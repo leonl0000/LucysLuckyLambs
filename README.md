@@ -1,4 +1,10 @@
-# Greyshirts
+# Member Photos
+
+Member | Photo
+Zoey | ![Zoey](https://avatars2.githubusercontent.com/u/39204446?s=460&v=4)
+
+
+# Team Skills Matrix
 
 Member | Skills | Personal Traits | Desired Growth | Weaknesses
 --- | --- | --- | --- | ---
