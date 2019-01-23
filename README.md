@@ -1,4 +1,4 @@
-# Team-23
+# Greyshirts
 
 Member | Skills | Personal Traits | Desired Growth | Weaknesses
 --- | --- | --- | --- | ---
