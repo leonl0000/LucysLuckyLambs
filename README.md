@@ -2,7 +2,7 @@
 
 Member | Photo
 --- | ---
-Zoey | ![Zoey](https://avatars2.githubusercontent.com/u/39204446?s=460&v=4 =230x230)
+Zoey | <img src="https://avatars2.githubusercontent.com/u/39204446?s=460&v=4" alt="Zoey" width="230"/>
 
 
 # Team Skills Matrix
