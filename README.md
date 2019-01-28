@@ -1,5 +1,5 @@
 # EMU GAMES
-<img src="https://files.slack.com/files-pri/TFDLC87EW-FFME4JGBD/image_from_ios.png" alt="Logo" title="Emu Games Logo" width="450">
+<img src="https://github.com/StanfordCS194/Team-23/blob/master/photos/logo_1.png" alt="Logo" title="Emu Games Logo" width="450">
 
 
 
