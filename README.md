@@ -30,4 +30,4 @@ https://docs.google.com/forms/d/e/1FAIpQLSd7IQ-R4Ei5d6FnpAyN22Hh1t_mJjjt98hGVVaa
 # Team Communication
 
 1. <a href="https://greyshirts.slack.com/open">Slack</a>
-2. Emails: leonl@stanford.edu, nschager@stanford.edu, sswaans@stanford.edu, zwonglema@stanford.edu
+2. Emails: leonl@stanford.edu, nschager@stanford.edu, sswaans@stanford.edu, zwonglema@stanford.edu, stbarnes@stanford.edu
