@@ -1,10 +1,16 @@
+# EMU GAMES
+<img src="https://files.slack.com/files-pri/TFDLC87EW-FFME4JGBD/image_from_ios.png" alt="Logo" title="Emu Games Logo" width="450">
+
+
+
+
 # Member Photos
 
 Member | Photo
 --- | ---
-Leon | <img src="" alt="Leon" width="230"/>
+Leon | <img src="https://camo.githubusercontent.com/2ce83bfea87e46979abfa276ad652e7ca62cff6b/68747470733a2f2f73636f6e74656e742d6c6178332d322e78782e666263646e2e6e65742f762f74312e302d392f33353133343037365f313836353237333537333533363339315f343431343531313039363433343532343136305f6e2e6a70673f5f6e635f6361743d313031265f6e635f68743d73636f6e74656e742d6c6178332d322e7878266f683d3666396332356332383337323864386466633539393264326361656162623236266f653d3543464634443635" alt="Leon" width="230"/>
 Nathan | <img src="" alt="Nathan" width="230"/>
-Stefan | <img src="https://camo.githubusercontent.com/2ce83bfea87e46979abfa276ad652e7ca62cff6b/68747470733a2f2f73636f6e74656e742d6c6178332d322e78782e666263646e2e6e65742f762f74312e302d392f33353133343037365f313836353237333537333533363339315f343431343531313039363433343532343136305f6e2e6a70673f5f6e635f6361743d313031265f6e635f68743d73636f6e74656e742d6c6178332d322e7878266f683d3666396332356332383337323864386466633539393264326361656162623236266f653d3543464634443635" alt="Stefan" width="230"/>
+Stefan | <img src="" alt="Stefan" width="230"/>
 Zoey | <img src="https://avatars2.githubusercontent.com/u/39204446?s=460&v=4" alt="Zoey" width="230"/>
 
 
@@ -15,7 +21,7 @@ Member | Skills | Personal Traits | Desired Growth | Weaknesses
 Nathan | 3D Graphics, needfinding, game engines, art | Explosive brain | Design | Absent Minded af
 Leon | ML | Endurance | Scoping | Real world skills
 Zoey | Systems, Backend Design, Debugging | Spurts of Creativity, Short Attention Span | Product Design | Focusing on One Task for long
-
+Stephan |
 
 # SGM Form
 
