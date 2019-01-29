@@ -18,7 +18,7 @@ Zoey | <img src="https://avatars2.githubusercontent.com/u/39204446?s=460&v=4" al
 
 Member | Skills | Personal Traits | Desired Growth | Weaknesses
 --- | --- | --- | --- | ---
-Nathan | 3D Graphics, needfinding, game engines, art | Explosive brain | Design | Absent Minded af
+Nathan | 3D Graphics, needfinding, game engines, art | Explosive brain | Design | Absent minded
 Leon | ML | Endurance | Scoping | Real world skills
 Zoey | Systems, Backend Design, Debugging | Spurts of Creativity, Short Attention Span | Product Design | Focusing on One Task for long
 Stephen | ML, Data Science | Easily excited and easily bored | Learning to use Unity; seeing a big project through the whole development process | No weaknesses
