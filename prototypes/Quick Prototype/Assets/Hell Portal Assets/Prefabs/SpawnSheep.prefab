@@ -109,6 +109,7 @@ MonoBehaviour:
   rb: {fileID: 509831795981568596}
   hsm: {fileID: 0}
   MAX_INITIAL_SPEED: 40
+  sheepBounce: 15
 --- !u!54 &509831795981568596
 Rigidbody:
   m_ObjectHideFlags: 0

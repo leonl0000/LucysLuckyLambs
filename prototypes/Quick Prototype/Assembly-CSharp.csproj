@@ -65,6 +65,8 @@
     <Compile Include="Assets\Hell Portal Assets\Scripts\scoreScript.cs" />
     <Compile Include="Assets\Hell Portal Assets\Scripts\sheepScript.cs" />
     <Compile Include="Assets\Hell Portal Assets\Scripts\spawnGateScript.cs" />
+    <Compile Include="Assets\Scripts\FollowPlayer.cs" />
+    <Compile Include="Assets\Scripts\PlayerMovement.cs" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>C:/Users/darky/Downloads/_CS 194/Team-23/prototypes/Quick Prototype/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
@@ -638,7 +640,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
