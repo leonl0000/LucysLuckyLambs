@@ -45,25 +45,25 @@ public class PlayerMovement : MonoBehaviour
         if (forwardMove)
         {
             //Move the Rigidbody forwards constantly at speed you define (the blue arrow axis in Scene view)
-            playerRB.velocity = transform.forward * moveSpeed;
+            playerRB.velocity += transform.forward * moveSpeed;
         }
 
         if (backMove)
         {
             //Move the Rigidbody backwards constantly at the speed you define (the blue arrow axis in Scene view)
-            playerRB.velocity = -transform.forward * moveSpeed;
+            playerRB.velocity += -transform.forward * moveSpeed;
         }
 
         if (rightMove)
         {
             //Rotate the sprite about the Y axis in the positive direction
-            playerRB.velocity = transform.right * moveSpeed;
+            playerRB.velocity += transform.right * moveSpeed;
         }
 
         if (leftMove)
         {
             //Rotate the sprite about the Y axis in the negative direction
-            playerRB.velocity = -transform.right * moveSpeed;
+            playerRB.velocity += -transform.right * moveSpeed;
         }
 
         if (jump && transform.position.y == 1) playerRB.AddForce(0, 200, 0);
