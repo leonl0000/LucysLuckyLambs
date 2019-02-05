@@ -11,7 +11,7 @@ public class FollowPlayer : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        transform.position = playerTransform.position + (playerTransform.forward * -5) + offset;
+        transform.position = playerTransform.position + (playerTransform.forward * -7) + offset;
         transform.LookAt(playerTransform, Vector3.up);
     }
 
