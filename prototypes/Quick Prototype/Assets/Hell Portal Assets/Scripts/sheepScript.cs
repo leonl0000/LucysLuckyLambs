@@ -6,6 +6,7 @@ public class sheepScript : MonoBehaviour {
 
     // x & z velocities will be set uniformly randomly in [-MAX_INITIAL_SPEED, MAX_INITIAL_SPEED]
     public float MAX_INITIAL_SPEED = 30;
+    public int index;
 
     //Force applied whenever sheep hit the ground
     public float sheepBounce = 15;
@@ -28,6 +29,7 @@ public class sheepScript : MonoBehaviour {
         if (collision.collider.tag == "ground") {
             rb.AddForce(0, sheepBounce, 0, ForceMode.VelocityChange);
         }
+
     }
 
 }
