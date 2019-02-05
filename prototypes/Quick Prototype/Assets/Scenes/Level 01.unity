@@ -209,6 +209,7 @@ GameObject:
   - component: {fileID: 170161256}
   - component: {fileID: 170161255}
   - component: {fileID: 170161254}
+  - component: {fileID: 170161260}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -313,6 +314,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &170161260
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 170161253}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e65b9fc535db01343852dd497d48cbeb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lure: {fileID: 1167363370957836, guid: 0ce9c58f5df7f6a4db09e62c7557605c, type: 2}
+  throw_speed: 64
 --- !u!1 &300832502
 GameObject:
   m_ObjectHideFlags: 0
