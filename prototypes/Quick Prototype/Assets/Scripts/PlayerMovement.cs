@@ -9,6 +9,7 @@ public class PlayerMovement : MonoBehaviour
     public Camera cam;
     public float camSpeed;
     public float moveSpeed;
+    public int num_jumps;
 
     private bool leftMove;
     private bool rightMove;
@@ -34,7 +35,7 @@ public class PlayerMovement : MonoBehaviour
         rightMove = Input.GetKey("d");
         forwardMove = Input.GetKey("w");
         backMove = Input.GetKey("s");
-        jump = Input.GetKey(KeyCode.Space);
+        jump = Input.GetKeyDown(KeyCode.Space);
     }
 
 
@@ -66,7 +67,12 @@ public class PlayerMovement : MonoBehaviour
             playerRB.velocity += -transform.right * moveSpeed;
         }
 
-        if (jump && transform.position.y == 1) playerRB.AddForce(0, 200, 0);
+        if (jump && num_jumps > 0)
+        {
+            num_jumps--;
+            playerRB.AddForce(0, 400, 0);
+            jump = false;
+        }
 
     }
 }
