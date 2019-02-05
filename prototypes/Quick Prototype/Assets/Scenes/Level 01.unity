@@ -231,8 +231,10 @@ MonoBehaviour:
   playerRB: {fileID: 170161255}
   cam: {fileID: 1826478463}
   camSpeed: 2
+  max_velocity: 16
   moveSpeed: 1
-  num_jumps: 3
+  max_jumps: 0
+  num_jumps: 5
 --- !u!54 &170161255
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -326,7 +328,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lure: {fileID: 1167363370957836, guid: 0ce9c58f5df7f6a4db09e62c7557605c, type: 2}
-  throw_speed: 64
+  throw_speed: 16
+  cam: {fileID: 1826478463}
 --- !u!1 &300832502
 GameObject:
   m_ObjectHideFlags: 0
@@ -356,6 +359,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mana: 0
   numSheepDropped: 0
+  sheep: {fileID: 0}
 --- !u!4 &300832504
 Transform:
   m_ObjectHideFlags: 0
@@ -1101,7 +1105,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hsm: {fileID: 300832503}
-  sheep: {fileID: 509831795736211845, guid: 36fb4eefdda37904e8c93007d4cf89c7, type: 2}
   spawnTimeout: 1
 --- !u!136 &2130539177
 CapsuleCollider:
