@@ -240,9 +240,9 @@ MonoBehaviour:
   playerRB: {fileID: 170161255}
   cam: {fileID: 1826478463}
   camSpeed: 2
-  max_velocity: 16
-  moveSpeed: 1
-  max_jumps: 0
+  max_velocity: 20
+  moveSpeed: 2
+  max_jumps: 5
   num_jumps: 5
 --- !u!54 &170161255
 Rigidbody:
@@ -335,8 +335,9 @@ Transform:
 --- !u!114 &170161260
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 170161253}
   m_Enabled: 1
   m_EditorHideFlags: 0
