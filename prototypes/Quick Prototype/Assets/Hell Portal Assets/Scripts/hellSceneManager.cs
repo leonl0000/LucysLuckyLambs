@@ -6,8 +6,13 @@ public class hellSceneManager : MonoBehaviour {
     public float mana;
     public int numSheepDropped;
     public GameObject sheep;
+
     public Dictionary<int, GameObject> sheepDict;
     private int nextIndex;
+
+    public GameObject player;
+    public float playerBoidInfluence = 150f; //multiplied onto the force each sheep gets applied
+
 
     public void Start() {
         mana = 50;
