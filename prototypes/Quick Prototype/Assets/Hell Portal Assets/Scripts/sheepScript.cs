@@ -21,6 +21,12 @@ public class sheepScript : MonoBehaviour {
     void Update() {
         //Check if fallen off
         if (rb.position.y < -10) hsm.objectDrop(this.gameObject);
+
+        //Apply force towards player
+        Vector3 playerDelta = hsm.player.transform.position - rb.position;
+        //float force = (playerDelta * Time.deltaTime * hsm.playerBoidInfluence / playerDelta.sqrMagnitude).magnitude;
+        //if (index%10==0) Debug.Log(string.Format("Sheep {0}: force {1:E3}, playerInf {2}", index, force, hsm.playerBoidInfluence));
+        rb.AddForce(playerDelta * Time.deltaTime * hsm.playerBoidInfluence / playerDelta.sqrMagnitude, ForceMode.VelocityChange);
     }
 
     private void OnCollisionEnter(Collision collision) {
