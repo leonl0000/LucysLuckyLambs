@@ -7,11 +7,15 @@ public class CollisionManager_Ground : MonoBehaviour {
 
     private PlayerMovement player_movement;
 
+    private void Start()
+    {
+        player_movement = GameObject.Find("Player").GetComponent<PlayerMovement>();
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         if(collision.collider.name == "Player")
         {
-            player_movement = collision.collider.GetComponent<PlayerMovement>();
             player_movement.num_jumps = player_movement.max_jumps;
         }
     }
