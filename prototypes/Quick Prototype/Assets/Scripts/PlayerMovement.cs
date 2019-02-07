@@ -9,7 +9,7 @@ public class PlayerMovement : MonoBehaviour
     public Rigidbody playerRB;
     public Camera cam;
     public float camSpeed;
-    public int max_velocity;
+    public float max_velocity;
     public float moveSpeed;
     public int max_jumps;
     public int num_jumps;
@@ -78,10 +78,14 @@ public class PlayerMovement : MonoBehaviour
             delta_velocity += -transform.right * moveSpeed;
         }
 
-        if (Mathf.Abs((playerRB.velocity + delta_velocity).x) > max_velocity) delta_velocity.x = playerRB.velocity.x > 0 ? max_velocity - playerRB.velocity.x : -max_velocity - playerRB.velocity.x;
-        if (Mathf.Abs((playerRB.velocity + delta_velocity).z) > max_velocity) delta_velocity.z = playerRB.velocity.z > 0 ? max_velocity - playerRB.velocity.z : -max_velocity - playerRB.velocity.z;
-
-        playerRB.velocity += delta_velocity;
+        //If the velocity we're about to add will make us faster than max_velocity
+        if (Mathf.Abs(Vector3.Magnitude(playerRB.velocity + delta_velocity)) > max_velocity) 
+        {
+            //Correct the delta_velocity to add exactly the remainder from playerRB.velocity to max_velcoity
+            delta_velocity = ((playerRB.velocity + delta_velocity) / (Vector3.Magnitude(playerRB.velocity + delta_velocity) / max_velocity)) - playerRB.velocity;
+        }
+        
+        playerRB.velocity += delta_velocity;         
 
         if (jump && num_jumps > 0)
         {

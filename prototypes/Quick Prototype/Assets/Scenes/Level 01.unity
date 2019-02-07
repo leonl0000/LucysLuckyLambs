@@ -240,9 +240,9 @@ MonoBehaviour:
   playerRB: {fileID: 170161255}
   cam: {fileID: 1826478463}
   camSpeed: 2
-  max_velocity: 16
-  moveSpeed: 1
-  max_jumps: 0
+  max_velocity: 20
+  moveSpeed: 2
+  max_jumps: 5
   num_jumps: 5
 --- !u!54 &170161255
 Rigidbody:
