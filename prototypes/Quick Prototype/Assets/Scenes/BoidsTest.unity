@@ -282,20 +282,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 300832502}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 16b5b378fb6d8c94ab96e6bfa403e8fb, type: 3}
+  m_Script: {fileID: 11500000, guid: d0f9f7e7b6d786542858754103f0e62d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mana: 0
-  numSheepDropped: 0
-  sheep: {fileID: 509831795736211845, guid: 36fb4eefdda37904e8c93007d4cf89c7, type: 3}
-  player: {fileID: 170161253}
-  playerBoidInfluence: 100
-  boidSeparateThreshold: 10
-  boidCohereThreshold: 30
-  boidAlignThreshold: 20
-  boidSeparationStrength: 30
-  boidCoherenceStrength: 150
-  boidAlignmentStrength: 10
 --- !u!4 &300832504
 Transform:
   m_ObjectHideFlags: 0
@@ -310,7 +299,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &598625732
+--- !u!1 &790725324
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -318,10 +307,10 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 598625736}
-  - component: {fileID: 598625735}
-  - component: {fileID: 598625734}
-  - component: {fileID: 598625733}
+  - component: {fileID: 790725327}
+  - component: {fileID: 790725326}
+  - component: {fileID: 790725325}
+  - component: {fileID: 790725328}
   m_Layer: 0
   m_Name: Terrain
   m_TagString: Untagged
@@ -329,36 +318,24 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
   m_IsActive: 1
---- !u!114 &598625733
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 598625732}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 80446620b5f0fc9428d9282db77637f3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!154 &598625734
+--- !u!154 &790725325
 TerrainCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 598625732}
+  m_GameObject: {fileID: 790725324}
   m_Material: {fileID: 0}
   m_Enabled: 1
   m_TerrainData: {fileID: 15600000, guid: ac17684daab3bf243b9f15bbeac598f3, type: 2}
   m_EnableTreeColliders: 1
---- !u!218 &598625735
+--- !u!218 &790725326
 Terrain:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 598625732}
+  m_GameObject: {fileID: 790725324}
   m_Enabled: 1
   serializedVersion: 3
   m_TerrainData: {fileID: 15600000, guid: ac17684daab3bf243b9f15bbeac598f3, type: 2}
@@ -388,13 +365,13 @@ Terrain:
   m_LightmapParameters: {fileID: 15203, guid: 0000000000000000f000000000000000, type: 0}
   m_GroupingID: 0
   m_AllowAutoConnect: 1
---- !u!4 &598625736
+--- !u!4 &790725327
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 598625732}
+  m_GameObject: {fileID: 790725324}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -1000, y: 0, z: -1000}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -402,6 +379,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &790725328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 790725324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80446620b5f0fc9428d9282db77637f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &816719009
 GameObject:
   m_ObjectHideFlags: 0
@@ -546,7 +535,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef11a6089c9533f45ab2ec213e9bb74b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hsm: {fileID: 300832503}
+  hsm: {fileID: 0}
   scoreText: {fileID: 826765960}
 --- !u!114 &826765960
 MonoBehaviour:
@@ -765,9 +754,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTransform: {fileID: 170161259}
-  offset: {x: 0, y: 8, z: 0}
-  positionBack: 15
-  lookForward: 20
+  offset: {x: 0, y: 1.5, z: 0}
 --- !u!81 &1826478465
 AudioListener:
   m_ObjectHideFlags: 0
@@ -889,7 +876,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d0dc235ec2ccb14a9ac72a348eb2e79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hsm: {fileID: 300832503}
+  hsm: {fileID: 0}
   numSacrificed: 0
 --- !u!136 &1948576944
 CapsuleCollider:
@@ -958,7 +945,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1948576942}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -200, y: 0, z: 500}
+  m_LocalPosition: {x: 30, y: 0, z: 30}
   m_LocalScale: {x: 10, y: 2, z: 10}
   m_Children: []
   m_Father: {fileID: 0}
@@ -996,7 +983,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e879105e4ce2264cad780dcba362b11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hsm: {fileID: 300832503}
+  hsm: {fileID: 0}
   spawnTimeout: 1
 --- !u!136 &2130539177
 CapsuleCollider:
