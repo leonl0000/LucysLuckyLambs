@@ -290,12 +290,12 @@ MonoBehaviour:
   health: 0
   numSheepDropped: 0
   sheep: {fileID: 509831795736211845, guid: 36fb4eefdda37904e8c93007d4cf89c7, type: 3}
-  playerBoidInfluence: 100
+  playerBoidInfluence: 120
   boidSeparateThreshold: 10
   boidCohereThreshold: 30
   boidAlignThreshold: 20
   boidSeparationStrength: 30
-  boidCoherenceStrength: 150
+  boidCoherenceStrength: 200
   boidAlignmentStrength: 10
 --- !u!4 &300832504
 Transform:
@@ -508,7 +508,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.5, y: 126.4}
+  m_AnchoredPosition: {x: -200, y: 126.4}
   m_SizeDelta: {x: 160, y: 66}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!132 &826765958
