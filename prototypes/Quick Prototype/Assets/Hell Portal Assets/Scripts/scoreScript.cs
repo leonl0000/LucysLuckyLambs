@@ -10,6 +10,9 @@ public class scoreScript : MonoBehaviour
 
     // Update is called once per frame
     void Update()    {
-        scoreText.text = string.Format("Mana: {0}\nFallen: {1}", hsm.mana, hsm.numSheepDropped);
+        if (hsm.health > 0)
+            scoreText.text = string.Format("Health: {0:0}\nMana: {1}\nFallen: {2}",
+                hsm.health, hsm.mana, hsm.numSheepDropped);
+        else scoreText.text = "YOU ARE DEAD\nDEAD\nDEAD";
     }
 }

@@ -6,15 +6,15 @@ public class FollowPlayer : MonoBehaviour
 {
     public Transform playerTransform;
     public Vector3 offset;
-    public float followDistance;
+    public int positionBack; // how far behind the player the camera is positioned
+    public int lookForward; // how far in front of the player the camera is looking
 
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        transform.position = playerTransform.position + (playerTransform.forward * -followDistance) + offset;
-        transform.LookAt(playerTransform, Vector3.up);
+        transform.position = playerTransform.position + (playerTransform.forward * -positionBack) + offset;
+        transform.LookAt(playerTransform.position + playerTransform.forward * lookForward, Vector3.up);
     }
-
 
 }
