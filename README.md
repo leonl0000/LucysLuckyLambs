@@ -23,6 +23,8 @@ Leon | ML | Endurance | Scoping | Real world skills
 Zoey | Systems, Backend Design, Debugging | Spurts of Creativity, Short Attention Span | Product Design | Focusing on One Task for long
 Stephen | ML, Data Science | Easily excited and easily bored | Learning to use Unity; seeing a big project through the whole development process | No weaknesses
 
+# <a href="https://github.com/StanfordCS194/EmuGames/blob/master/Documentation_Index.md">Documentation</a>
+
 # SGM Form
 
 https://docs.google.com/forms/d/e/1FAIpQLSd7IQ-R4Ei5d6FnpAyN22Hh1t_mJjjt98hGVVaa7AXXSsQ14A/viewform?vc=0&c=0&w=1

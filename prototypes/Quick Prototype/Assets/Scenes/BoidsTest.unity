@@ -282,9 +282,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 300832502}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0f9f7e7b6d786542858754103f0e62d, type: 3}
+  m_Script: {fileID: 11500000, guid: 16b5b378fb6d8c94ab96e6bfa403e8fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mana: 0
+  numSheepDropped: 0
+  sheep: {fileID: 509831795736211845, guid: 36fb4eefdda37904e8c93007d4cf89c7, type: 3}
+  player: {fileID: 170161253}
+  playerBoidInfluence: 100
+  boidSeparateThreshold: 10
+  boidCohereThreshold: 30
+  boidAlignThreshold: 0
+  boidSeparationStrength: 150
+  boidCoherenceStrength: 30
+  boidAlignmentStrength: 0
 --- !u!4 &300832504
 Transform:
   m_ObjectHideFlags: 0
@@ -535,7 +546,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef11a6089c9533f45ab2ec213e9bb74b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hsm: {fileID: 0}
+  hsm: {fileID: 300832503}
   scoreText: {fileID: 826765960}
 --- !u!114 &826765960
 MonoBehaviour:
@@ -723,7 +734,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 90
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -755,6 +766,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerTransform: {fileID: 170161259}
   offset: {x: 0, y: 1.5, z: 0}
+  positionBack: 0
+  lookForward: 0
 --- !u!81 &1826478465
 AudioListener:
   m_ObjectHideFlags: 0
@@ -983,7 +996,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e879105e4ce2264cad780dcba362b11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hsm: {fileID: 0}
+  hsm: {fileID: 300832503}
   spawnTimeout: 1
 --- !u!136 &2130539177
 CapsuleCollider:
