@@ -5,7 +5,7 @@ public class sheepScript : MonoBehaviour {
     public hellSceneManager hsm;
 
     // x & z velocities will be set uniformly randomly in [-MAX_INITIAL_SPEED, MAX_INITIAL_SPEED]
-    public float MAX_INITIAL_SPEED = 30;
+    public float MAX_INITIAL_SPEED = 5;
     public int index;
 
     //Force applied whenever sheep hit the ground

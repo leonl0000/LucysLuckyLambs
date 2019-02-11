@@ -8,7 +8,7 @@ public class hellgateScript : MonoBehaviour {
     public int numSacrificed = 0;
 
     //Everything passed to scene manager
-    private void OnTriggerEnter(Collider other) {
+    private void OnTriggerStay(Collider other) {
         hsm.objectEnterHellgate(other.gameObject, this);
     }
 
