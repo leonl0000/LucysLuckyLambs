@@ -26,7 +26,7 @@ public class LureScript : MonoBehaviour
 
         // remove if past lifetime
         if (age >= lifetime) {
-            hsm.sheepDict.Remove(index);
+            hsm.lureDict.Remove(index);
             Destroy(gameObject);
         }
     }
