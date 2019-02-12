@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class hellSceneManager : MonoBehaviour {
 
@@ -8,6 +9,7 @@ public class hellSceneManager : MonoBehaviour {
     public float mana;
     public float health;
     public int numSheepDropped;
+    public int numSheepEaten;
     public GameObject sheep;
 
 
@@ -40,9 +42,17 @@ public class hellSceneManager : MonoBehaviour {
         mana = 50f;
         health = 100f;
         numSheepDropped = 0;
+        numSheepEaten = 0;
         sheepDict = new Dictionary<int, GameObject>();
         lureDict = new Dictionary<int, GameObject>();
         nextIndex = 0;
+    }
+
+    void Update() {
+        updateBoids();
+        if (mana > 1000) {
+            nextLevel();
+        }
     }
 
 
@@ -50,8 +60,8 @@ public class hellSceneManager : MonoBehaviour {
     public void objectEnterHellgate(GameObject o, hellgateScript hellGate) {
         switch(o.tag) {
             case "sheep":
-                Destroy(o);
                 sheepDict.Remove(o.GetComponent<sheepScript>().index);
+                Destroy(o);
                 //Debug.Log(string.Format("Sheep {0} SACRIFICED", o.GetComponent<sheepScript>().index));
                 mana += 100;
                 hellGate.numSacrificed += 1;
@@ -68,10 +78,19 @@ public class hellSceneManager : MonoBehaviour {
     //Deal with objects that fall off the edge
     public void objectDrop(GameObject o) {
         if (o.tag == "sheep") {
-            Destroy(o);
             sheepDict.Remove(o.GetComponent<sheepScript>().index);
+            Destroy(o);
             //Debug.Log(string.Format("Sheep {0} dropped", o.GetComponent<sheepScript>().index));
             numSheepDropped += 1;
+        }
+
+    }
+
+    public void predatorCollision(GameObject pred, GameObject prey) {
+        if(prey.tag == "sheep") {
+            numSheepEaten++;
+            sheepDict.Remove(prey.GetComponent<sheepScript>().index);
+            Destroy(prey);
         }
     }
 
@@ -88,9 +107,7 @@ public class hellSceneManager : MonoBehaviour {
         return false;
     }
 
-    void Update() {
-        updateBoids();
-    }
+
 
     // Update all boids' velocities
     public void updateBoids() {
@@ -170,6 +187,17 @@ public class hellSceneManager : MonoBehaviour {
             bodyB.velocity = Vector3.Slerp(bodyB.velocity, bodyA.velocity, boidAlignmentStrength * Time.deltaTime);
             bodyA.velocity = temp;
         }
+    }
+
+
+
+
+
+
+
+
+    public void nextLevel() {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
 }
