@@ -296,7 +296,7 @@ MonoBehaviour:
   boidSeparateThreshold: 10
   boidCohereThreshold: 30
   boidAlignThreshold: 20
-  boidSeparationStrength: 30
+  boidSeparationStrength: 50
   boidCoherenceStrength: 200
   boidAlignmentStrength: 10
   lureRange: 100
