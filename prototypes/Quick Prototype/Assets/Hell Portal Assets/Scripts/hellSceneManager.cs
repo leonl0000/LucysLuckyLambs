@@ -128,21 +128,23 @@ public class hellSceneManager : MonoBehaviour {
         if (distance < boidSeparateThreshold)
         {
             // apply separation rule
-            bodyA.AddForce(-aToBNormalizedXZ * boidSeparationStrength);
-            bodyB.AddForce( aToBNormalizedXZ * boidSeparationStrength);
+            bodyA.AddForce(-aToBNormalizedXZ * boidSeparationStrength * Time.deltaTime);
+            bodyB.AddForce( aToBNormalizedXZ * boidSeparationStrength * Time.deltaTime);
             // also TODO separation rule for player, so boids don't crowd it
         }
         else
         {
             // apply coherence rule
-            bodyA.AddForce( aToBNormalizedXZ * boidCoherenceStrength); // TODO scale down with distance
-            bodyB.AddForce(-aToBNormalizedXZ * boidCoherenceStrength);
+            bodyA.AddForce( aToBNormalizedXZ * boidCoherenceStrength * Time.deltaTime); // TODO scale down with distance
+            bodyB.AddForce(-aToBNormalizedXZ * boidCoherenceStrength * Time.deltaTime);
         }
 
         if (distance < boidAlignThreshold)
         {
             // apply alignment rule
-            // TODO
+            Vector3 temp = Vector3.Slerp(bodyA.velocity, bodyB.velocity, boidAlignmentStrength * Time.deltaTime); // TODO scale down with distance
+            bodyB.velocity = Vector3.Slerp(bodyB.velocity, bodyA.velocity, boidAlignmentStrength * Time.deltaTime);
+            bodyA.velocity = temp;
         }
     }
 
