@@ -15,6 +15,8 @@ public class hellSceneManager : MonoBehaviour {
     public Dictionary<int, GameObject> sheepDict;
     private int nextIndex;
 
+    public Dictionary<int, GameObject> lureDict;
+
 
 
     public float playerBoidInfluence = 150f; //multiplied onto the force each sheep gets applied
@@ -29,6 +31,9 @@ public class hellSceneManager : MonoBehaviour {
     public float boidCoherenceStrength;
     public float boidAlignmentStrength;
 
+    public float lureRange;
+    public float lureStrength;
+
 
 
     public void Start() {
@@ -36,6 +41,7 @@ public class hellSceneManager : MonoBehaviour {
         health = 100f;
         numSheepDropped = 0;
         sheepDict = new Dictionary<int, GameObject>();
+        lureDict = new Dictionary<int, GameObject>();
         nextIndex = 0;
     }
 
@@ -93,12 +99,30 @@ public class hellSceneManager : MonoBehaviour {
         // For every pair, compute distance, and then apply the three rules (separation, cohesion, alignment)
         boidCohereThresholdSQ = boidCohereThreshold * boidCohereThreshold;
 
+        // handle boid pair interactions
         foreach (int i in sheepDict.Keys) { 
             foreach (int j in sheepDict.Keys) { 
                 if (i<j)
                     // Debug.Log(string.Format("Interacting: sheep {0} -- {1}", i, j));
                     updateBoidPair(sheepDict[i], sheepDict[j]);
             }
+        }
+
+        // handle single boid effects
+        foreach (int i in sheepDict.Keys) {
+            // lure interactions
+            foreach (int j in lureDict.Keys)
+                lureAttract(sheepDict[i], lureDict[j]);
+        }
+    }
+
+    public void lureAttract (GameObject sheep, GameObject lure) {
+        Vector3 posSheep = sheep.transform.position;
+        Vector3 posLure = lure.transform.position;
+        Vector3 sheepToLure = posLure - posSheep;
+        var distance = sheepToLure.magnitude;
+        if (distance < lureRange) {
+            sheep.GetComponent<Rigidbody>().AddForce(sheepToLure * lureStrength * Time.deltaTime);
         }
     }
 
