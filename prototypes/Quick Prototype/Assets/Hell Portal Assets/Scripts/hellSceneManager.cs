@@ -20,6 +20,7 @@ public class hellSceneManager : MonoBehaviour {
     public Dictionary<int, GameObject> lureDict;
 
 
+    public float maxSheepSpeed;
 
     public float playerBoidInfluence = 150f; //multiplied onto the force each sheep gets applied
 
@@ -127,9 +128,13 @@ public class hellSceneManager : MonoBehaviour {
 
         // handle single boid effects
         foreach (int i in sheepDict.Keys) {
+            var sheep = sheepDict[i];
             // lure interactions
             foreach (int j in lureDict.Keys)
-                lureAttract(sheepDict[i], lureDict[j]);
+                lureAttract(sheep, lureDict[j]);
+            // max speed
+            if (sheep.GetComponent<Rigidbody>().velocity.magnitude > maxSheepSpeed)
+                sheep.GetComponent<Rigidbody>().velocity = sheep.GetComponent<Rigidbody>().velocity.normalized * maxSheepSpeed;
         }
     }
 
@@ -169,8 +174,8 @@ public class hellSceneManager : MonoBehaviour {
         if (distance < boidSeparateThreshold)
         {
             // apply separation rule
-            bodyA.AddForce(-aToBNormalizedXZ * boidSeparationStrength * Time.deltaTime);
-            bodyB.AddForce( aToBNormalizedXZ * boidSeparationStrength * Time.deltaTime);
+            bodyA.AddForce(-aToBNormalizedXZ * boidSeparationStrength * Time.deltaTime / distance);
+            bodyB.AddForce( aToBNormalizedXZ * boidSeparationStrength * Time.deltaTime / distance);
             // also TODO separation rule for player, so boids don't crowd it
         }
         else
