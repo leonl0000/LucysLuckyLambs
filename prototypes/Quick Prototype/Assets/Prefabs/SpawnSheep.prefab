@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 509831795736211848}
   - component: {fileID: 509831795736211849}
   - component: {fileID: 509831795736211850}
-  - component: {fileID: 509831795736211851}
   - component: {fileID: 509831795736211844}
   - component: {fileID: 509831795981568596}
+  - component: {fileID: 948310302663856110}
   m_Layer: 0
   m_Name: SpawnSheep
   m_TagString: sheep
@@ -28,13 +28,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 509831795736211845}
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!33 &509831795736211849
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -42,7 +42,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 509831795736211845}
-  m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 4300000, guid: 0e73feb753c46f946b096b7373936fd0, type: 3}
 --- !u!23 &509831795736211850
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -60,7 +60,8 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 805b88679efa1544d9f013cda1f08ad9, type: 2}
+  - {fileID: 2100000, guid: 4dd1038236df2734f82f4d15f663c380, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -80,20 +81,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!136 &509831795736211851
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 509831795736211845}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &509831795736211844
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -109,6 +96,7 @@ MonoBehaviour:
   rb: {fileID: 509831795981568596}
   hsm: {fileID: 0}
   MAX_INITIAL_SPEED: 40
+  index: 0
   sheepBounce: 15
 --- !u!54 &509831795981568596
 Rigidbody:
@@ -126,3 +114,17 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
+--- !u!136 &948310302663856110
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 509831795736211845}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.015250722
+  m_Height: 0.053597435
+  m_Direction: 0
+  m_Center: {x: -0.005, y: -0.0000000018626451, z: -0.0030616298}
