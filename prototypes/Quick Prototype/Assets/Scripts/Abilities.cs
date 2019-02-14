@@ -17,12 +17,15 @@ public class Abilities : MonoBehaviour {
 
     public void SpawnLure()
     {
-        spawned_lure = Instantiate(lure, me_transform.position + new Vector3(0,1,0), lure.transform.rotation);
-        spawned_lure.GetComponent<Rigidbody>().velocity += (cam.transform.forward * throw_speed) + new Vector3(0,1*throw_speed,0);
-        
-        hsm.lureDict[nextIndex] = spawned_lure;
-        spawned_lure.GetComponent<LureScript>().index = nextIndex;
-        nextIndex++;
+        if (hsm.mana >= 2) {
+            hsm.mana -= 2;
+            spawned_lure = Instantiate(lure, me_transform.position + new Vector3(0, 1, 0), lure.transform.rotation);
+            spawned_lure.GetComponent<Rigidbody>().velocity += (cam.transform.forward * throw_speed) + new Vector3(0, 1 * throw_speed, 0);
+
+            hsm.lureDict[nextIndex] = spawned_lure;
+            spawned_lure.GetComponent<LureScript>().index = nextIndex;
+            nextIndex++;
+        }
     }
 
     // Use this for initialization
