@@ -32,9 +32,9 @@ public class Abilities : MonoBehaviour {
     void Start () {
         me_transform = this.gameObject.transform;
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
-		
+
 	}
 }
