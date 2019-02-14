@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class hellSceneManager : MonoBehaviour {
 
@@ -8,6 +9,7 @@ public class hellSceneManager : MonoBehaviour {
     public float mana;
     public float health;
     public int numSheepDropped;
+    public int numSheepEaten;
     public GameObject sheep;
 
 
@@ -15,7 +17,10 @@ public class hellSceneManager : MonoBehaviour {
     public Dictionary<int, GameObject> sheepDict;
     private int nextIndex;
 
+    public Dictionary<int, GameObject> lureDict;
 
+
+    public float maxSheepSpeed;
 
     public float playerBoidInfluence = 150f; //multiplied onto the force each sheep gets applied
 
@@ -29,14 +34,26 @@ public class hellSceneManager : MonoBehaviour {
     public float boidCoherenceStrength;
     public float boidAlignmentStrength;
 
+    public float lureRange;
+    public float lureStrength;
+
 
 
     public void Start() {
         mana = 50f;
         health = 100f;
         numSheepDropped = 0;
+        numSheepEaten = 0;
         sheepDict = new Dictionary<int, GameObject>();
+        lureDict = new Dictionary<int, GameObject>();
         nextIndex = 0;
+    }
+
+    void Update() {
+        updateBoids();
+        if (mana > 1000) {
+            nextLevel();
+        }
     }
 
 
@@ -44,8 +61,8 @@ public class hellSceneManager : MonoBehaviour {
     public void objectEnterHellgate(GameObject o, hellgateScript hellGate) {
         switch(o.tag) {
             case "sheep":
-                Destroy(o);
                 sheepDict.Remove(o.GetComponent<sheepScript>().index);
+                Destroy(o);
                 //Debug.Log(string.Format("Sheep {0} SACRIFICED", o.GetComponent<sheepScript>().index));
                 mana += 100;
                 hellGate.numSacrificed += 1;
@@ -62,10 +79,19 @@ public class hellSceneManager : MonoBehaviour {
     //Deal with objects that fall off the edge
     public void objectDrop(GameObject o) {
         if (o.tag == "sheep") {
-            Destroy(o);
             sheepDict.Remove(o.GetComponent<sheepScript>().index);
+            Destroy(o);
             //Debug.Log(string.Format("Sheep {0} dropped", o.GetComponent<sheepScript>().index));
             numSheepDropped += 1;
+        }
+
+    }
+
+    public void predatorCollision(GameObject pred, GameObject prey) {
+        if(prey.tag == "sheep") {
+            numSheepEaten++;
+            sheepDict.Remove(prey.GetComponent<sheepScript>().index);
+            Destroy(prey);
         }
     }
 
@@ -82,9 +108,7 @@ public class hellSceneManager : MonoBehaviour {
         return false;
     }
 
-    void Update() {
-        updateBoids();
-    }
+
 
     // Update all boids' velocities
     public void updateBoids() {
@@ -93,12 +117,34 @@ public class hellSceneManager : MonoBehaviour {
         // For every pair, compute distance, and then apply the three rules (separation, cohesion, alignment)
         boidCohereThresholdSQ = boidCohereThreshold * boidCohereThreshold;
 
+        // handle boid pair interactions
         foreach (int i in sheepDict.Keys) {
             foreach (int j in sheepDict.Keys) {
                 if (i<j)
                     // Debug.Log(string.Format("Interacting: sheep {0} -- {1}", i, j));
                     updateBoidPair(sheepDict[i], sheepDict[j]);
             }
+        }
+
+        // handle single boid effects
+        foreach (int i in sheepDict.Keys) {
+            var sheep = sheepDict[i];
+            // lure interactions
+            foreach (int j in lureDict.Keys)
+                lureAttract(sheep, lureDict[j]);
+            // max speed
+            if (sheep.GetComponent<Rigidbody>().velocity.magnitude > maxSheepSpeed)
+                sheep.GetComponent<Rigidbody>().velocity = sheep.GetComponent<Rigidbody>().velocity.normalized * maxSheepSpeed;
+        }
+    }
+
+    public void lureAttract (GameObject sheep, GameObject lure) {
+        Vector3 posSheep = sheep.transform.position;
+        Vector3 posLure = lure.transform.position;
+        Vector3 sheepToLure = posLure - posSheep;
+        var distance = sheepToLure.magnitude;
+        if (distance < lureRange) {
+            sheep.GetComponent<Rigidbody>().AddForce(sheepToLure * lureStrength * Time.deltaTime);
         }
     }
 
@@ -128,22 +174,35 @@ public class hellSceneManager : MonoBehaviour {
         if (distance < boidSeparateThreshold)
         {
             // apply separation rule
-            bodyA.AddForce(-aToBNormalizedXZ * boidSeparationStrength);
-            bodyB.AddForce( aToBNormalizedXZ * boidSeparationStrength);
+            bodyA.AddForce(-aToBNormalizedXZ * boidSeparationStrength * Time.deltaTime / distance);
+            bodyB.AddForce( aToBNormalizedXZ * boidSeparationStrength * Time.deltaTime / distance);
             // also TODO separation rule for player, so boids don't crowd it
         }
         else
         {
             // apply coherence rule
-            bodyA.AddForce( aToBNormalizedXZ * boidCoherenceStrength); // TODO scale down with distance
-            bodyB.AddForce(-aToBNormalizedXZ * boidCoherenceStrength);
+            bodyA.AddForce( aToBNormalizedXZ * boidCoherenceStrength * Time.deltaTime); // TODO scale down with distance
+            bodyB.AddForce(-aToBNormalizedXZ * boidCoherenceStrength * Time.deltaTime);
         }
 
         if (distance < boidAlignThreshold)
         {
             // apply alignment rule
-            // TODO
+            Vector3 temp = Vector3.Slerp(bodyA.velocity, bodyB.velocity, boidAlignmentStrength * Time.deltaTime); // TODO scale down with distance
+            bodyB.velocity = Vector3.Slerp(bodyB.velocity, bodyA.velocity, boidAlignmentStrength * Time.deltaTime);
+            bodyA.velocity = temp;
         }
+    }
+
+
+
+
+
+
+
+
+    public void nextLevel() {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
 }

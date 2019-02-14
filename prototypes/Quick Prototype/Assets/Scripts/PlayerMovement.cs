@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public class Constants
+{
+    public enum PanType {MOUSE, KEY};
+}
+
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -19,14 +24,19 @@ public class PlayerMovement : MonoBehaviour
     private bool rightMove;
     private bool forwardMove;
     private bool backMove;
+    private bool panRight;
+    private bool panLeft;
     private bool ab1;
     private bool jump;
     private float angle;
+    private bool panKey;
+    public Constants.PanType pan_type;
     private Vector3 offsetAngle;
-
+    
 
     void Start()
     {
+        pan_type = Constants.PanType.MOUSE;
         playerRB.AddForce(0, 200, 0);
         abilities = this.gameObject.GetComponent<Abilities>();
         num_jumps = max_jumps;
@@ -34,17 +44,36 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        //Rotates the player's facing direction based on Mouse X axis movement.
-        angle += camSpeed * Input.GetAxis("Mouse X");
-        offsetAngle = new Vector3(0, angle, 0);
-        transform.eulerAngles = offsetAngle;
-
+        panLeft = Input.GetKey("q");
+        panRight = Input.GetKey("e");
+        if(Input.GetKeyDown("p")) pan_type = pan_type == Constants.PanType.MOUSE ? Constants.PanType.KEY : Constants.PanType.MOUSE;
         leftMove = Input.GetKey("a");
         rightMove = Input.GetKey("d");
         forwardMove = Input.GetKey("w");
         backMove = Input.GetKey("s");
         jump = Input.GetKeyDown(KeyCode.Space);
         ab1 = Input.GetKeyDown(KeyCode.Alpha1);
+
+
+        //Rotates the player's facing direction based on Mouse X axis movement.
+        if (pan_type == Constants.PanType.MOUSE)
+        {
+            angle += camSpeed * Input.GetAxis("Mouse X");
+            offsetAngle = new Vector3(0, angle, 0);
+            transform.eulerAngles = offsetAngle;
+        } else
+        {
+            float axis = 0; ;
+            if (panRight) axis = 1;
+            if (panLeft) axis = -1;
+            angle += camSpeed * axis;
+            offsetAngle = new Vector3(0, angle, 0);
+            transform.eulerAngles = offsetAngle;
+            //if (panRight) transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 90, 0), camSpeed * Time.deltaTime);
+            //else if (panLeft) transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, -90, 0), camSpeed * Time.deltaTime);
+        }
+
+        
     }
 
 
@@ -85,7 +114,10 @@ public class PlayerMovement : MonoBehaviour
             delta_velocity = ((playerRB.velocity + delta_velocity) / (Vector3.Magnitude(playerRB.velocity + delta_velocity) / max_velocity)) - playerRB.velocity;
         }
         
-        playerRB.velocity += delta_velocity;         
+        playerRB.velocity += delta_velocity;
+
+        //if (panKey) pan_type = pan_type == Constants.PanType.MOUSE ? Constants.PanType.KEY : Constants.PanType.MOUSE;
+
 
         if (jump && num_jumps > 0)
         {
