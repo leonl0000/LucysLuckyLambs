@@ -1,0 +1,42 @@
+﻿using UnityEngine;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+
+public static class SaveSystem
+{
+    public static string[] saves = {Application.persistentDataPath + "/save_slot_1.bin",
+        Application.persistentDataPath + "/save_slot_2.bin",
+        Application.persistentDataPath + "/save_slot_3.bin"};
+
+    public static void SaveGame(hellSceneManager hsm, int saveSlot) {
+        string save = saves[saveSlot - 1];
+        BinaryFormatter binaryFormatter = new BinaryFormatter();
+        FileStream stream = new FileStream(save, FileMode.Create);
+
+        SaveData saveData = new SaveData(hsm);
+        binaryFormatter.Serialize(stream, saveData);
+        stream.Close();
+    }
+
+    public static bool SaveFileExists(int saveSlot) {
+        return File.Exists(saves[saveSlot - 1]);
+    }
+
+    public static SaveData LoadGame(int saveSlot) {
+        string save = saves[saveSlot - 1];
+        if(File.Exists(save)) {
+            BinaryFormatter binaryFormatter = new BinaryFormatter();
+            FileStream stream = new FileStream(save, FileMode.Open);
+
+            SaveData saveData = binaryFormatter.Deserialize(stream) as SaveData;
+            stream.Close();
+            return saveData;
+
+
+        } else {
+            Debug.Log(save + " not found");
+            return null;
+        }
+    } 
+
+}
