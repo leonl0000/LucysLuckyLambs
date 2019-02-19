@@ -4,6 +4,8 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 public static class SaveSystem
 {
+    public static int saveSlot = 0;
+
     public static string[] saves = {Application.persistentDataPath + "/save_slot_1.bin",
         Application.persistentDataPath + "/save_slot_2.bin",
         Application.persistentDataPath + "/save_slot_3.bin"};

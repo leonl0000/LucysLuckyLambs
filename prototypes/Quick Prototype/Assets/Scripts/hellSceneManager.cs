@@ -47,6 +47,7 @@ public class hellSceneManager : MonoBehaviour {
         sheepDict = new Dictionary<int, GameObject>();
         lureDict = new Dictionary<int, GameObject>();
         nextIndex = 0;
+        if (SaveSystem.saveSlot != 0) load(SaveSystem.saveSlot);
     }
 
     void FixedUpdate() {
