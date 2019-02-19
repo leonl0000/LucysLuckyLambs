@@ -47,15 +47,17 @@ public class hellSceneManager : MonoBehaviour {
         sheepDict = new Dictionary<int, GameObject>();
         lureDict = new Dictionary<int, GameObject>();
         nextIndex = 0;
+        if (SaveSystem.saveSlot != 0) load(SaveSystem.saveSlot);
     }
 
-    void Update() {
+    void FixedUpdate() {
         updateBoids();
         if (mana > 1000) {
             nextLevel();
         }
     }
 
+    #region Collisions and Falls
 
     //HELLGATE Objects
     public void objectEnterHellgate(GameObject o, hellgateScript hellGate) {
@@ -94,6 +96,7 @@ public class hellSceneManager : MonoBehaviour {
             Destroy(prey);
         }
     }
+    #endregion
 
     public bool spawnSheepAt(Vector3 pos) {
         if (mana > 0) {
@@ -109,7 +112,7 @@ public class hellSceneManager : MonoBehaviour {
     }
 
 
-
+    #region Boids and Lures
     // Update all boids' velocities
     public void updateBoids() {
         // Algorithm overview:
@@ -118,8 +121,8 @@ public class hellSceneManager : MonoBehaviour {
         boidCohereThresholdSQ = boidCohereThreshold * boidCohereThreshold;
 
         // handle boid pair interactions
-        foreach (int i in sheepDict.Keys) {
-            foreach (int j in sheepDict.Keys) {
+        foreach (int i in sheepDict.Keys) { 
+            foreach (int j in sheepDict.Keys) { 
                 if (i<j)
                     // Debug.Log(string.Format("Interacting: sheep {0} -- {1}", i, j));
                     updateBoidPair(sheepDict[i], sheepDict[j]);
@@ -194,15 +197,27 @@ public class hellSceneManager : MonoBehaviour {
         }
     }
 
+    #endregion
 
 
-
-
-
-
-
+    #region Save, Load, and Scene Navigation
     public void nextLevel() {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
+
+    public void save(int slot) {
+        SaveSystem.SaveGame(this, slot);
+    }
+
+    public void load(int slot) {
+        SaveData data = SaveSystem.LoadGame(slot);
+        mana = data.mana;
+        health = data.health;
+        numSheepDropped = data.numSheepDropped;
+        numSheepEaten = data.numSheepEaten;
+        player.transform.position = new Vector3(data.playerPos[0], data.playerPos[1], data.playerPos[2]);
+
+    }
+    #endregion
 
 }

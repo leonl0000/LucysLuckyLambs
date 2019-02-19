@@ -8,8 +8,8 @@ public class spawnGateScript : MonoBehaviour
 
     //spawnTimeout sets interval between sheep, timer counts down from it
     public float spawnTimeout = 1f;
-    private float timer = 1f;
-
+    private float timer;
+    
     private Transform tf; //Position of the spawnGate
 
 
@@ -22,9 +22,7 @@ public class spawnGateScript : MonoBehaviour
     {
         timer -= Time.deltaTime;
         if (timer < 0) {
-            bool b =hsm.spawnSheepAt(tf.position);
-            Debug.Log(b);
-            if (b) timer = spawnTimeout;
+            if (hsm.spawnSheepAt(tf.position)) timer = spawnTimeout;
         }
     }
 }

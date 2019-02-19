@@ -11,13 +11,15 @@ public class sheepScript : MonoBehaviour {
     //Force applied whenever sheep hit the ground
     public float sheepBounce = 15;
 
+    
+
 
     void Start() {
         hsm = FindObjectOfType<hellSceneManager>();
         rb.velocity = new Vector3(2 * MAX_INITIAL_SPEED * (Random.value - .5f), 0, 2 * MAX_INITIAL_SPEED * (Random.value - .5f));
     }
 
-
+    
     void Update() {
         //Check if fallen off
         if (rb.position.y < -10) hsm.objectDrop(this.gameObject);

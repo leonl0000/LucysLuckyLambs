@@ -2,11 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class scoreScript : MonoBehaviour
 {
-    public hellSceneManager hsm;
-    public Text scoreText;
+    private hellSceneManager hsm;
+    private TextMeshProUGUI scoreText;
+
+    void Start() {
+        hsm = GameObject.Find("GameManager").GetComponent<hellSceneManager>();
+        scoreText = gameObject.GetComponent<TextMeshProUGUI>();
+    }
 
     // Update is called once per frame
     void Update()    {
