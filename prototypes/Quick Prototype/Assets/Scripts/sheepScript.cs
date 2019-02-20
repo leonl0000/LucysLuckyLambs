@@ -11,6 +11,10 @@ public class sheepScript : MonoBehaviour {
     //Force applied whenever sheep hit the ground
     public float sheepBounce = 15;
 
+    public float playerApproachThreshold = 200 * 200; // squared distance
+    public float playerAvoidThreshold = 30 * 30;
+    public float boidVelocityNoise = 1;
+
     
 
 
@@ -24,11 +28,22 @@ public class sheepScript : MonoBehaviour {
         //Check if fallen off
         if (rb.position.y < -10) hsm.objectDrop(this.gameObject);
 
-        //Apply force towards player
+        // Approach or avoid the player
         Vector3 playerDelta = hsm.player.transform.position - rb.position;
-        //float force = (playerDelta * Time.deltaTime * hsm.playerBoidInfluence / playerDelta.sqrMagnitude).magnitude;
-        //if (index%10==0) Debug.Log(string.Format("Sheep {0}: force {1:E3}, playerInf {2}", index, force, hsm.playerBoidInfluence));
-        rb.AddForce(playerDelta * Time.deltaTime * hsm.playerBoidInfluence / playerDelta.sqrMagnitude, ForceMode.VelocityChange);
+        if (playerDelta.sqrMagnitude < playerAvoidThreshold)
+        {
+            // Apply force away from player
+            rb.AddForce(-playerDelta * Time.deltaTime * hsm.playerBoidInfluence / playerDelta.sqrMagnitude, ForceMode.VelocityChange);
+        }
+        else if (playerDelta.sqrMagnitude < playerApproachThreshold)
+        {
+            // Apply force towards player
+            //float force = (playerDelta * Time.deltaTime * hsm.playerBoidInfluence / playerDelta.sqrMagnitude).magnitude;
+            //if (index%10==0) Debug.Log(string.Format("Sheep {0}: force {1:E3}, playerInf {2}", index, force, hsm.playerBoidInfluence));
+            rb.AddForce(playerDelta * Time.deltaTime * hsm.playerBoidInfluence / playerDelta.sqrMagnitude, ForceMode.VelocityChange);
+        }
+
+        // Add random acceleration
     }
 
     private void OnCollisionEnter(Collision collision) {
