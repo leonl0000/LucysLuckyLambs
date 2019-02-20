@@ -220,6 +220,9 @@ MonoBehaviour:
   hsm: {fileID: 300832503}
   lure: {fileID: 1167363370957836, guid: 0ce9c58f5df7f6a4db09e62c7557605c, type: 3}
   throw_speed: 16
+  fireball: {fileID: 1650406987346316890, guid: 51c03b48fe9d9ac438c4aa362920d46a,
+    type: 3}
+  fireball_speed: 50
   cam: {fileID: 1826478463}
 --- !u!1 &300832502
 GameObject:
