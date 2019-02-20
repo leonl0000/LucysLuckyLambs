@@ -8,10 +8,15 @@ public class Abilities : MonoBehaviour {
 
     public GameObject lure;
     public int throw_speed;
+    private GameObject spawned_lure;
+
+    public GameObject fireball;
+    public int fireball_speed;
+    private GameObject spawned_fireball;
+
     public Camera cam;
 
     private Transform me_transform;
-    private GameObject spawned_lure;
 
     private int nextIndex = 0;
 
@@ -25,6 +30,16 @@ public class Abilities : MonoBehaviour {
             hsm.lureDict[nextIndex] = spawned_lure;
             spawned_lure.GetComponent<LureScript>().index = nextIndex;
             nextIndex++;
+        }
+    }
+
+    public void SpawnFireball()
+    {
+        if (hsm.mana >= 2)
+        {
+            hsm.mana -= 2;
+            spawned_fireball = Instantiate(fireball, me_transform.position + new Vector3(0, 3, 0), fireball.transform.rotation);
+            spawned_fireball.GetComponent<Rigidbody>().velocity += me_transform.forward * fireball_speed;
         }
     }
 

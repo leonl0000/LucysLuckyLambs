@@ -27,6 +27,7 @@ public class PlayerMovement : MonoBehaviour
     private bool panRight;
     private bool panLeft;
     private bool ab1;
+    private bool ab2;
     private bool jump;
     private float angle;
     private bool panKey;
@@ -53,6 +54,7 @@ public class PlayerMovement : MonoBehaviour
         backMove = Input.GetKey("s");
         jump = Input.GetKeyDown(KeyCode.Space);
         ab1 = Input.GetKeyDown(KeyCode.Alpha1);
+        ab2 = Input.GetKeyDown(KeyCode.Alpha2);
 
 
         //Rotates the player's facing direction based on Mouse X axis movement.
@@ -128,6 +130,10 @@ public class PlayerMovement : MonoBehaviour
         if (ab1)
         {
             abilities.SpawnLure();
+        }
+        if (ab2)
+        {
+            abilities.SpawnFireball();
         }
 
     }
