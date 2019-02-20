@@ -53,6 +53,7 @@ MonoBehaviour:
   sheepBounce: 15
   playerApproachThreshold: 40000
   playerAvoidThreshold: 900
+  boidNoise: 1
 --- !u!54 &509831795981568596
 Rigidbody:
   m_ObjectHideFlags: 0

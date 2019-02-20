@@ -13,7 +13,7 @@ public class sheepScript : MonoBehaviour {
 
     public float playerApproachThreshold = 200 * 200; // squared distance
     public float playerAvoidThreshold = 30 * 30;
-    public float boidVelocityNoise = 1;
+    //public float boidNoise = 1;
 
     
 
@@ -44,6 +44,8 @@ public class sheepScript : MonoBehaviour {
         }
 
         // Add random acceleration
+        //Vector3 randomForce = Random.insideUnitCircle;
+        //rb.AddForce(randomForce * boidNoise, ForceMode.VelocityChange);
     }
 
     private void OnCollisionEnter(Collision collision) {
