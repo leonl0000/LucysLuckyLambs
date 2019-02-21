@@ -82,6 +82,7 @@ GameObject:
   - component: {fileID: 1994853219726146243}
   - component: {fileID: 8865346551465493763}
   - component: {fileID: 5668450362543544136}
+  - component: {fileID: 2763090099558197036}
   m_Layer: 0
   m_Name: Fireball
   m_TagString: Untagged
@@ -158,7 +159,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1650406987346316890}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
@@ -179,6 +180,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &2763090099558197036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1650406987346316890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28ced6cadf8f9684e8c8d6a997f80a0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  explosion: {fileID: 6127004419535111038, guid: 48ff580ea71df3641ba917902ffb8595,
+    type: 3}
 --- !u!1 &6985494247470276553
 GameObject:
   m_ObjectHideFlags: 0
@@ -463,7 +478,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1
+      scalar: 2
       minScalar: 1
       maxCurve:
         serializedVersion: 2
