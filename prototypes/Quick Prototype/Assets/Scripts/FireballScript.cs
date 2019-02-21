@@ -5,6 +5,7 @@ using UnityEngine;
 public class FireballScript : MonoBehaviour
 {
     public GameObject explosion;
+    public float fireballDamage = 10;
 
     // Start is called before the first frame update
     void Start()
@@ -24,8 +25,10 @@ public class FireballScript : MonoBehaviour
         GameObject thisExplosion = Instantiate(explosion, this.gameObject.transform.position, this.gameObject.transform.rotation);
 
         // And call damage-inflicting function on sheep and wolves, etc.
-        //if (collision.collider.tag == "ground")
-        // TODO
+        if (collision.collider.tag == "sheep")
+            collision.gameObject.GetComponent<sheepScript>().wound(fireballDamage, gameObject.transform);
+        else if (collision.collider.tag == "Predator")
+            collision.gameObject.GetComponent<PreditorScript>().wound(fireballDamage, gameObject.transform);
 
         // Destroy fireball
         Destroy(this.gameObject);
