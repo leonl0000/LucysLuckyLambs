@@ -53,7 +53,8 @@ MonoBehaviour:
   sheepBounce: 15
   playerApproachThreshold: 40000
   playerAvoidThreshold: 900
-  boidNoise: 1
+  bloodSplatter: {fileID: 7050866618058274405, guid: 667e304859b18204ea99a7684015a4ff,
+    type: 3}
 --- !u!54 &509831795981568596
 Rigidbody:
   m_ObjectHideFlags: 0

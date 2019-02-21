@@ -13,6 +13,8 @@ public class PreditorScript : MonoBehaviour
     private float timer;
     private GameObject prey;
 
+    public GameObject bloodSplatter;
+
     void Start() {
         timer = chasingTimeout;
         rb = gameObject.GetComponent<Rigidbody>();
@@ -46,6 +48,14 @@ public class PreditorScript : MonoBehaviour
         if (collision.collider.tag == "ground") {
             rb.AddForce(0, 200*Time.deltaTime, 0, ForceMode.VelocityChange);
         } else   hsm.predatorCollision(gameObject, collision.gameObject);
+    }
+
+    public void wound(float damage, Transform site)
+    {
+        // TODO inflict damage, possibly die
+
+        // Spawn blood splatter
+        GameObject thisSplatter = Instantiate(bloodSplatter, site.position, site.rotation);
     }
 }
 

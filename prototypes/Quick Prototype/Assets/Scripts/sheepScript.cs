@@ -15,6 +15,8 @@ public class sheepScript : MonoBehaviour {
     public float playerAvoidThreshold = 30 * 30;
     //public float boidNoise = 1;
 
+    public GameObject bloodSplatter;
+
     
 
 
@@ -55,6 +57,14 @@ public class sheepScript : MonoBehaviour {
             rb.AddForce(0, sheepBounce, 0, ForceMode.VelocityChange);
         }
 
+    }
+
+    public void wound(float damage, Transform site)
+    {
+        // TODO inflict damage, possibly die
+
+        // Spawn blood splatter
+        GameObject thisSplatter = Instantiate(bloodSplatter, site.position, site.rotation);
     }
 
 }

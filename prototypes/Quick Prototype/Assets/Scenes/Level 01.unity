@@ -222,7 +222,7 @@ MonoBehaviour:
   throw_speed: 16
   fireball: {fileID: 1650406987346316890, guid: 51c03b48fe9d9ac438c4aa362920d46a,
     type: 3}
-  fireball_speed: 1
+  fireball_speed: 50
   cam: {fileID: 1826478463}
 --- !u!1 &300832502
 GameObject:
@@ -1706,6 +1706,7 @@ MonoBehaviour:
   chasingTimeout: 10
   maxSquaredDistance: 10000
   rb: {fileID: 0}
+  bloodSplatter: {fileID: 0}
 --- !u!65 &1640364011
 BoxCollider:
   m_ObjectHideFlags: 0
