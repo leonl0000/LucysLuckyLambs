@@ -48,13 +48,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 509831795981568596}
   hsm: {fileID: 0}
-  MAX_INITIAL_SPEED: 40
+  MAX_INITIAL_SPEED: 15
   index: 0
-  sheepBounce: 15
+  maxSheepSpeed: 15
+  maxGoalSize: 15
   playerApproachThreshold: 40000
   playerAvoidThreshold: 900
+  boidNoise: 0.2
+  minStartCountdown: 0.5
+  maxStartCountdown: 2
   bloodSplatter: {fileID: 7050866618058274405, guid: 667e304859b18204ea99a7684015a4ff,
     type: 3}
+  goal: {x: 0, y: 0, z: 0}
+  hopForce: 8
 --- !u!54 &509831795981568596
 Rigidbody:
   m_ObjectHideFlags: 0
