@@ -11,11 +11,12 @@ public class Abilities : MonoBehaviour {
     private GameObject spawned_lure;
 
     public GameObject fireball;
-    public int fireball_speed;
+    public float minFireballSpeed = 40;
+    public float maxFireballSpeed = 100;
     private GameObject spawned_fireball;
     public bool isGrowingFireball = false;
     private float fireballGrowLength;
-    private const float fireballMinPower = 0.1f;
+    private const float fireballMinPower = 0.2f;
     private const float fireballMaxScale = 0.2f;
     private const float fireballParticlesMaxScale = 2;
     private const float fireballMaxGrowLength = 3; // length in seconds to grow fireball to full size
@@ -59,19 +60,23 @@ public class Abilities : MonoBehaviour {
         {
             fireballGrowLength += Time.deltaTime;
             float growFraction = Mathf.Max(Mathf.Min(1, fireballGrowLength / fireballMaxGrowLength), fireballMinPower);
-            float currFireballScale = growFraction * fireballMaxScale;
+            float currPower = fireballMinPower + growFraction * (1 - fireballMinPower);
+            float currFireballScale = currPower * fireballMaxScale;
             spawned_fireball.gameObject.transform.localScale = new Vector3(currFireballScale, currFireballScale, currFireballScale);
-            float currParticleScale = growFraction * fireballParticlesMaxScale;
+            float currParticleScale = currPower * fireballParticlesMaxScale;
             spawned_fireball.transform.GetChild(0).gameObject.transform.localScale = new Vector3(currParticleScale, currParticleScale, currParticleScale);
         }
     }
 
     public void FireballRelease()
     {
-        spawned_fireball.GetComponent<Rigidbody>().velocity += me_transform.forward * fireball_speed;
         isGrowingFireball = false;
         float growFraction = Mathf.Min(1, fireballGrowLength / fireballMaxGrowLength);
-        spawned_fireball.GetComponent<FireballScript>().power = growFraction;
+        float currPower = fireballMinPower + growFraction * (1 - fireballMinPower);
+        spawned_fireball.GetComponent<FireballScript>().power = currPower;
+
+        float fireballSpeed = minFireballSpeed + (1 - currPower) * (maxFireballSpeed - minFireballSpeed);
+        spawned_fireball.GetComponent<Rigidbody>().velocity += me_transform.forward * fireballSpeed;
     }
 
     // Use this for initialization
