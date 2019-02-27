@@ -335,16 +335,15 @@ MonoBehaviour:
   numSheepDropped: 0
   numSheepEaten: 0
   sheep: {fileID: 509831795736211845, guid: 36fb4eefdda37904e8c93007d4cf89c7, type: 3}
-  maxSheepSpeed: 15
-  playerBoidInfluence: 400
+  playerBoidInfluence: 3000
   boidSeparateThreshold: 10
   boidCohereThreshold: 30
   boidAlignThreshold: 20
   boidSeparationStrength: 50
-  boidCoherenceStrength: 200
-  boidAlignmentStrength: 10
+  boidCoherenceStrength: 100
+  boidAlignmentStrength: 20
   lureRange: 100
-  lureStrength: 50
+  lureStrength: 200
 --- !u!4 &300832504
 Transform:
   m_ObjectHideFlags: 0

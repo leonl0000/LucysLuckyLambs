@@ -15,11 +15,12 @@ public class sheepScript : MonoBehaviour {
     public float maxGoalSize = 15;
 
     public float playerApproachThreshold = 200 * 200; // squared distance
-    public float playerAvoidThreshold = 30 * 30;
-    public float boidNoise = 0.2f;
+    public float playerAvoidThreshold = 10 * 10;
+    public float boidNoise = 1f;
+
     private float moveCountdown;
     public float minStartCountdown = 0.5f;
-    public float maxStartCountdown = 2f;
+    public float maxStartCountdown = 1.5f;
     // TODO eventually this will involve panic
 
     public GameObject bloodSplatter;
@@ -27,7 +28,7 @@ public class sheepScript : MonoBehaviour {
     public Vector3 goal;
     // Represents the direction the sheep wants to move in. Sheep takes steps in this direction.
 
-    public float hopForce = 8; // force with which sheep hop up
+    public float hopForce = 4; // force with which sheep hop up
     // TODO eventually this will involve panic
 
     private bool isOnGround = false;
@@ -42,6 +43,18 @@ public class sheepScript : MonoBehaviour {
         moveCountdown = Random.Range(minStartCountdown, maxStartCountdown);
     }
 
+
+    void FixedUpdate() {
+        // Sheep rotate to face goal; this is before each frame to prevent jerky movements
+        if (goal != Vector3.zero)
+        {
+            transform.rotation = Quaternion.LookRotation(goal, Vector3.up);
+            // rotate by another -90 degrees y so it looks forward
+            // TODO is there a way to do this in the unity object viewer? would be faster
+            transform.Rotate(transform.rotation.x, transform.rotation.y - 90, transform.rotation.z);
+        }
+    }
+
     
     void Update() {
         //Check if fallen off
@@ -52,7 +65,7 @@ public class sheepScript : MonoBehaviour {
         if (playerDelta.sqrMagnitude < playerAvoidThreshold)
         {
             // Apply force away from player
-            goal += -playerDelta * Time.deltaTime * hsm.playerBoidInfluence / playerDelta.sqrMagnitude;
+            goal += -playerDelta * Time.deltaTime * hsm.playerBoidInfluence / Mathf.Max(playerDelta.sqrMagnitude, 1);
         }
         else if (playerDelta.sqrMagnitude < playerApproachThreshold)
         {
@@ -60,12 +73,8 @@ public class sheepScript : MonoBehaviour {
             //float force = (playerDelta * Time.deltaTime * hsm.playerBoidInfluence / playerDelta.sqrMagnitude).magnitude;
             //if (index%10==0) Debug.Log(string.Format("Sheep {0}: force {1:E3}, playerInf {2}", index, force, hsm.playerBoidInfluence));
 
-            goal += playerDelta * Time.deltaTime * hsm.playerBoidInfluence / playerDelta.sqrMagnitude;
+            goal += playerDelta * Time.deltaTime * hsm.playerBoidInfluence / Mathf.Max(playerDelta.sqrMagnitude, 1);
         }
-
-        // Add random acceleration
-        Vector3 randomForce = Random.onUnitSphere;
-        goal += randomForce * boidNoise;
 
         goal.y = 0; // goal is on same plane as sheep
 
@@ -83,6 +92,11 @@ public class sheepScript : MonoBehaviour {
                 rb.velocity = rb.velocity.normalized * maxSheepSpeed;
 
             moveCountdown = Random.Range(minStartCountdown, maxStartCountdown);
+            
+            // Add random goal change right after each hop
+            Vector3 randomForce = Random.onUnitSphere;
+            goal += randomForce * boidNoise;
+            goal.y = 0; // goal is on same plane as sheep
         }
         // if a move countdown has passed but it hasn't hit the ground, just assume it's on ground
         // TODO fix this; leaving it out makes sheep freeze, letting them hop when not on ground causes flying sheep
@@ -95,6 +109,9 @@ public class sheepScript : MonoBehaviour {
         {
             moveCountdown -= Time.deltaTime;
         }
+
+        // Debug line to show goal; click on "gizmos" button to show/hide
+        Debug.DrawLine(transform.position, transform.position + goal * 0.3f, Color.red);
     }
 
     private void OnCollisionEnter(Collision collision) {
