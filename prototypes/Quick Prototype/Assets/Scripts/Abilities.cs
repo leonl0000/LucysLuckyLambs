@@ -13,6 +13,11 @@ public class Abilities : MonoBehaviour {
     public GameObject fireball;
     public int fireball_speed;
     private GameObject spawned_fireball;
+    public bool isGrowingFireball = false;
+    private float fireballGrowLength;
+    private const float fireballMaxScale = 0.2f;
+    private const float fireballParticlesMaxScale = 2;
+    private const float fireballMaxGrowLength = 3; // length in seconds to grow fireball to full size
 
     public Camera cam;
 
@@ -33,14 +38,35 @@ public class Abilities : MonoBehaviour {
         }
     }
 
-    public void SpawnFireball()
+    /* Called when fireball key is held down. Can either spawn or grow fireball */
+    public void FireballKey()
     {
-        if (hsm.mana >= 2)
+        // possibly create a new fireball
+        if (!isGrowingFireball && hsm.mana >= 2)
         {
+            isGrowingFireball = true;
+            fireballGrowLength = 0;
             hsm.mana -= 2;
             spawned_fireball = Instantiate(fireball, me_transform.position + new Vector3(0, 3, 0), fireball.transform.rotation);
-            spawned_fireball.GetComponent<Rigidbody>().velocity += me_transform.forward * fireball_speed;
+            spawned_fireball.gameObject.transform.localScale = new Vector3(0, 0, 0);
+            spawned_fireball.transform.GetChild(0).gameObject.transform.localScale = new Vector3(0, 0, 0);
         }
+        // otherwise, grow current fireball
+        else if (isGrowingFireball)
+        {
+            fireballGrowLength += Time.deltaTime;
+            float growFraction = Mathf.Min(1, fireballGrowLength / fireballMaxGrowLength);
+            float currFireballScale = growFraction * fireballMaxScale;
+            spawned_fireball.gameObject.transform.localScale = new Vector3(currFireballScale, currFireballScale, currFireballScale);
+            float currParticleScale = growFraction * fireballParticlesMaxScale;
+            spawned_fireball.transform.GetChild(0).gameObject.transform.localScale = new Vector3(currParticleScale, currParticleScale, currParticleScale);
+        }
+    }
+
+    public void FireballRelease()
+    {
+        spawned_fireball.GetComponent<Rigidbody>().velocity += me_transform.forward * fireball_speed;
+        isGrowingFireball = false;
     }
 
     // Use this for initialization

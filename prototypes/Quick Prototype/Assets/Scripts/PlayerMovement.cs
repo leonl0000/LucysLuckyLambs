@@ -55,7 +55,7 @@ public class PlayerMovement : MonoBehaviour
         backMove = Input.GetKey("s");
         jump = Input.GetKeyDown(KeyCode.Space);
         ab1 = Input.GetKeyDown(KeyCode.Alpha1);
-        ab2 = Input.GetKeyDown(KeyCode.Alpha2);
+        ab2 = Input.GetKey(KeyCode.Alpha2);
 
         //Rotates the player's facing direction based on Mouse X and Y axis movement.
         if (pan_type == Constants.PanType.MOUSE)
@@ -132,9 +132,14 @@ public class PlayerMovement : MonoBehaviour
         {
             abilities.SpawnLure();
         }
+
         if (ab2)
         {
-            abilities.SpawnFireball();
+            abilities.FireballKey();
+        }
+        else if (abilities.isGrowingFireball)
+        {
+            abilities.FireballRelease();
         }
 
     }
