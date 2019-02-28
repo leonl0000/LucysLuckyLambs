@@ -11,8 +11,15 @@ public class Abilities : MonoBehaviour {
     private GameObject spawned_lure;
 
     public GameObject fireball;
-    public int fireball_speed;
+    public float minFireballSpeed = 40;
+    public float maxFireballSpeed = 100;
     private GameObject spawned_fireball;
+    public bool isGrowingFireball = false;
+    private float fireballGrowLength;
+    private const float fireballMinPower = 0.2f;
+    private const float fireballAimSphereMaxScale = 0.4f;
+    private const float fireballParticlesMaxScale = 2;
+    private const float fireballMaxGrowLength = 3; // length in seconds to grow fireball to full size
 
     public Camera cam;
 
@@ -33,14 +40,60 @@ public class Abilities : MonoBehaviour {
         }
     }
 
-    public void SpawnFireball()
+    /* Called when fireball key is held down. Can either spawn or grow fireball */
+    public void FireballKey()
     {
-        if (hsm.mana >= 2)
+        // possibly create a new fireball
+        if (!isGrowingFireball && hsm.mana >= 2)
         {
+            isGrowingFireball = true;
+            fireballGrowLength = 0;
             hsm.mana -= 2;
-            spawned_fireball = Instantiate(fireball, me_transform.position + new Vector3(0, 3, 0), fireball.transform.rotation);
-            spawned_fireball.GetComponent<Rigidbody>().velocity += me_transform.forward * fireball_speed;
+            spawned_fireball = Instantiate(fireball, cam.transform.position + cam.transform.forward * 10, fireball.transform.rotation);
+
+            // deactivate particles while aiming
+            spawned_fireball.gameObject.transform.GetChild(0).gameObject.GetComponent<Renderer>().enabled = false;
+
+            // set fireball aiming sphere's scale
+            float currFireballScale = fireballMinPower * fireballAimSphereMaxScale;
+            spawned_fireball.gameObject.transform.localScale = new Vector3(currFireballScale, currFireballScale, currFireballScale);
         }
+        // otherwise, grow current fireball
+        else if (isGrowingFireball)
+        {
+            // move fireball to new position
+            spawned_fireball.transform.position = cam.transform.position + cam.transform.forward * 10;
+
+            // calculate current power
+            fireballGrowLength += Time.deltaTime;
+            float growFraction = Mathf.Max(Mathf.Min(1, fireballGrowLength / fireballMaxGrowLength), fireballMinPower);
+            float currPower = fireballMinPower + growFraction * (1 - fireballMinPower);
+
+            // set fireball scale according to power
+            float currFireballScale = currPower * fireballAimSphereMaxScale;
+            spawned_fireball.gameObject.transform.localScale = new Vector3(currFireballScale, currFireballScale, currFireballScale);
+        }
+    }
+
+    public void FireballRelease()
+    {
+        // compute fireball power
+        isGrowingFireball = false;
+        float growFraction = Mathf.Min(1, fireballGrowLength / fireballMaxGrowLength);
+        float currPower = fireballMinPower + growFraction * (1 - fireballMinPower);
+        spawned_fireball.GetComponent<FireballScript>().power = currPower;
+
+        // activate particles, and set to right scale
+        spawned_fireball.gameObject.transform.GetChild(0).gameObject.GetComponent<Renderer>().enabled = true;
+        float currParticleScale = currPower * fireballParticlesMaxScale;
+        spawned_fireball.transform.GetChild(0).gameObject.transform.localScale = new Vector3(currParticleScale, currParticleScale, currParticleScale);
+
+        // deactivate the aiming sphere
+        spawned_fireball.gameObject.GetComponent<Renderer>().enabled = false;
+
+        // shoot fireball forward with appropriate speed, smaller ones shoot faster
+        float fireballSpeed = minFireballSpeed + (1 - currPower) * (maxFireballSpeed - minFireballSpeed);
+        spawned_fireball.GetComponent<Rigidbody>().velocity += cam.transform.forward * fireballSpeed;
     }
 
     // Use this for initialization

@@ -26,14 +26,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 509831795736211845}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 3144244993529095787}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!114 &509831795736211844
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -48,13 +48,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 509831795981568596}
   hsm: {fileID: 0}
-  MAX_INITIAL_SPEED: 40
+  MAX_INITIAL_SPEED: 15
   index: 0
-  sheepBounce: 15
+  maxSheepSpeed: 15
+  maxGoalSize: 15
   playerApproachThreshold: 40000
-  playerAvoidThreshold: 900
+  playerAvoidThreshold: 100
+  boidNoise: 1
+  minStartCountdown: 0.5
+  maxStartCountdown: 1.5
   bloodSplatter: {fileID: 7050866618058274405, guid: 667e304859b18204ea99a7684015a4ff,
     type: 3}
+  goal: {x: 0, y: 0, z: 0}
+  hopForce: 4
 --- !u!54 &509831795981568596
 Rigidbody:
   m_ObjectHideFlags: 0
