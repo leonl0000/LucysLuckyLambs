@@ -15,12 +15,9 @@ public class hellSceneManager : MonoBehaviour {
 
 
     public Dictionary<int, GameObject> sheepDict;
-    private int nextIndex;
+    private int nextSheepIndex;
 
     public Dictionary<int, GameObject> lureDict;
-
-
-    public float maxSheepSpeed;
 
     public float playerBoidInfluence = 150f; //multiplied onto the force each sheep gets applied
 
@@ -46,7 +43,7 @@ public class hellSceneManager : MonoBehaviour {
         numSheepEaten = 0;
         sheepDict = new Dictionary<int, GameObject>();
         lureDict = new Dictionary<int, GameObject>();
-        nextIndex = 0;
+        nextSheepIndex = 0;
         if (SaveSystem.saveSlot != 0) load(SaveSystem.saveSlot);
     }
 
@@ -86,7 +83,6 @@ public class hellSceneManager : MonoBehaviour {
             //Debug.Log(string.Format("Sheep {0} dropped", o.GetComponent<sheepScript>().index));
             numSheepDropped += 1;
         }
-
     }
 
     public void predatorCollision(GameObject pred, GameObject prey) {
@@ -102,9 +98,9 @@ public class hellSceneManager : MonoBehaviour {
         if (mana > 0) {
             mana--;
             GameObject s = Instantiate(sheep, pos, sheep.transform.rotation);
-            s.GetComponent<sheepScript>().index = nextIndex;
-            sheepDict[nextIndex] = s;
-            nextIndex++;
+            s.GetComponent<sheepScript>().index = nextSheepIndex;
+            sheepDict[nextSheepIndex] = s;
+            nextSheepIndex++;
             //Debug.Log(string.Format("Sheep {0} Born", s.GetComponent<sheepScript>().index));
             return true;
         }
@@ -136,8 +132,8 @@ public class hellSceneManager : MonoBehaviour {
             foreach (int j in lureDict.Keys)
                 lureAttract(sheep, lureDict[j]);
             // max speed
-            if (sheep.GetComponent<Rigidbody>().velocity.magnitude > maxSheepSpeed)
-                sheep.GetComponent<Rigidbody>().velocity = sheep.GetComponent<Rigidbody>().velocity.normalized * maxSheepSpeed;
+            //if (sheep.GetComponent<Rigidbody>().velocity.magnitude > maxSheepSpeed)
+            //    sheep.GetComponent<Rigidbody>().velocity = sheep.GetComponent<Rigidbody>().velocity.normalized * maxSheepSpeed;
         }
     }
 
@@ -147,7 +143,7 @@ public class hellSceneManager : MonoBehaviour {
         Vector3 sheepToLure = posLure - posSheep;
         var distance = sheepToLure.magnitude;
         if (distance < lureRange) {
-            sheep.GetComponent<Rigidbody>().AddForce(sheepToLure * lureStrength * Time.deltaTime);
+            sheep.GetComponent<sheepScript>().goal += sheepToLure * lureStrength * Time.deltaTime;
         }
     }
 
@@ -156,6 +152,8 @@ public class hellSceneManager : MonoBehaviour {
     {
         Rigidbody bodyA = a.GetComponent<Rigidbody>();
         Rigidbody bodyB = b.GetComponent<Rigidbody>();
+        sheepScript scriptA = a.GetComponent<sheepScript>();
+        sheepScript scriptB = b.GetComponent<sheepScript>();
         Vector3 posA = a.transform.position;
         Vector3 posB = b.transform.position;
         Vector3 aToB = posB - posA;
@@ -177,23 +175,23 @@ public class hellSceneManager : MonoBehaviour {
         if (distance < boidSeparateThreshold)
         {
             // apply separation rule
-            bodyA.AddForce(-aToBNormalizedXZ * boidSeparationStrength * Time.deltaTime / distance);
-            bodyB.AddForce( aToBNormalizedXZ * boidSeparationStrength * Time.deltaTime / distance);
+            scriptA.goal += -aToBNormalizedXZ * boidSeparationStrength * Time.deltaTime / Mathf.Min(1, distance);
+            scriptB.goal += aToBNormalizedXZ * boidSeparationStrength * Time.deltaTime / Mathf.Min(1, distance);
             // also TODO separation rule for player, so boids don't crowd it
         }
         else
         {
             // apply coherence rule
-            bodyA.AddForce( aToBNormalizedXZ * boidCoherenceStrength * Time.deltaTime); // TODO scale down with distance
-            bodyB.AddForce(-aToBNormalizedXZ * boidCoherenceStrength * Time.deltaTime);
+            scriptA.goal += aToBNormalizedXZ * boidCoherenceStrength * Time.deltaTime; // TODO scale down with distance
+            scriptB.goal += -aToBNormalizedXZ * boidCoherenceStrength * Time.deltaTime;
         }
 
         if (distance < boidAlignThreshold)
         {
             // apply alignment rule
-            Vector3 temp = Vector3.Slerp(bodyA.velocity, bodyB.velocity, boidAlignmentStrength * Time.deltaTime); // TODO scale down with distance
-            bodyB.velocity = Vector3.Slerp(bodyB.velocity, bodyA.velocity, boidAlignmentStrength * Time.deltaTime);
-            bodyA.velocity = temp;
+            Vector3 temp = scriptA.goal + Vector3.Slerp(scriptA.goal, scriptB.goal, boidAlignmentStrength * Time.deltaTime); // TODO scale down with distance
+            scriptB.goal += Vector3.Slerp(scriptB.goal, scriptA.goal, boidAlignmentStrength * Time.deltaTime);
+            scriptA.goal = temp;
         }
     }
 
