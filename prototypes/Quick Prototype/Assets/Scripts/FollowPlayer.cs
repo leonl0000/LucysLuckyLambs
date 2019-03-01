@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class FollowPlayer : MonoBehaviour
 {
-    public Transform playerTransform;
+    public GameObject player;
     public Vector3 offset;
     public int positionBack; // how far behind the player the camera is positioned
     public int lookForward; // how far in front of the player the camera is looking
 
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        transform.position = playerTransform.position + (playerTransform.forward * -positionBack) + offset;
-        transform.LookAt(playerTransform.position + playerTransform.forward * lookForward, Vector3.up);
+        Transform cameraTransform = player.GetComponent<PlayerMovement>().cameraTransform;
+        transform.position = player.transform.position + (cameraTransform.forward * -positionBack) + offset;
+        transform.LookAt(player.transform.position + cameraTransform.forward * lookForward, Vector3.up);
     }
 
 }

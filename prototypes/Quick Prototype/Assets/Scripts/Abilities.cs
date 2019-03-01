@@ -20,7 +20,7 @@ public class Abilities : MonoBehaviour {
     private const float fireballAimSphereMaxScale = 0.4f;
     private const float fireballParticlesMaxScale = 2;
     private const float fireballMaxGrowLength = 3; // length in seconds to grow fireball to full size
-    private const float fireMaxLight = 3; // maximum intensity of fireball's light
+    private const float fireballMaxLight = 3; // maximum intensity of fireball's light
 
     public Camera cam;
 
