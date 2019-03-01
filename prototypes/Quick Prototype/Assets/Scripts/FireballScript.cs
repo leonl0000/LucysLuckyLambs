@@ -27,8 +27,9 @@ public class FireballScript : MonoBehaviour
         GameObject thisExplosion = Instantiate(explosion, this.gameObject.transform.position, this.gameObject.transform.rotation);
         // set explosion scale
         thisExplosion.transform.GetChild(0).gameObject.transform.localScale = new Vector3(power, power, power);
+        thisExplosion.transform.GetChild(1).gameObject.transform.localScale = new Vector3(power, power, power);
         // set explosion light intensity
-        thisExplosion.transform.GetChild(0).transform.GetChild(0).gameObject.GetComponent<Light>().intensity = power * fireExplosionMaxLight;
+        thisExplosion.transform.GetChild(1).transform.GetChild(0).gameObject.GetComponent<Light>().intensity = power * fireExplosionMaxLight;
 
         // And call damage-inflicting function on sheep and wolves, etc.
         if (collision.collider.tag == "sheep")
