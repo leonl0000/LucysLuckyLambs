@@ -20,6 +20,7 @@ public class Abilities : MonoBehaviour {
     private const float fireballAimSphereMaxScale = 0.4f;
     private const float fireballParticlesMaxScale = 2;
     private const float fireballMaxGrowLength = 3; // length in seconds to grow fireball to full size
+    private const float fireballMaxLight = 3; // maximum intensity of fireball's light
 
     public Camera cam;
 
@@ -51,7 +52,7 @@ public class Abilities : MonoBehaviour {
             hsm.mana -= 2;
             spawned_fireball = Instantiate(fireball, cam.transform.position + cam.transform.forward * 10, fireball.transform.rotation);
 
-            // deactivate particles while aiming
+            // deactivate particles and light while aiming
             spawned_fireball.gameObject.transform.GetChild(0).gameObject.GetComponent<Renderer>().enabled = false;
 
             // set fireball aiming sphere's scale
@@ -72,6 +73,9 @@ public class Abilities : MonoBehaviour {
             // set fireball scale according to power
             float currFireballScale = currPower * fireballAimSphereMaxScale;
             spawned_fireball.gameObject.transform.localScale = new Vector3(currFireballScale, currFireballScale, currFireballScale);
+
+            // set light intensity according to power
+            spawned_fireball.gameObject.transform.GetChild(1).gameObject.GetComponent<Light>().intensity = currPower * fireballMaxLight;
         }
     }
 

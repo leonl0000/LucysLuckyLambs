@@ -41,9 +41,9 @@ Light:
   m_Enabled: 1
   serializedVersion: 8
   m_Type: 2
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0.75686276, b: 0, a: 1}
   m_Intensity: 1
-  m_Range: 10
+  m_Range: 100
   m_SpotAngle: 30
   m_CookieSize: 10
   m_Shadows:
@@ -208,7 +208,7 @@ GameObject:
   - component: {fileID: 2518987967224779765}
   - component: {fileID: 7079507778524604134}
   m_Layer: 0
-  m_Name: Particle System
+  m_Name: Fire trail particles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
