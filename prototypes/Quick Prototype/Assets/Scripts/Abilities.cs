@@ -28,6 +28,14 @@ public class Abilities : MonoBehaviour {
 
     private int nextIndex = 0;
 
+    void FixedUpdate()
+    {
+        // move currently-growing fireball to new position
+        // done in FixedUpdate so it doesn't lag behind player movement
+        if (isGrowingFireball)
+            spawned_fireball.transform.position = cam.transform.position + cam.transform.forward * 10;
+    }
+
     public void SpawnLure()
     {
         if (hsm.mana >= 2) {
@@ -62,9 +70,6 @@ public class Abilities : MonoBehaviour {
         // otherwise, grow current fireball
         else if (isGrowingFireball)
         {
-            // move fireball to new position
-            spawned_fireball.transform.position = cam.transform.position + cam.transform.forward * 10;
-
             // calculate current power
             fireballGrowLength += Time.deltaTime;
             float growFraction = Mathf.Max(Mathf.Min(1, fireballGrowLength / fireballMaxGrowLength), fireballMinPower);
