@@ -2259,6 +2259,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7362995482438591844, guid: 82b9c46789619ab41a85f7a50809397e,
+        type: 3}
+      propertyPath: timeoutDriftChangeInitial
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7362995482438591844, guid: 82b9c46789619ab41a85f7a50809397e,
+        type: 3}
+      propertyPath: hsm
+      value: 
+      objectReference: {fileID: 300832503}
+    - target: {fileID: 7362995482438591844, guid: 82b9c46789619ab41a85f7a50809397e,
+        type: 3}
+      propertyPath: levitationHeight
+      value: 35
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 82b9c46789619ab41a85f7a50809397e, type: 3}
 --- !u!1 &1845895892

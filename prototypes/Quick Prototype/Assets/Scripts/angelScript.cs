@@ -6,15 +6,32 @@ public enum AngelState { DRIFTING, CHASING_SHEEP, ABDUCTING_SHEEP, ATTACKING_PLA
 
 public class angelScript : MonoBehaviour
 {
+    public hellSceneManager hsm;
     private Vector3 spawnPoint;
     private AngelState state;
     private Rigidbody rb;
 
+    public float levitationHeight = 35;
+
+    public float driftProbability = 0.4f;
+    public float chaseProbability = 0.5f;
+    // remaining probability is attackProbability
+
     private float timeoutDriftChange;
-    public float timeoutDriftChangeInitial = 3;
+    public float timeoutDriftChangeInitial = 1;
+    private float timeoutDriftStop;
+    public float timeoutDriftStopInitial = 10;
     private Vector3 driftDir; // direction we're drifting in
     public float driftOriginBias = 0.2f;
     public float driftSpeed = 3;
+
+    public float sheepChaseDist = 100;
+    private GameObject sheepChaseTarget;
+    private float timeoutChaseStop;
+    public float timeoutChaseStopInitial = 30;
+    private float timeoutChaseRedirect;
+    public float timeoutChaseRedirectInitial = 1;
+    public float chaseSpeed = 5;
 
     // Start is called before the first frame update
     void Start()
@@ -26,9 +43,19 @@ public class angelScript : MonoBehaviour
 
     void randomNextActivity()
     {
-        // TODO other two branches
-        state = AngelState.DRIFTING;
-        startDrifting();
+        float randomNum = Random.value;
+
+        if (randomNum < driftProbability)
+        {
+            state = AngelState.DRIFTING;
+            startDrifting();
+        }
+        else if (randomNum < driftProbability + chaseProbability)
+        {
+            state = AngelState.CHASING_SHEEP;
+            startChasing();
+        }
+        // TODO attack branch
     }
 
     void startDrifting()
@@ -40,7 +67,30 @@ public class angelScript : MonoBehaviour
             driftDir = new Vector3(1, 0, 1);
         driftDir /= driftDir.magnitude;
 
+        timeoutDriftStop = timeoutDriftStopInitial;
+
         updateDriftDir();
+    }
+
+    void startChasing()
+    {
+        // Find random sheep within sheepChaseDist
+        int numSheepConsidered = 0;
+        foreach (int index in hsm.sheepDict.Keys)
+        {
+            GameObject sheep = hsm.sheepDict[index];
+            float distance = (sheep.transform.position - transform.position).magnitude;
+            if (distance < sheepChaseDist)
+            {
+                numSheepConsidered++;
+                if (numSheepConsidered == 1 || Random.value < (1 / numSheepConsidered))
+                    sheepChaseTarget = sheep;
+            }
+        }
+
+        timeoutChaseStop = timeoutChaseStopInitial;
+
+        updateChaseDir();
     }
 
     // Update is called once per frame
@@ -48,12 +98,28 @@ public class angelScript : MonoBehaviour
     {
         if (state == AngelState.DRIFTING)
         {
+            timeoutDriftStop -= Time.deltaTime;
+            if (timeoutDriftStop <= 0)
+            {
+                randomNextActivity();
+                return;
+            }
             timeoutDriftChange -= Time.deltaTime;
             if (timeoutDriftChange <= 0)
-            {
                 updateDriftDir();
+            // TODO check if wounded
+        }
+        else if (state == AngelState.CHASING_SHEEP)
+        {
+            timeoutChaseStop -= Time.deltaTime;
+            if (timeoutChaseStop <= 0)
+            {
+                randomNextActivity();
+                return;
             }
-            // TODO drift timeout
+            timeoutChaseRedirect -= Time.deltaTime;
+            if (timeoutChaseRedirect <= 0)
+                updateChaseDir();
             // TODO check if wounded
         }
         // TODO other states
@@ -68,12 +134,25 @@ public class angelScript : MonoBehaviour
         // change drift dest to be closer to spawn point, by interpolating
         driftDest += driftOriginBias * spawnPoint + (1 - driftOriginBias) * driftDest;
         // add random modification
-        driftDir += Random.onUnitSphere;
-        driftDir.y = 0;
+        driftDest += Random.onUnitSphere;
         // update driftDir, and normalize
         driftDir = (driftDest - transform.position);
+        driftDir.y = 0;
         driftDir /= driftDir.magnitude;
         // move in direction driftDir
         rb.velocity = driftDir * driftSpeed;
+    }
+
+    void updateChaseDir()
+    {
+        timeoutChaseRedirect = timeoutChaseRedirectInitial;
+
+        // compute goal
+        Vector3 goal = sheepChaseTarget.transform.position;
+        goal.y += levitationHeight;
+        // move towards goal
+        Vector3 chaseDir = goal - transform.position;
+        chaseDir /= chaseDir.magnitude;
+        rb.velocity = chaseDir * chaseSpeed;
     }
 }
