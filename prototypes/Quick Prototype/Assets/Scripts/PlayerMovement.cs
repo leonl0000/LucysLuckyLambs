@@ -34,6 +34,7 @@ public class PlayerMovement : MonoBehaviour
     private bool panKey;
     public Constants.PanType pan_type;
     private Vector3 offsetAngle;
+    public Transform cameraTransform;
     
 
     void Start()
@@ -42,6 +43,11 @@ public class PlayerMovement : MonoBehaviour
         playerRB.AddForce(0, 200, 0);
         abilities = this.gameObject.GetComponent<Abilities>();
         num_jumps = max_jumps;
+
+        GameObject tempObj = new GameObject();
+        tempObj.transform.position = transform.position;
+        tempObj.transform.eulerAngles = transform.eulerAngles;
+        cameraTransform = tempObj.transform;
     }
 
     private void Update()
@@ -63,7 +69,8 @@ public class PlayerMovement : MonoBehaviour
             xangle += camSpeed * Input.GetAxis("Mouse X");
             yangle += camSpeed * Input.GetAxis("Mouse Y");
             offsetAngle = new Vector3(yangle, xangle, 0);
-            transform.eulerAngles = offsetAngle;
+            cameraTransform.eulerAngles = offsetAngle;
+            transform.eulerAngles = new Vector3(0, xangle, 0);
         } else
         {
             float axis = 0; ;
@@ -71,6 +78,7 @@ public class PlayerMovement : MonoBehaviour
             if (panLeft) axis = -1;
             xangle += camSpeed * axis;
             offsetAngle = new Vector3(0, xangle, 0);
+            cameraTransform.eulerAngles = offsetAngle;
             transform.eulerAngles = offsetAngle;
             //if (panRight) transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 90, 0), camSpeed * Time.deltaTime);
             //else if (panLeft) transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, -90, 0), camSpeed * Time.deltaTime);

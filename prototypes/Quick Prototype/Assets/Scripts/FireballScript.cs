@@ -5,8 +5,9 @@ using UnityEngine;
 public class FireballScript : MonoBehaviour
 {
     public GameObject explosion;
-    public float maxFireballDamage = 10;
+    public float maxFireballDamage = 10; // damage scales with square of fireball power
     public float power; // set when cast, between 0 and 1, denotes charging time
+    private const float fireExplosionMaxLight = 4; // maximum intensity of fireball's light
 
     // Start is called before the first frame update
     void Start()
@@ -24,13 +25,17 @@ public class FireballScript : MonoBehaviour
     {
         // Spawn explosion
         GameObject thisExplosion = Instantiate(explosion, this.gameObject.transform.position, this.gameObject.transform.rotation);
+        // set explosion scale
         thisExplosion.transform.GetChild(0).gameObject.transform.localScale = new Vector3(power, power, power);
+        thisExplosion.transform.GetChild(1).gameObject.transform.localScale = new Vector3(power, power, power);
+        // set explosion light intensity
+        thisExplosion.transform.GetChild(1).transform.GetChild(0).gameObject.GetComponent<Light>().intensity = power * fireExplosionMaxLight;
 
         // And call damage-inflicting function on sheep and wolves, etc.
         if (collision.collider.tag == "sheep")
-            collision.gameObject.GetComponent<sheepScript>().wound(maxFireballDamage * power, gameObject.transform);
+            collision.gameObject.GetComponent<sheepScript>().wound(maxFireballDamage * power * power, gameObject.transform);
         else if (collision.collider.tag == "Predator")
-            collision.gameObject.GetComponent<PreditorScript>().wound(maxFireballDamage * power, gameObject.transform);
+            collision.gameObject.GetComponent<PreditorScript>().wound(maxFireballDamage * power * power, gameObject.transform);
 
         // Destroy fireball
         Destroy(this.gameObject);

@@ -61,6 +61,8 @@ MonoBehaviour:
     type: 3}
   goal: {x: 0, y: 0, z: 0}
   hopForce: 4
+  oldGoalPersistence: 0.5
+  newGoalStrength: 0.5
 --- !u!54 &509831795981568596
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -84,7 +86,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 509831795736211845}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 96c7bda18f61a994cab9eb2e1c7b2d79, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 2.1466174
