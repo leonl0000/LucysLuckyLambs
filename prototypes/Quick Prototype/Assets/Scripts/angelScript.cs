@@ -25,7 +25,7 @@ public class angelScript : MonoBehaviour
     public float driftOriginBias = 0.2f;
     public float driftSpeed = 3;
 
-    public float sheepChaseDist = 100;
+    public float sheepChaseDist = 140;
     private GameObject sheepChaseTarget;
     private float timeoutChaseStop;
     public float timeoutChaseStopInitial = 30;
@@ -33,11 +33,23 @@ public class angelScript : MonoBehaviour
     public float timeoutChaseRedirectInitial = 1;
     public float chaseSpeed = 5;
 
+    public float abductStartDist = 50; // must be greater then levitationHeight
+    private float timeoutAbductStop;
+    public float timeoutAbductStopInitial = 60;
+
+    public Color beamStartCol = Color.white;
+    public Color beamEndCol = Color.cyan;
+    public float beamStartAlpha = 0.7f;
+    public float beamEndAlpha = 0.3f;
+    private LineRenderer lineRenderer;
+    public Material abductBeamMat;
+
     // Start is called before the first frame update
     void Start()
     {
         spawnPoint = transform.position;
         rb = gameObject.GetComponent<Rigidbody>();
+        hsm = FindObjectOfType<hellSceneManager>();
         randomNextActivity();
     }
 
@@ -76,17 +88,28 @@ public class angelScript : MonoBehaviour
     {
         // Find random sheep within sheepChaseDist
         int numSheepConsidered = 0;
-        foreach (int index in hsm.sheepDict.Keys)
+        if (hsm.sheepDict.Count > 0)
         {
-            GameObject sheep = hsm.sheepDict[index];
-            float distance = (sheep.transform.position - transform.position).magnitude;
-            if (distance < sheepChaseDist)
+            foreach (int index in hsm.sheepDict.Keys)
             {
-                numSheepConsidered++;
-                if (numSheepConsidered == 1 || Random.value < (1 / numSheepConsidered))
-                    sheepChaseTarget = sheep;
+                GameObject sheep = hsm.sheepDict[index];
+                float distance = (sheep.transform.position - transform.position).magnitude;
+                if (distance < sheepChaseDist)
+                {
+                    numSheepConsidered++;
+                    if ((numSheepConsidered == 1) || (Random.value < (1 / numSheepConsidered)))
+                        sheepChaseTarget = sheep;
+                }
             }
         }
+
+        // if no nearby sheep, just drift
+        if (numSheepConsidered == 0)
+        {
+            state = AngelState.DRIFTING;
+            startDrifting();
+        }
+
 
         timeoutChaseStop = timeoutChaseStopInitial;
 
@@ -122,7 +145,17 @@ public class angelScript : MonoBehaviour
                 updateChaseDir();
             // TODO check if wounded
         }
-        // TODO other states
+        else if (state == AngelState.ABDUCTING_SHEEP)
+        {
+            timeoutAbductStop -= Time.deltaTime;
+            if (timeoutAbductStop <= 0)
+            {
+                randomNextActivity();
+                return;
+            }
+            updateAbduct();
+        }
+        // TODO attacking state
     }
 
     void updateDriftDir()
@@ -145,6 +178,16 @@ public class angelScript : MonoBehaviour
 
     void updateChaseDir()
     {
+        // check whether we can transition to abduction
+        float dist = (sheepChaseTarget.transform.position - transform.position).magnitude;
+        Debug.Log(string.Format("start abduction? dist is {0}", dist));
+        if (dist <= abductStartDist)
+        {
+            state = AngelState.ABDUCTING_SHEEP;
+            startAbducting();
+            return;
+        }
+
         timeoutChaseRedirect = timeoutChaseRedirectInitial;
 
         // compute goal
@@ -154,5 +197,48 @@ public class angelScript : MonoBehaviour
         Vector3 chaseDir = goal - transform.position;
         chaseDir /= chaseDir.magnitude;
         rb.velocity = chaseDir * chaseSpeed;
+    }
+
+    void startAbducting()
+    {
+        Debug.Log("startAbducting");
+        timeoutAbductStop = timeoutAbductStopInitial;
+
+        // create beam
+        lineRenderer = gameObject.AddComponent<LineRenderer>();
+        lineRenderer.material = abductBeamMat;
+        lineRenderer.widthMultiplier = 0.2f;
+        lineRenderer.positionCount = 2;
+        
+        Gradient gradient = new Gradient();
+        gradient.SetKeys(
+            new GradientColorKey[] { new GradientColorKey(beamStartCol, 0.0f), new GradientColorKey(beamEndCol, 1.0f) },
+            new GradientAlphaKey[] { new GradientAlphaKey(beamStartAlpha, 0.0f), new GradientAlphaKey(beamEndAlpha, 1.0f) }
+        );
+        lineRenderer.colorGradient = gradient;
+
+        updateAbduct();
+    }
+
+    void updateAbduct()
+    {
+        // set velocity to 0
+        rb.velocity = new Vector3(0, 0, 0);
+
+        // update beam
+        var points = new Vector3[2];
+        points[0] = transform.position;
+        points[1] = sheepChaseTarget.transform.position;
+        lineRenderer.SetPositions(points);
+
+        // update sheep velocity
+        // TODO
+
+        // TODO turn towards sheep
+    }
+
+    void endAbducting()
+    {
+        // TODO destroy linerenderer
     }
 }
