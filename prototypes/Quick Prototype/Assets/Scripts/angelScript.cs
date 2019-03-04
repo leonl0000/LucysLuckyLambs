@@ -36,6 +36,9 @@ public class angelScript : MonoBehaviour
     public float abductStartDist = 50; // must be greater then levitationHeight
     private float timeoutAbductStop;
     public float timeoutAbductStopInitial = 60;
+    public float abductStopDist = 70;
+    public float abductSpeed = 5;
+    public float abductDoneDist = 10;
 
     public Color beamStartCol = Color.white;
     public Color beamEndCol = Color.cyan;
@@ -50,6 +53,19 @@ public class angelScript : MonoBehaviour
         spawnPoint = transform.position;
         rb = gameObject.GetComponent<Rigidbody>();
         hsm = FindObjectOfType<hellSceneManager>();
+
+        // create abduction beam
+        lineRenderer = gameObject.AddComponent<LineRenderer>();
+        lineRenderer.material = abductBeamMat;
+        lineRenderer.widthMultiplier = 0.2f;
+        Gradient gradient = new Gradient();
+        gradient.SetKeys(
+            new GradientColorKey[] { new GradientColorKey(beamStartCol, 0.0f), new GradientColorKey(beamEndCol, 1.0f) },
+            new GradientAlphaKey[] { new GradientAlphaKey(beamStartAlpha, 0.0f), new GradientAlphaKey(beamEndAlpha, 1.0f) }
+        );
+        lineRenderer.colorGradient = gradient;
+        lineRenderer.positionCount = 0;
+
         randomNextActivity();
     }
 
@@ -150,6 +166,7 @@ public class angelScript : MonoBehaviour
             timeoutAbductStop -= Time.deltaTime;
             if (timeoutAbductStop <= 0)
             {
+                endAbducting();
                 randomNextActivity();
                 return;
             }
@@ -204,19 +221,7 @@ public class angelScript : MonoBehaviour
         Debug.Log("startAbducting");
         timeoutAbductStop = timeoutAbductStopInitial;
 
-        // create beam
-        lineRenderer = gameObject.AddComponent<LineRenderer>();
-        lineRenderer.material = abductBeamMat;
-        lineRenderer.widthMultiplier = 0.2f;
         lineRenderer.positionCount = 2;
-        
-        Gradient gradient = new Gradient();
-        gradient.SetKeys(
-            new GradientColorKey[] { new GradientColorKey(beamStartCol, 0.0f), new GradientColorKey(beamEndCol, 1.0f) },
-            new GradientAlphaKey[] { new GradientAlphaKey(beamStartAlpha, 0.0f), new GradientAlphaKey(beamEndAlpha, 1.0f) }
-        );
-        lineRenderer.colorGradient = gradient;
-
         updateAbduct();
     }
 
@@ -231,14 +236,39 @@ public class angelScript : MonoBehaviour
         points[1] = sheepChaseTarget.transform.position;
         lineRenderer.SetPositions(points);
 
+        // check whether sheep is out of abduction range
+        Vector3 sheepToAngel = transform.position - sheepChaseTarget.transform.position;
+        if (sheepToAngel.magnitude > abductStopDist)
+        {
+            endAbducting();
+            randomNextActivity();
+            return;
+        }
+
+        // check whether sheep is close enough to disappear
+        if (sheepToAngel.magnitude < abductDoneDist)
+        {
+            // disappear sheep
+            hsm.objectDrop(sheepChaseTarget);
+
+            // TODO spawn particle effect
+
+            // move out of abduction mode
+            endAbducting();
+            randomNextActivity();
+            return;
+        }
+
         // update sheep velocity
-        // TODO
+        Rigidbody sheepRB = sheepChaseTarget.GetComponent<Rigidbody>();
+        sheepRB.velocity = (sheepToAngel / sheepToAngel.magnitude) * abductSpeed;
 
         // TODO turn towards sheep
     }
 
     void endAbducting()
     {
-        // TODO destroy linerenderer
+        // make linerenderer stop rendering
+        lineRenderer.positionCount = 0;
     }
 }
