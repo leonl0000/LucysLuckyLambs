@@ -276,11 +276,13 @@ public class angelScript : MonoBehaviour
         // set velocity to 0
         rb.velocity = new Vector3(0, 0, 0);
 
-        // update beam
-        var points = new Vector3[2];
-        points[0] = transform.position;
-        points[1] = sheepChaseTarget.transform.position;
-        lineRenderer.SetPositions(points);
+        // Check whether sheep has somehow died
+        if (sheepChaseTarget == null)
+        {
+            endAbducting();
+            randomNextActivity();
+            return;
+        }
 
         // check whether sheep is out of abduction range
         Vector3 sheepToAngel = transform.position - sheepChaseTarget.transform.position;
@@ -304,6 +306,12 @@ public class angelScript : MonoBehaviour
             randomNextActivity();
             return;
         }
+
+        // update beam
+        var points = new Vector3[2];
+        points[0] = transform.position;
+        points[1] = sheepChaseTarget.transform.position;
+        lineRenderer.SetPositions(points);
 
         // update sheep velocity
         Rigidbody sheepRB = sheepChaseTarget.GetComponent<Rigidbody>();
