@@ -2920,6 +2920,21 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 170161253}
+    - target: {fileID: 7362995482438591844, guid: 82b9c46789619ab41a85f7a50809397e,
+        type: 3}
+      propertyPath: chaseProbability
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7362995482438591844, guid: 82b9c46789619ab41a85f7a50809397e,
+        type: 3}
+      propertyPath: driftProbability
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7362995482438591844, guid: 82b9c46789619ab41a85f7a50809397e,
+        type: 3}
+      propertyPath: timeoutAttackStopInitial
+      value: 30
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 82b9c46789619ab41a85f7a50809397e, type: 3}
 --- !u!1 &1845895892
