@@ -134,6 +134,7 @@ public class angelScript : MonoBehaviour
         {
             state = AngelState.DRIFTING;
             startDrifting();
+            return;
         }
 
 
