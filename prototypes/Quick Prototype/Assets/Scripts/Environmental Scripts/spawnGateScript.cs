@@ -20,9 +20,9 @@ public class spawnGateScript : MonoBehaviour
 
     void Update()
     {
-        timer -= Time.deltaTime;
-        if (timer < 0) {
-            if (hsm.spawnSheepAt(tf.position)) timer = spawnTimeout;
-        }
+        //timer -= Time.deltaTime;
+        //if (timer < 0) {
+        //    if (hsm.spawnSheepAt(tf.position)) timer = spawnTimeout;
+        //}
     }
 }
