@@ -75,7 +75,7 @@ public class hellSceneManager : MonoBehaviour {
                 break;
 
             case 3:
-                spawnSheepAt(spawnGate.position);
+                spawnSheep();
                 break;
         }
     }
@@ -129,6 +129,11 @@ public class hellSceneManager : MonoBehaviour {
         }
     }
     #endregion
+
+    public bool spawnSheep() {
+        return spawnSheepAt(spawnGate.position);
+
+    }
 
     public bool spawnSheepAt(Vector3 pos) {
         if (mana > 0) {
