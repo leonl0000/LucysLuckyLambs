@@ -35,7 +35,7 @@ public class FireballScript : MonoBehaviour
         if (collision.collider.tag == "sheep")
             collision.gameObject.GetComponent<sheepScript>().wound(maxFireballDamage * power * power, gameObject.transform);
         else if (collision.collider.tag == "Predator")
-            collision.gameObject.GetComponent<PreditorScript>().wound(maxFireballDamage * power * power, gameObject.transform);
+            collision.gameObject.GetComponent<PredatorScript>().wound(maxFireballDamage * power * power, gameObject.transform);
 
         // Destroy fireball
         Destroy(this.gameObject);
