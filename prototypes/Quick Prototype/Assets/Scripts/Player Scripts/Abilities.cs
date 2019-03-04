@@ -86,23 +86,25 @@ public class Abilities : MonoBehaviour {
 
     public void FireballRelease()
     {
-        // compute fireball power
-        isGrowingFireball = false;
-        float growFraction = Mathf.Min(1, fireballGrowLength / fireballMaxGrowLength);
-        float currPower = fireballMinPower + growFraction * (1 - fireballMinPower);
-        spawned_fireball.GetComponent<FireballScript>().power = currPower;
+        if (isGrowingFireball) {
+            // compute fireball power
+            isGrowingFireball = false;
+            float growFraction = Mathf.Min(1, fireballGrowLength / fireballMaxGrowLength);
+            float currPower = fireballMinPower + growFraction * (1 - fireballMinPower);
+            spawned_fireball.GetComponent<FireballScript>().power = currPower;
 
-        // activate particles, and set to right scale
-        spawned_fireball.gameObject.transform.GetChild(0).gameObject.GetComponent<Renderer>().enabled = true;
-        float currParticleScale = currPower * fireballParticlesMaxScale;
-        spawned_fireball.transform.GetChild(0).gameObject.transform.localScale = new Vector3(currParticleScale, currParticleScale, currParticleScale);
+            // activate particles, and set to right scale
+            spawned_fireball.gameObject.transform.GetChild(0).gameObject.GetComponent<Renderer>().enabled = true;
+            float currParticleScale = currPower * fireballParticlesMaxScale;
+            spawned_fireball.transform.GetChild(0).gameObject.transform.localScale = new Vector3(currParticleScale, currParticleScale, currParticleScale);
 
-        // deactivate the aiming sphere
-        spawned_fireball.gameObject.GetComponent<Renderer>().enabled = false;
+            // deactivate the aiming sphere
+            spawned_fireball.gameObject.GetComponent<Renderer>().enabled = false;
 
-        // shoot fireball forward with appropriate speed, smaller ones shoot faster
-        float fireballSpeed = minFireballSpeed + (1 - currPower) * (maxFireballSpeed - minFireballSpeed);
-        spawned_fireball.GetComponent<Rigidbody>().velocity += cam.transform.forward * fireballSpeed;
+            // shoot fireball forward with appropriate speed, smaller ones shoot faster
+            float fireballSpeed = minFireballSpeed + (1 - currPower) * (maxFireballSpeed - minFireballSpeed);
+            spawned_fireball.GetComponent<Rigidbody>().velocity += cam.transform.forward * fireballSpeed;
+        }
     }
 
     public void spawnSheep() {
