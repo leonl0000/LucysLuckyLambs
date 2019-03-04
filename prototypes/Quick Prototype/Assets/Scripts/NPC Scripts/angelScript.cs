@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum AngelState { DRIFTING, CHASING_SHEEP, ABDUCTING_SHEEP, ATTACKING_PLAYER };
+public enum AngelState { DRIFTING, CHASING_SHEEP, ABDUCTING_SHEEP, ATTACKING_PLAYER, NULL };
 
 public class angelScript : MonoBehaviour
 {
@@ -50,8 +50,17 @@ public class angelScript : MonoBehaviour
 
     public float maxAutoAttackDist = 90;
     private float timeoutAttackStop;
-    public float timeoutAttackStopInitial;
+    public float timeoutAttackStopInitial = 30;
     public float attackMoveRandomStrength = 1;
+    public float attackSpeed = 10;
+    private float timeoutAttackUpdate;
+    public float timeoutAttackUpdateInitial = 3;
+    private float timeoutShoot;
+    public float timeoutShootInitial = 2;
+    public float maxShotRange = 70;
+    public GameObject bolt;
+    public float boltSpawnDist = 2;
+    public float boltSpeed = 40;
 
     // Start is called before the first frame update
     void Start()
@@ -72,7 +81,7 @@ public class angelScript : MonoBehaviour
         lineRenderer.colorGradient = gradient;
         lineRenderer.positionCount = 0;
 
-        randomNextActivity();
+        state = AngelState.NULL;
     }
 
     void randomNextActivity()
@@ -92,7 +101,7 @@ public class angelScript : MonoBehaviour
         else
         {
             state = AngelState.ATTACKING_PLAYER;
-            startAttacking();
+            startSpontaneouslyAttacking();
         }
     }
 
@@ -143,7 +152,7 @@ public class angelScript : MonoBehaviour
         updateChaseDir();
     }
 
-    void startAttacking()
+    void startSpontaneouslyAttacking()
     {
         // Check if player close enough to spontaneously attack
         float dist = (player.transform.position - transform.position).magnitude;
@@ -153,7 +162,15 @@ public class angelScript : MonoBehaviour
             return;
         }
 
+        startAttacking();
+    }
+
+    void startAttacking()
+    {
+        // TODO wounded checks should automatically call this, not startSpontaneouslyAttacking, so there's no distance cap on reactive attacks
         timeoutAttackStop = timeoutAttackStopInitial;
+        timeoutAttackUpdate = timeoutAttackUpdateInitial;
+        timeoutShoot = timeoutShootInitial;
 
         updateAttack();
     }
@@ -161,7 +178,11 @@ public class angelScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (state == AngelState.DRIFTING)
+        if (state == AngelState.NULL)
+        {
+            randomNextActivity();
+        }
+        else if (state == AngelState.DRIFTING)
         {
             timeoutDriftStop -= Time.deltaTime;
             if (timeoutDriftStop <= 0)
@@ -206,12 +227,38 @@ public class angelScript : MonoBehaviour
                 randomNextActivity();
                 return;
             }
-            updateAttack();
+            timeoutAttackUpdate -= Time.deltaTime;
+            if (timeoutAttackUpdate <= 0)
+            {
+                updateAttack();
+            }
+            timeoutShoot -= Time.deltaTime;
+            if (timeoutShoot <= 0)
+            {
+                shoot();
+            }
         }
+    }
+
+    void shoot()
+    {
+        Debug.Log("shoot");
+        timeoutShoot = timeoutShootInitial;
+        Vector3 angelToPlayer = player.transform.position - transform.position;
+        if (angelToPlayer.magnitude > maxShotRange)
+            return;
+
+        Vector3 boltDir = angelToPlayer / angelToPlayer.magnitude;
+        Vector3 shotSpawnPoint = transform.position + boltDir * boltSpawnDist;
+        GameObject spawned_bolt = Instantiate(bolt, shotSpawnPoint, transform.rotation);
+        spawned_bolt.GetComponent<Rigidbody>().velocity = boltDir * boltSpeed;
     }
 
     void updateAttack()
     {
+        Debug.Log("updateAttack");
+        timeoutAttackUpdate = timeoutAttackUpdateInitial;
+
         // Find position we want to head to
         Vector3 goalPos = player.transform.position + new Vector3(0, levitationHeight, 0);
         // Find goal displacement, and normalize
@@ -219,6 +266,9 @@ public class angelScript : MonoBehaviour
         goalDisplacement /= goalDisplacement.magnitude;
         // add random factor
         goalDisplacement += Random.onUnitSphere * attackMoveRandomStrength;
+
+        // Move towards goal
+        rb.velocity = (goalDisplacement / goalDisplacement.magnitude) * attackSpeed;
     }
 
     void updateDriftDir()
