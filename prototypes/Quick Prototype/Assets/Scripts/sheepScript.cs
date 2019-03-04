@@ -14,13 +14,9 @@ public class sheepScript : MonoBehaviour {
     public float maxSheepSpeed = 15;
     public float maxGoalSize = 15;
 
-    public float playerApproachThreshold = 200 * 200; // squared distance
-    public float playerAvoidThreshold = 10 * 10;
-    public float boidNoise = 1f;
-
     private float moveCountdown;
-    public float minStartCountdown = 0.5f;
-    public float maxStartCountdown = 1.5f;
+    public float minStartCountdown = 0.7f;
+    public float maxStartCountdown = 2.0f;
     // TODO eventually this will involve panic
 
     public GameObject bloodSplatter;
@@ -32,6 +28,10 @@ public class sheepScript : MonoBehaviour {
     // TODO eventually this will involve panic
 
     private bool isOnGround = false;
+
+
+    public float oldGoalPersistence = 0.5f;
+    public float newGoalStrength = 0.5f;
 
 
 
@@ -60,28 +60,6 @@ public class sheepScript : MonoBehaviour {
         //Check if fallen off
         if (rb.position.y < -10) hsm.objectDrop(this.gameObject);
 
-        // Approach or avoid the player
-        Vector3 playerDelta = hsm.player.transform.position - rb.position;
-        if (playerDelta.sqrMagnitude < playerAvoidThreshold)
-        {
-            // Apply force away from player
-            goal += -playerDelta * Time.deltaTime * hsm.playerBoidInfluence / Mathf.Max(playerDelta.sqrMagnitude, 1);
-        }
-        else if (playerDelta.sqrMagnitude < playerApproachThreshold)
-        {
-            // Apply force towards player
-            //float force = (playerDelta * Time.deltaTime * hsm.playerBoidInfluence / playerDelta.sqrMagnitude).magnitude;
-            //if (index%10==0) Debug.Log(string.Format("Sheep {0}: force {1:E3}, playerInf {2}", index, force, hsm.playerBoidInfluence));
-
-            goal += playerDelta * Time.deltaTime * hsm.playerBoidInfluence / Mathf.Max(playerDelta.sqrMagnitude, 1);
-        }
-
-        goal.y = 0; // goal is on same plane as sheep
-
-        // prevent goal from exceeding maximum magnitude
-        if (goal.magnitude > maxGoalSize)
-            goal = goal.normalized * maxGoalSize;
-
         // If countdown ended, move in direction of goal.
         if (moveCountdown <= 0 && isOnGround)
         {
@@ -92,10 +70,7 @@ public class sheepScript : MonoBehaviour {
                 rb.velocity = rb.velocity.normalized * maxSheepSpeed;
 
             moveCountdown = Random.Range(minStartCountdown, maxStartCountdown);
-            
-            // Add random goal change right after each hop
-            Vector3 randomForce = Random.onUnitSphere;
-            goal += randomForce * boidNoise;
+
             goal.y = 0; // goal is on same plane as sheep
         }
         // if a move countdown has passed but it hasn't hit the ground, just assume it's on ground
@@ -104,6 +79,7 @@ public class sheepScript : MonoBehaviour {
         {
             moveCountdown = Random.Range(minStartCountdown, maxStartCountdown);
             isOnGround = true;
+            afterHop();
         }
         else
         {
@@ -122,8 +98,23 @@ public class sheepScript : MonoBehaviour {
             // rb.AddForce(0, sheepBounce, 0, ForceMode.VelocityChange);
 
             isOnGround = true;
-        }
 
+            afterHop();
+        }
+    }
+
+    /* Called after every hop. Sets new goal. */
+    private void afterHop()
+    {
+        // After every hop, update goal as interpolation of old and new goals
+        Vector3 newGoal = hsm.getSheepGoal(index);
+        goal = goal * oldGoalPersistence + newGoal * newGoalStrength;
+
+        goal.y = 0; // goal is on same plane as sheep
+
+        // prevent goal from exceeding maximum magnitude
+        if (goal.magnitude > maxGoalSize)
+            goal = goal.normalized * maxGoalSize;
     }
 
     public void wound(float damage, Transform site)

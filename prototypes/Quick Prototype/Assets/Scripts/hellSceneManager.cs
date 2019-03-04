@@ -36,6 +36,15 @@ public class hellSceneManager : MonoBehaviour {
     public float lureRange;
     public float lureStrength;
 
+    public float playerApproachThreshold = 200;
+    public float playerAvoidThreshold = 10;
+    public float boidNoise = 1f;
+
+    public float playerBoidFactor = 0.3f;
+    public float coherenceAvoidanceBoidFactor = 0.2f;
+    public float alignmentBoidFactor = 0.2f;
+    public float lureBoidFactor = 0.3f;
+
 
 
     public void Start() {
@@ -72,7 +81,6 @@ public class hellSceneManager : MonoBehaviour {
     }
 
     void FixedUpdate() {
-        updateBoids();
         if (mana > 1000) {
             nextLevel();
         }
@@ -137,90 +145,101 @@ public class hellSceneManager : MonoBehaviour {
 
 
     #region Boids and Lures
-    // Update all boids' velocities
-    public void updateBoids() {
-        // Algorithm overview:
-        // Iterate over every pair of boids
-        // For every pair, compute distance, and then apply the three rules (separation, cohesion, alignment)
-        boidCohereThresholdSQ = boidCohereThreshold * boidCohereThreshold;
+    /* Called with a sheep's index. Returns its goal based on current game state.
+     This is combined with sheep's current goal to produce new goal. */
+    public Vector3 getSheepGoal(int i)
+    {
 
-        // handle boid pair interactions
-        foreach (int i in sheepDict.Keys) { 
-            foreach (int j in sheepDict.Keys) { 
-                if (i<j)
-                    // Debug.Log(string.Format("Interacting: sheep {0} -- {1}", i, j));
-                    updateBoidPair(sheepDict[i], sheepDict[j]);
+        GameObject sheepI = sheepDict[i];
+        Vector3 posI = sheepI.transform.position;
+
+        Vector3 coherenceAvoidanceGoal = new Vector3(0, 0, 0);
+        float numCohereAvoid = 0;
+        Vector3 alignmentGoal = new Vector3(0, 0, 0);
+        float numAlignment = 0;
+        Vector3 playerGoal = new Vector3(0, 0, 0);
+        Vector3 lureGoal = new Vector3(0, 0, 0);
+        float numLures = 0;
+
+        // First, compute all sheep-pair effects together
+        foreach (int j in sheepDict.Keys)
+        {
+            if (i == j)
+                continue;
+
+            GameObject sheepJ = sheepDict[j];
+            Vector3 posJ = sheepJ.transform.position;
+            Vector3 ItoJ = posJ - posI;
+            float distance = ItoJ.magnitude;
+
+            Vector3 ItoJnormalized = ItoJ / distance;
+            Vector3 ItoJnormflat = new Vector3(ItoJnormalized.x, 0, ItoJnormalized.z);
+
+            // Either separate or cohere, depending on distance
+            if (distance < boidSeparateThreshold)
+            {
+                // apply separation rule
+                coherenceAvoidanceGoal += -ItoJnormflat * boidSeparationStrength / Mathf.Min(1, distance);
+                numCohereAvoid += 1 / Mathf.Min(1, distance);
+            }
+            else if (distance < boidCohereThreshold)
+            {
+                // apply coherence rule
+                coherenceAvoidanceGoal += ItoJnormflat * boidCoherenceStrength * (1 - (distance / boidCohereThreshold));
+                numCohereAvoid += (1 - (distance / boidCohereThreshold));
+            }
+
+            // Compute alignment effect
+            if (distance < boidAlignThreshold)
+            {
+                Vector3 sheepJgoal = sheepJ.GetComponent<sheepScript>().goal;
+                alignmentGoal += (1 - (distance / boidAlignThreshold)) * sheepJgoal / Mathf.Max(1, sheepJgoal.magnitude);
+                numAlignment += (1 - (distance / boidAlignThreshold));
+            }
+
+        }
+
+        // Compute player-attraction effect
+        Vector3 toPlayer = player.transform.position - sheepI.transform.position;
+        if (toPlayer.magnitude < playerAvoidThreshold)
+            // Apply force away from player
+            playerGoal = -toPlayer * playerBoidInfluence / Mathf.Max(toPlayer.magnitude, 1);
+        else if (toPlayer.magnitude < playerApproachThreshold)
+            // Apply force towards player
+            playerGoal = toPlayer * playerBoidInfluence * (1 - (toPlayer.magnitude / playerApproachThreshold));
+
+        // Compute lure-attraction effect
+        foreach (int j in lureDict.Keys)
+        {
+            Vector3 toLure = lureDict[j].transform.position - posI;
+            var distance = toLure.magnitude;
+            if (distance < lureRange)
+            {
+                lureGoal += toLure * lureStrength * (1 - (distance / lureRange)); // note no decay of lure strength over time, until it disappears
+                numLures += (1 - (distance / lureRange));
             }
         }
 
-        // handle single boid effects
-        foreach (int i in sheepDict.Keys) {
-            var sheep = sheepDict[i];
-            // lure interactions
-            foreach (int j in lureDict.Keys)
-                lureAttract(sheep, lureDict[j]);
-            // max speed
-            //if (sheep.GetComponent<Rigidbody>().velocity.magnitude > maxSheepSpeed)
-            //    sheep.GetComponent<Rigidbody>().velocity = sheep.GetComponent<Rigidbody>().velocity.normalized * maxSheepSpeed;
-        }
-    }
-
-    public void lureAttract (GameObject sheep, GameObject lure) {
-        Vector3 posSheep = sheep.transform.position;
-        Vector3 posLure = lure.transform.position;
-        Vector3 sheepToLure = posLure - posSheep;
-        var distance = sheepToLure.magnitude;
-        if (distance < lureRange) {
-            sheep.GetComponent<sheepScript>().goal += sheepToLure * lureStrength * Time.deltaTime;
-        }
-    }
-
-    // Update the velocities of 2 boids to account for their effect on each other
-    public void updateBoidPair(GameObject a, GameObject b)
-    {
-        Rigidbody bodyA = a.GetComponent<Rigidbody>();
-        Rigidbody bodyB = b.GetComponent<Rigidbody>();
-        sheepScript scriptA = a.GetComponent<sheepScript>();
-        sheepScript scriptB = b.GetComponent<sheepScript>();
-        Vector3 posA = a.transform.position;
-        Vector3 posB = b.transform.position;
-        Vector3 aToB = posB - posA;
-        var distanceSQ = aToB.sqrMagnitude;
-
-        // if too far to cohere, then no interaction
-        // Minor optimization: don't do square root if not necessary
-        if (distanceSQ > boidCohereThresholdSQ)
-            return;
-
-        var distance = Mathf.Sqrt(distanceSQ);
-
-        Vector3 aToBNormalized = aToB / distance;
-        Vector3 planeNormal = new Vector3(0, 1, 0);
-        Vector3 aToBNormalizedXZ = Vector3.ProjectOnPlane(aToBNormalized, planeNormal);
-            // a to b vector, with y dimension set to zero so boids don't try to move up/
-
-        // either separate or cohere, depending on boidSeparateThreshold
-        if (distance < boidSeparateThreshold)
-        {
-            // apply separation rule
-            scriptA.goal += -aToBNormalizedXZ * boidSeparationStrength * Time.deltaTime / Mathf.Min(1, distance);
-            scriptB.goal += aToBNormalizedXZ * boidSeparationStrength * Time.deltaTime / Mathf.Min(1, distance);
-            // also TODO separation rule for player, so boids don't crowd it
-        }
-        else
-        {
-            // apply coherence rule
-            scriptA.goal += aToBNormalizedXZ * boidCoherenceStrength * Time.deltaTime; // TODO scale down with distance
-            scriptB.goal += -aToBNormalizedXZ * boidCoherenceStrength * Time.deltaTime;
-        }
-
-        if (distance < boidAlignThreshold)
-        {
-            // apply alignment rule
-            Vector3 temp = scriptA.goal + Vector3.Slerp(scriptA.goal, scriptB.goal, boidAlignmentStrength * Time.deltaTime); // TODO scale down with distance
-            scriptB.goal += Vector3.Slerp(scriptB.goal, scriptA.goal, boidAlignmentStrength * Time.deltaTime);
-            scriptA.goal = temp;
-        }
+        // Combine all the effects together to generate new goal
+        Vector3 newGoal = new Vector3(0, 0, 0);
+        // normalize each factor
+        if (numCohereAvoid != 0)
+            coherenceAvoidanceGoal /= numCohereAvoid;
+        if (numAlignment != 0)
+            alignmentGoal /= numAlignment;
+        // lureGoal /= numLures; // dividing makes 2 lures as effective as one
+        // add in each factor, with weight
+        newGoal += playerBoidFactor * playerGoal;
+        newGoal += coherenceAvoidanceBoidFactor * coherenceAvoidanceGoal;
+        newGoal += alignmentBoidFactor * alignmentGoal;
+        newGoal += lureBoidFactor * lureGoal;
+        // Add random goal change
+        Vector3 randomForce = Random.onUnitSphere;
+        newGoal += randomForce * boidNoise;
+        newGoal.y = 0; // goal is on same plane as sheep
+        Debug.AssertFormat(!float.IsNaN(newGoal.x), "{0} {1} {2} {3}", playerGoal, coherenceAvoidanceGoal, alignmentGoal, lureGoal);
+        Debug.AssertFormat(!float.IsNaN(newGoal.z), "{0} {1} {2} {3}", playerGoal, coherenceAvoidanceGoal, alignmentGoal, lureGoal);
+        return newGoal;
     }
 
     #endregion
