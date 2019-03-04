@@ -27,11 +27,14 @@ public class PlayerMovement : MonoBehaviour
     private bool panRight;
     private bool panLeft;
     private bool ab1;
+    private bool ab2;
     private bool jump;
-    private float angle;
+    private float xangle;
+    private float yangle;
     private bool panKey;
     public Constants.PanType pan_type;
     private Vector3 offsetAngle;
+    public Transform cameraTransform;
     
 
     void Start()
@@ -40,6 +43,11 @@ public class PlayerMovement : MonoBehaviour
         playerRB.AddForce(0, 200, 0);
         abilities = this.gameObject.GetComponent<Abilities>();
         num_jumps = max_jumps;
+
+        GameObject tempObj = new GameObject();
+        tempObj.transform.position = transform.position;
+        tempObj.transform.eulerAngles = transform.eulerAngles;
+        cameraTransform = tempObj.transform;
     }
 
     private void Update()
@@ -53,27 +61,30 @@ public class PlayerMovement : MonoBehaviour
         backMove = Input.GetKey("s");
         jump = Input.GetKeyDown(KeyCode.Space);
         ab1 = Input.GetKeyDown(KeyCode.Alpha1);
+        ab2 = Input.GetKey(KeyCode.Alpha2);
 
-
-        //Rotates the player's facing direction based on Mouse X axis movement.
+        //Rotates the player's facing direction based on Mouse X and Y axis movement.
         if (pan_type == Constants.PanType.MOUSE)
         {
-            angle += camSpeed * Input.GetAxis("Mouse X");
-            offsetAngle = new Vector3(0, angle, 0);
-            transform.eulerAngles = offsetAngle;
+            xangle += camSpeed * Input.GetAxis("Mouse X");
+            yangle += camSpeed * Input.GetAxis("Mouse Y");
+            offsetAngle = new Vector3(yangle, xangle, 0);
+            cameraTransform.eulerAngles = offsetAngle;
+            transform.eulerAngles = new Vector3(0, xangle, 0);
         } else
         {
             float axis = 0; ;
             if (panRight) axis = 1;
             if (panLeft) axis = -1;
-            angle += camSpeed * axis;
-            offsetAngle = new Vector3(0, angle, 0);
+            xangle += camSpeed * axis;
+            offsetAngle = new Vector3(0, xangle, 0);
+            cameraTransform.eulerAngles = offsetAngle;
             transform.eulerAngles = offsetAngle;
             //if (panRight) transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 90, 0), camSpeed * Time.deltaTime);
             //else if (panLeft) transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, -90, 0), camSpeed * Time.deltaTime);
         }
 
-        
+
     }
 
 
@@ -128,6 +139,15 @@ public class PlayerMovement : MonoBehaviour
         if (ab1)
         {
             abilities.SpawnLure();
+        }
+
+        if (ab2)
+        {
+            abilities.FireballKey();
+        }
+        else if (abilities.isGrowingFireball)
+        {
+            abilities.FireballRelease();
         }
 
     }
