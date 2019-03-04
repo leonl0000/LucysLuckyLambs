@@ -10,6 +10,7 @@ public class angelScript : MonoBehaviour
     private Vector3 spawnPoint;
     private AngelState state;
     private Rigidbody rb;
+    public GameObject player;
 
     public float levitationHeight = 35;
 
@@ -47,6 +48,11 @@ public class angelScript : MonoBehaviour
     private LineRenderer lineRenderer;
     public Material abductBeamMat;
 
+    public float maxAutoAttackDist = 90;
+    private float timeoutAttackStop;
+    public float timeoutAttackStopInitial;
+    public float attackMoveRandomStrength = 1;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -83,7 +89,11 @@ public class angelScript : MonoBehaviour
             state = AngelState.CHASING_SHEEP;
             startChasing();
         }
-        // TODO attack branch
+        else
+        {
+            state = AngelState.ATTACKING_PLAYER;
+            startAttacking();
+        }
     }
 
     void startDrifting()
@@ -132,6 +142,21 @@ public class angelScript : MonoBehaviour
         updateChaseDir();
     }
 
+    void startAttacking()
+    {
+        // Check if player close enough to spontaneously attack
+        float dist = (player.transform.position - transform.position).magnitude;
+        if (dist > maxAutoAttackDist)
+        {
+            randomNextActivity();
+            return;
+        }
+
+        timeoutAttackStop = timeoutAttackStopInitial;
+
+        updateAttack();
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -172,7 +197,27 @@ public class angelScript : MonoBehaviour
             }
             updateAbduct();
         }
-        // TODO attacking state
+        else if (state == AngelState.ATTACKING_PLAYER)
+        {
+            timeoutAttackStop -= Time.deltaTime;
+            if (timeoutAttackStop <= 0)
+            {
+                randomNextActivity();
+                return;
+            }
+            updateAttack();
+        }
+    }
+
+    void updateAttack()
+    {
+        // Find position we want to head to
+        Vector3 goalPos = player.transform.position + new Vector3(0, levitationHeight, 0);
+        // Find goal displacement, and normalize
+        Vector3 goalDisplacement = goalPos - transform.position;
+        goalDisplacement /= goalDisplacement.magnitude;
+        // add random factor
+        goalDisplacement += Random.onUnitSphere * attackMoveRandomStrength;
     }
 
     void updateDriftDir()
