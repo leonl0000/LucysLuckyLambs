@@ -1780,7 +1780,9 @@ MonoBehaviour:
   hsm: {fileID: 300832503}
   accelerationFactor: 5
   chasingTimeout: 10
-  maxSquaredDistance: 10000
+  directionTimeout: 1
+  maxSquaredDistance: 1000000
+  speed: 10
   rb: {fileID: 0}
   bloodSplatter: {fileID: 7050866618058274405, guid: 667e304859b18204ea99a7684015a4ff,
     type: 3}

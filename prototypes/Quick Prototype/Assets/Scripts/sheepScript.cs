@@ -46,7 +46,7 @@ public class sheepScript : MonoBehaviour {
 
     void FixedUpdate() {
         // Sheep rotate to face goal; this is before each frame to prevent jerky movements
-        if (goal != Vector3.zero)
+        if (goal.sqrMagnitude > .01)
         {
             transform.rotation = Quaternion.LookRotation(goal, Vector3.up);
             // rotate by another -90 degrees y so it looks forward
