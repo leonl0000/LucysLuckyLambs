@@ -30,7 +30,9 @@ public class PlayerMovement : MonoBehaviour
     private bool ab1;
     public bool ab2;
     private bool ab3;
+    private bool ab4;
     private bool jump;
+    private bool wallInPlay;
     private float xangle;
     private float yangle;
     private bool panKey;
@@ -51,6 +53,7 @@ public class PlayerMovement : MonoBehaviour
         tempObj.transform.position = transform.position;
         tempObj.transform.eulerAngles = transform.eulerAngles;
         cameraTransform = tempObj.transform;
+        wallInPlay = false;
     }
 
     private void Update()
@@ -66,6 +69,7 @@ public class PlayerMovement : MonoBehaviour
         ab1 = Input.GetKeyDown(KeyCode.Alpha1);
         ab2 = Input.GetKey(KeyCode.Alpha2) || hsm.fireballDown;
         ab3 = Input.GetKeyDown(KeyCode.Alpha3);
+        ab4 = Input.GetKeyDown(KeyCode.Alpha4);
 
 
         //Rotates the player's facing direction based on Mouse X and Y axis movement.
@@ -76,7 +80,7 @@ public class PlayerMovement : MonoBehaviour
             offsetAngle = new Vector3(yangle, xangle, 0);
             cameraTransform.eulerAngles = offsetAngle;
             transform.eulerAngles = new Vector3(0, xangle, 0);
-        } else
+        } else 
         {
             float axis = 0; ;
             if (panRight) axis = 1;
@@ -132,8 +136,6 @@ public class PlayerMovement : MonoBehaviour
         
         playerRB.velocity += delta_velocity;
 
-        //if (panKey) pan_type = pan_type == Constants.PanType.MOUSE ? Constants.PanType.KEY : Constants.PanType.MOUSE;
-
 
         if (jump && num_jumps > 0)
         {
@@ -150,6 +152,12 @@ public class PlayerMovement : MonoBehaviour
         }
 
         if (ab3) abilities.spawnSheep();
+
+        if(ab4 && !wallInPlay)
+        {
+            abilities.trumpWall();
+            wallInPlay = true;
+        }
 
     }
 }
