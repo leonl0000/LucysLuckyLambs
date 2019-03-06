@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PreditorScript : MonoBehaviour
+public class PredatorScript : MonoBehaviour
 {
     public hellSceneManager hsm;
     public float accelerationFactor = 30f;
@@ -56,7 +56,7 @@ public class PreditorScript : MonoBehaviour
             chaseTimer -= Time.deltaTime;
             if (directionTimer < 0) {
                 Vector3 direction = prey.transform.position - gameObject.transform.position;
-                direction.y = direction.y > 0 ? direction.y : direction.y/2;
+                direction.y = direction.y > 0 ? direction.y : direction.y / 2;
                 direction = direction.normalized;
                 velocityTarget = speed * direction;
                 rb.velocity = velocityTarget;
@@ -70,7 +70,7 @@ public class PreditorScript : MonoBehaviour
 
         if ((rb.position - lastPosition).sqrMagnitude < 1 * Time.deltaTime) terrainTimer += Time.deltaTime;
         else terrainTimer = 0;
-        if(terrainTimer > stuckOnTerrainTimeout && prey != null) {
+        if (terrainTimer > stuckOnTerrainTimeout && prey != null) {
             terrainTimer = 0;
             rb.AddForce(0, 250, 0, ForceMode.VelocityChange);
         }
@@ -79,12 +79,11 @@ public class PreditorScript : MonoBehaviour
 
     public void OnCollisionEnter(Collision collision) {        //Bounce on ground!
         if (collision.collider.tag == "ground") {
-            rb.AddForce(0, 200*Time.deltaTime, 0, ForceMode.VelocityChange);
-        } else   hsm.predatorCollision(gameObject, collision.gameObject);
+            rb.AddForce(0, 200 * Time.deltaTime, 0, ForceMode.VelocityChange);
+        } else hsm.predatorCollision(gameObject, collision.gameObject);
     }
 
-    public void wound(float damage, Transform site)
-    {
+    public void wound(float damage, Transform site) {
         // TODO inflict damage, possibly die
 
         // Spawn blood splatter

@@ -27,7 +27,7 @@ public class PlayerMovement : MonoBehaviour
     private bool panRight;
     private bool panLeft;
     private bool ab1;
-    private bool ab2;
+    public bool ab2;
     private bool ab3;
     private bool ab4;
     private bool jump;
@@ -141,24 +141,15 @@ public class PlayerMovement : MonoBehaviour
             playerRB.AddForce(0, 400, 0);
         }
 
-        if (ab1)
-        {
-            abilities.SpawnLure();
-        }
+        if (ab1) abilities.SpawnLure();
 
-        if (ab2)
-        {
+        if (ab2)   {
             abilities.FireballKey();
-        }
-        else if (abilities.isGrowingFireball)
-        {
+        }  else if (abilities.isGrowingFireball)   {
             abilities.FireballRelease();
         }
 
-        if (ab3)
-        {
-            abilities.spawnSheep();
-        }
+        if (ab3) abilities.spawnSheep();
 
         if(ab4 && !wallInPlay)
         {
