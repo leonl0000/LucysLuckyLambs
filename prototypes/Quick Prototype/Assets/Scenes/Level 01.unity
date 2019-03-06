@@ -196,10 +196,11 @@ GameObject:
   m_Component:
   - component: {fileID: 170161259}
   - component: {fileID: 170161258}
-  - component: {fileID: 170161256}
   - component: {fileID: 170161255}
   - component: {fileID: 170161254}
   - component: {fileID: 170161260}
+  - component: {fileID: 170161256}
+  - component: {fileID: 170161257}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -220,14 +221,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerRB: {fileID: 170161255}
-  cam: {fileID: 0}
+  cam: {fileID: 1826478463}
   camSpeed: 2
   max_velocity: 20
   moveSpeed: 2
   max_jumps: 5
   num_jumps: 5
   pan_type: 0
-  cameraTransform: {fileID: 0}
+  cameraTransform: {fileID: 1826478466}
 --- !u!54 &170161255
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -244,14 +245,28 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
---- !u!135 &170161256
+--- !u!64 &170161256
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 170161253}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 1
+  m_CookingOptions: -1
+  m_Mesh: {fileID: 4300000, guid: 045284ddc98d7b0428b5804fa62cc04f, type: 3}
+--- !u!135 &170161257
 SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 170161253}
-  m_Material: {fileID: 13400000, guid: 96c7bda18f61a994cab9eb2e1c7b2d79, type: 2}
+  m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -273,7 +288,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 170161253}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.65, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 357327694}
@@ -295,6 +310,8 @@ MonoBehaviour:
   hsm: {fileID: 300832503}
   lure: {fileID: 8861316476448875418, guid: c28516cfc0eb0d0419f694e0b05dcecd, type: 3}
   throw_speed: 16
+  wall: {fileID: 9054153885918259496, guid: 0fa4d52833e429340b990969a63c015e, type: 3}
+  wall_move_speed: 20
   fireball: {fileID: 1650406987346316890, guid: 51c03b48fe9d9ac438c4aa362920d46a,
     type: 3}
   minFireballSpeed: 40
@@ -331,13 +348,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 170161253}
-  playerAbilities: {fileID: 0}
+  playerAbilities: {fileID: 170161260}
   mana: 0
   health: 0
   numSheepDropped: 0
   numSheepEaten: 0
   sheep: {fileID: 509831795736211845, guid: 36fb4eefdda37904e8c93007d4cf89c7, type: 3}
-  spawnGate: {fileID: 0}
+  spawnGate: {fileID: 2130539180}
   playerBoidInfluence: 5
   boidSeparateThreshold: 10
   boidCohereThreshold: 70
@@ -728,7 +745,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &846003099
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1809,19 +1826,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed205021a939c8a418352c7e572029e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hsm: {fileID: 300832503}
-  accelerationFactor: 5
-  chasingTimeout: 10
-  directionTimeout: 1
-  velocityResetTimeout: 0.25
-  stuckOnTerrainTimeout: 4
-  maxSquaredDistance: 1000000
-  speed: 10
-  rb: {fileID: 0}
-  terrainTimer: 0
-  debugFloat: 0
-  bloodSplatter: {fileID: 7050866618058274405, guid: 667e304859b18204ea99a7684015a4ff,
-    type: 3}
 --- !u!65 &1640364011
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2292,6 +2296,11 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 170161253}
+    - target: {fileID: 7362995482438591844, guid: 82b9c46789619ab41a85f7a50809397e,
+        type: 3}
+      propertyPath: abductBeamMat
+      value: 
+      objectReference: {fileID: 2100000, guid: 363850704c17fe948904f9fd61fef875, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 82b9c46789619ab41a85f7a50809397e, type: 3}
 --- !u!1 &1845895892
