@@ -5,11 +5,21 @@ using UnityEngine;
 public class Abilities : MonoBehaviour {
 
     public hellSceneManager hsm;
-
+    
+    //Lure variables
     public GameObject lure;
     public int throw_speed;
     private GameObject spawned_lure;
+    
+    //Wall variables
+    public GameObject wall;
+    public int wall_move_speed;
+    private GameObject spawnedWall;
+    private float forward_angle;
+    private float side_angle;
+    private Vector3 offsetAngle;
 
+    //Fireball variables!
     public GameObject fireball;
     public float minFireballSpeed = 40;
     public float maxFireballSpeed = 100;
@@ -46,6 +56,17 @@ public class Abilities : MonoBehaviour {
             hsm.lureDict[nextIndex] = spawned_lure;
             spawned_lure.GetComponent<LureScript>().index = nextIndex;
             nextIndex++;
+        }
+    }
+
+    public void trumpWall()
+    {
+
+
+        if (hsm.mana >= 2)
+        {
+            spawnedWall = Instantiate(wall, me_transform.position + new Vector3(0, 13, 0), wall.transform.rotation);
+
         }
     }
 
