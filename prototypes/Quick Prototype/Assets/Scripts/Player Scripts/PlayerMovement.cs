@@ -32,7 +32,7 @@ public class PlayerMovement : MonoBehaviour
     private bool ab3;
     private bool ab4;
     private bool jump;
-    private bool wallInPlay;
+    public bool wallInPlay;
     private float xangle;
     private float yangle;
     private bool panKey;

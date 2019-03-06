@@ -7,6 +7,7 @@ public class hellSceneManager : MonoBehaviour {
 
     public GameObject player;
     public Abilities playerAbilities;
+    private PlayerMovement playerMovement;
     public bool fireballDown;
     public float mana;
     public float health;
@@ -56,6 +57,7 @@ public class hellSceneManager : MonoBehaviour {
         lureDict = new Dictionary<int, GameObject>();
         nextSheepIndex = 0;
         playerAbilities = player.GetComponent<Abilities>();
+        playerMovement = player.GetComponent<PlayerMovement>();
         if (SaveSystem.saveSlot != 0) load(SaveSystem.saveSlot);
         fireballDown = false;
     }
@@ -76,6 +78,10 @@ public class hellSceneManager : MonoBehaviour {
 
             case 3:
                 spawnSheep();
+                break;
+
+            case 4:
+                if (!playerMovement.wallInPlay) playerAbilities.trumpWall();
                 break;
         }
     }

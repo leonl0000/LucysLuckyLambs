@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class Abilities : MonoBehaviour {
 
@@ -69,6 +70,9 @@ public class Abilities : MonoBehaviour {
             hsm.lureDict[nextIndex] = spawned_lure;
             spawned_lure.GetComponent<LureScript>().index = nextIndex;
             nextIndex++;
+            if(hsm.lureDict.Count > 3) {
+                hsm.lureDict[hsm.lureDict.Keys.Min()].GetComponent<LureScript>().destroyLure();
+            }
         }
     }
 
@@ -76,9 +80,10 @@ public class Abilities : MonoBehaviour {
     {
 
 
-        if (hsm.mana >= 2)
+        if (hsm.mana >= 5)
         {
             spawnedWall = Instantiate(wall, me_transform.position + new Vector3(0, 13, 0), wall.transform.rotation);
+            hsm.mana -= 5;
 
         }
     }
