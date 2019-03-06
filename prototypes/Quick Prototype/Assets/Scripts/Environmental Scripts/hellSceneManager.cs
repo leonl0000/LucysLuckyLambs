@@ -7,13 +7,13 @@ public class hellSceneManager : MonoBehaviour {
 
     public GameObject player;
     public Abilities playerAbilities;
+    public bool fireballDown;
     public float mana;
     public float health;
     public int numSheepDropped;
     public int numSheepEaten;
     public GameObject sheep;
     public Transform spawnGate;
-    private bool fireballDown;
 
 
     public Dictionary<int, GameObject> sheepDict;
@@ -84,10 +84,6 @@ public class hellSceneManager : MonoBehaviour {
         if (mana > 1000) {
             nextLevel();
         }
-        if(fireballDown) {
-            playerAbilities.FireballKey();
-        } else if (playerAbilities.isGrowingFireball)
-            playerAbilities.FireballRelease();
     }
 
     #region Collisions and Falls
