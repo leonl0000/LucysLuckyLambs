@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class Abilities : MonoBehaviour {
 
@@ -42,8 +43,21 @@ public class Abilities : MonoBehaviour {
     {
         // move currently-growing fireball to new position
         // done in FixedUpdate so it doesn't lag behind player movement
-        if (isGrowingFireball)
+        if (isGrowingFireball) { 
             spawned_fireball.transform.position = cam.transform.position + cam.transform.forward * 10;
+        
+            // calculate current power
+            fireballGrowLength += Time.deltaTime;
+            float growFraction = Mathf.Max(Mathf.Min(1, fireballGrowLength / fireballMaxGrowLength), fireballMinPower);
+            float currPower = fireballMinPower + growFraction * (1 - fireballMinPower);
+
+            // set fireball scale according to power
+            float currFireballScale = currPower * fireballAimSphereMaxScale;
+            spawned_fireball.gameObject.transform.localScale = new Vector3(currFireballScale, currFireballScale, currFireballScale);
+
+            // set light intensity according to power
+            spawned_fireball.gameObject.transform.GetChild(1).gameObject.GetComponent<Light>().intensity = currPower * fireballMaxLight;
+        }
     }
 
     public void SpawnLure()
@@ -56,6 +70,9 @@ public class Abilities : MonoBehaviour {
             hsm.lureDict[nextIndex] = spawned_lure;
             spawned_lure.GetComponent<LureScript>().index = nextIndex;
             nextIndex++;
+            if(hsm.lureDict.Count > 3) {
+                hsm.lureDict[hsm.lureDict.Keys.Min()].GetComponent<LureScript>().destroyLure();
+            }
         }
     }
 
@@ -63,9 +80,10 @@ public class Abilities : MonoBehaviour {
     {
 
 
-        if (hsm.mana >= 2)
+        if (hsm.mana >= 5)
         {
             spawnedWall = Instantiate(wall, me_transform.position + new Vector3(0, 13, 0), wall.transform.rotation);
+            hsm.mana -= 5;
 
         }
     }
@@ -74,6 +92,7 @@ public class Abilities : MonoBehaviour {
     public void FireballKey()
     {
         // possibly create a new fireball
+
         if (!isGrowingFireball && hsm.mana >= 2)
         {
             isGrowingFireball = true;
@@ -89,20 +108,7 @@ public class Abilities : MonoBehaviour {
             spawned_fireball.gameObject.transform.localScale = new Vector3(currFireballScale, currFireballScale, currFireballScale);
         }
         // otherwise, grow current fireball
-        else if (isGrowingFireball)
-        {
-            // calculate current power
-            fireballGrowLength += Time.deltaTime;
-            float growFraction = Mathf.Max(Mathf.Min(1, fireballGrowLength / fireballMaxGrowLength), fireballMinPower);
-            float currPower = fireballMinPower + growFraction * (1 - fireballMinPower);
 
-            // set fireball scale according to power
-            float currFireballScale = currPower * fireballAimSphereMaxScale;
-            spawned_fireball.gameObject.transform.localScale = new Vector3(currFireballScale, currFireballScale, currFireballScale);
-
-            // set light intensity according to power
-            spawned_fireball.gameObject.transform.GetChild(1).gameObject.GetComponent<Light>().intensity = currPower * fireballMaxLight;
-        }
     }
 
     public void FireballRelease()
@@ -112,6 +118,7 @@ public class Abilities : MonoBehaviour {
             isGrowingFireball = false;
             float growFraction = Mathf.Min(1, fireballGrowLength / fireballMaxGrowLength);
             float currPower = fireballMinPower + growFraction * (1 - fireballMinPower);
+            spawned_fireball.GetComponent<FireballScript>().beginLifeTimer();
             spawned_fireball.GetComponent<FireballScript>().power = currPower;
 
             // activate particles, and set to right scale

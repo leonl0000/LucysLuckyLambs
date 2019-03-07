@@ -4639,7 +4639,7 @@ ParticleSystem:
 --- !u!199 &5919076859275189285
 ParticleSystemRenderer:
   serializedVersion: 6
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 2
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -4875,5 +4875,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hsm: {fileID: 0}
   index: 0
-  lifetime: 30
+  lifetime: 15
   age: 0

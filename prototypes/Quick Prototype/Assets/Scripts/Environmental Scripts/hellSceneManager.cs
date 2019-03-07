@@ -7,13 +7,14 @@ public class hellSceneManager : MonoBehaviour {
 
     public GameObject player;
     public Abilities playerAbilities;
+    private PlayerMovement playerMovement;
+    public bool fireballDown;
     public float mana;
     public float health;
     public int numSheepDropped;
     public int numSheepEaten;
     public GameObject sheep;
     public Transform spawnGate;
-    private bool fireballDown;
 
 
     public Dictionary<int, GameObject> sheepDict;
@@ -56,6 +57,7 @@ public class hellSceneManager : MonoBehaviour {
         lureDict = new Dictionary<int, GameObject>();
         nextSheepIndex = 0;
         playerAbilities = player.GetComponent<Abilities>();
+        playerMovement = player.GetComponent<PlayerMovement>();
         if (SaveSystem.saveSlot != 0) load(SaveSystem.saveSlot);
         fireballDown = false;
     }
@@ -77,6 +79,10 @@ public class hellSceneManager : MonoBehaviour {
             case 3:
                 spawnSheep();
                 break;
+
+            case 4:
+                if (!playerMovement.wallInPlay) playerAbilities.trumpWall();
+                break;
         }
     }
 
@@ -84,10 +90,6 @@ public class hellSceneManager : MonoBehaviour {
         if (mana > 1000) {
             nextLevel();
         }
-        if(fireballDown) {
-            playerAbilities.FireballKey();
-        } else if (playerAbilities.isGrowingFireball)
-            playerAbilities.FireballRelease();
     }
 
     #region Collisions and Falls

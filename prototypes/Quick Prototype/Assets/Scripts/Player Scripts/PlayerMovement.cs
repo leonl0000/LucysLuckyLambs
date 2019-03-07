@@ -20,6 +20,7 @@ public class PlayerMovement : MonoBehaviour
     public int num_jumps;
 
     private Abilities abilities;
+    private hellSceneManager hsm;
     private bool leftMove;
     private bool rightMove;
     private bool forwardMove;
@@ -31,7 +32,7 @@ public class PlayerMovement : MonoBehaviour
     private bool ab3;
     private bool ab4;
     private bool jump;
-    private bool wallInPlay;
+    public bool wallInPlay;
     private float xangle;
     private float yangle;
     private bool panKey;
@@ -46,6 +47,7 @@ public class PlayerMovement : MonoBehaviour
         playerRB.AddForce(0, 200, 0);
         abilities = this.gameObject.GetComponent<Abilities>();
         num_jumps = max_jumps;
+        hsm = GameObject.Find("GameManager").GetComponent<hellSceneManager>();
 
         GameObject tempObj = new GameObject();
         tempObj.transform.position = transform.position;
@@ -65,7 +67,7 @@ public class PlayerMovement : MonoBehaviour
         backMove = Input.GetKey("s");
         jump = Input.GetKeyDown(KeyCode.Space);
         ab1 = Input.GetKeyDown(KeyCode.Alpha1);
-        ab2 = Input.GetKey(KeyCode.Alpha2);
+        ab2 = Input.GetKey(KeyCode.Alpha2) || hsm.fireballDown;
         ab3 = Input.GetKeyDown(KeyCode.Alpha3);
         ab4 = Input.GetKeyDown(KeyCode.Alpha4);
 
@@ -142,7 +144,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         if (ab1) abilities.SpawnLure();
-
+        
         if (ab2)   {
             abilities.FireballKey();
         }  else if (abilities.isGrowingFireball)   {
