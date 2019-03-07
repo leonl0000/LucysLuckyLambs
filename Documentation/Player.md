@@ -1,4 +1,4 @@
-# NPCs 
+# The Player
 
 # Movement
 
