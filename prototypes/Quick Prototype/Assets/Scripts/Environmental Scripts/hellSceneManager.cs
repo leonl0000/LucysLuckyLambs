@@ -21,6 +21,9 @@ public class hellSceneManager : MonoBehaviour {
 
     public Dictionary<int, GameObject> lureDict;
 
+    public Dictionary<int, GameObject> angelDict;
+    public int nextAngelIndex;
+
     public float playerBoidInfluence = 150f; //multiplied onto the force each sheep gets applied
 
     public float boidSeparateThreshold;

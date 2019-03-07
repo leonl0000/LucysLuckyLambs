@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum AngelState { DRIFTING, CHASING_SHEEP, ABDUCTING_SHEEP, ATTACKING_PLAYER, NULL };
+public enum AngelState { DRIFTING, CHASING_SHEEP, ABDUCTING_SHEEP, ATTACKING_PLAYER, JUST_CREATED };
 
 public class angelScript : MonoBehaviour
 {
@@ -11,6 +11,10 @@ public class angelScript : MonoBehaviour
     private AngelState state;
     private Rigidbody rb;
     public GameObject player;
+    public int index;
+
+    public int startHealth;
+    public int health;
 
     public float levitationHeight = 35;
 
@@ -41,6 +45,7 @@ public class angelScript : MonoBehaviour
     public float abductSpeed = 5;
     public float abductDoneDist = 10;
 
+    public float beamWidth = 0.5f;
     public Color beamStartCol = Color.white;
     public Color beamEndCol = Color.cyan;
     public float beamStartAlpha = 0.7f;
@@ -72,7 +77,7 @@ public class angelScript : MonoBehaviour
         // create abduction beam
         lineRenderer = gameObject.AddComponent<LineRenderer>();
         lineRenderer.material = abductBeamMat;
-        lineRenderer.widthMultiplier = 0.2f;
+        lineRenderer.widthMultiplier = beamWidth;
         Gradient gradient = new Gradient();
         gradient.SetKeys(
             new GradientColorKey[] { new GradientColorKey(beamStartCol, 0.0f), new GradientColorKey(beamEndCol, 1.0f) },
@@ -81,7 +86,7 @@ public class angelScript : MonoBehaviour
         lineRenderer.colorGradient = gradient;
         lineRenderer.positionCount = 0;
 
-        state = AngelState.NULL;
+        state = AngelState.JUST_CREATED;
     }
 
     void randomNextActivity()
@@ -165,6 +170,12 @@ public class angelScript : MonoBehaviour
         startAttacking();
     }
 
+    void wound(float damage, Transform site)
+    {
+        // do damage
+
+    }
+
     void startAttacking()
     {
         // TODO wounded checks should automatically call this, not startSpontaneouslyAttacking, so there's no distance cap on reactive attacks
@@ -178,8 +189,12 @@ public class angelScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (state == AngelState.NULL)
+        if (state == AngelState.JUST_CREATED)
         {
+            index = hsm.nextAngelIndex;
+            hsm.angelDict.Add(index, this.gameObject);
+            hsm.nextAngelIndex++;
+
             randomNextActivity();
         }
         else if (state == AngelState.DRIFTING)
