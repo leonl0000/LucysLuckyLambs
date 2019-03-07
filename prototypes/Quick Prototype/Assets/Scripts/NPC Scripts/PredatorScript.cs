@@ -22,6 +22,7 @@ public class PredatorScript : MonoBehaviour
     public float terrainTimer;
     private Vector3 lastPosition;
     public float debugFloat;
+    public float health;
 
     public GameObject bloodSplatter;
 
@@ -30,6 +31,7 @@ public class PredatorScript : MonoBehaviour
         directionTimer = directionTimeout;
         velocityResetTimer = velocityResetTimeout;
         terrainTimer = 0;
+        health = 30;
         rb = gameObject.GetComponent<Rigidbody>();
     }
 
@@ -78,16 +80,24 @@ public class PredatorScript : MonoBehaviour
     }
 
     public void OnCollisionEnter(Collision collision) {        //Bounce on ground!
-        if (collision.collider.tag == "ground") {
-            rb.AddForce(0, 200 * Time.deltaTime, 0, ForceMode.VelocityChange);
-        } else hsm.predatorCollision(gameObject, collision.gameObject);
+        switch (collision.collider.tag) {
+            case "ground":
+                rb.AddForce(0, 200 * Time.deltaTime, 0, ForceMode.VelocityChange);
+                break;
+
+            case "fireball":
+                break;
+
+            default:
+                hsm.predatorCollision(gameObject, collision.gameObject);
+                break;
+        }
     }
 
     public void wound(float damage, Transform site) {
-        // TODO inflict damage, possibly die
-
-        // Spawn blood splatter
-        GameObject thisSplatter = Instantiate(bloodSplatter, site.position, site.rotation);
+        GameObject thisSplatter = Instantiate(Resources.Load("BloodSplatter"), site.position, site.rotation) as GameObject;
+        health -= damage;
+        if (health < 0) Destroy(gameObject);
     }
 }
 
