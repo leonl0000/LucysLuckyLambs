@@ -331,11 +331,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 170161253}
+  playerAbilities: {fileID: 0}
   mana: 0
   health: 0
   numSheepDropped: 0
   numSheepEaten: 0
   sheep: {fileID: 509831795736211845, guid: 36fb4eefdda37904e8c93007d4cf89c7, type: 3}
+  spawnGate: {fileID: 0}
   playerBoidInfluence: 5
   boidSeparateThreshold: 10
   boidCohereThreshold: 70
@@ -1810,8 +1812,14 @@ MonoBehaviour:
   hsm: {fileID: 300832503}
   accelerationFactor: 5
   chasingTimeout: 10
-  maxSquaredDistance: 10000
+  directionTimeout: 1
+  velocityResetTimeout: 0.25
+  stuckOnTerrainTimeout: 4
+  maxSquaredDistance: 1000000
+  speed: 10
   rb: {fileID: 0}
+  terrainTimer: 0
+  debugFloat: 0
   bloodSplatter: {fileID: 7050866618058274405, guid: 667e304859b18204ea99a7684015a4ff,
     type: 3}
 --- !u!65 &1640364011
@@ -2279,6 +2287,11 @@ PrefabInstance:
       propertyPath: abductStartDist
       value: 50
       objectReference: {fileID: 0}
+    - target: {fileID: 7362995482438591844, guid: 82b9c46789619ab41a85f7a50809397e,
+        type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 170161253}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 82b9c46789619ab41a85f7a50809397e, type: 3}
 --- !u!1 &1845895892

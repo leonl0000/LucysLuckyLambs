@@ -105,6 +105,10 @@ public class Abilities : MonoBehaviour {
         spawned_fireball.GetComponent<Rigidbody>().velocity += cam.transform.forward * fireballSpeed;
     }
 
+    public void spawnSheep() {
+        hsm.spawnSheep();
+    }
+
     // Use this for initialization
     void Start () {
         me_transform = this.gameObject.transform;
