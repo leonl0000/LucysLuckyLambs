@@ -58,6 +58,7 @@ public class hellSceneManager : MonoBehaviour {
         numSheepEaten = 0;
         sheepDict = new Dictionary<int, GameObject>();
         lureDict = new Dictionary<int, GameObject>();
+        angelDict = new Dictionary<int, GameObject>();
         nextSheepIndex = 0;
         playerAbilities = player.GetComponent<Abilities>();
         playerMovement = player.GetComponent<PlayerMovement>();

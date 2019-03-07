@@ -13,8 +13,8 @@ public class angelScript : MonoBehaviour
     public GameObject player;
     public int index;
 
-    public int startHealth;
-    public int health;
+    public float startHealth = 20f;
+    public float health;
 
     public float levitationHeight = 35;
 
@@ -66,6 +66,7 @@ public class angelScript : MonoBehaviour
     public GameObject bolt;
     public float boltSpawnDist = 2;
     public float boltSpeed = 40;
+    public float woundAlarmRange = 30;
 
     // Start is called before the first frame update
     void Start()
@@ -85,6 +86,8 @@ public class angelScript : MonoBehaviour
         );
         lineRenderer.colorGradient = gradient;
         lineRenderer.positionCount = 0;
+
+        health = startHealth;
 
         state = AngelState.JUST_CREATED;
     }
@@ -170,15 +173,40 @@ public class angelScript : MonoBehaviour
         startAttacking();
     }
 
-    void wound(float damage, Transform site)
+    public void wound(float damage, Transform site)
     {
-        // do damage
+        // do damage; no bloodSplatter
+        health -= damage;
+        if (health < 0)
+        {
+            Destroy(gameObject);
+            return;
+        }
 
+        foreach (int angelIndex in hsm.angelDict.Keys)
+        {
+            if (angelIndex == index)
+                continue;
+            GameObject otherAngel = hsm.angelDict[angelIndex];
+            Vector3 otherPos = otherAngel.transform.position;
+            float distance = (otherPos - transform.position).magnitude;
+            if (distance < woundAlarmRange)
+            {
+                otherAngel.GetComponent<angelScript>().alarmTriggered();
+            }
+        }
+        alarmTriggered();
+    }
+
+    void alarmTriggered()
+    {
+        state = AngelState.ATTACKING_PLAYER;
+        startAttacking();
     }
 
     void startAttacking()
     {
-        // TODO wounded checks should automatically call this, not startSpontaneouslyAttacking, so there's no distance cap on reactive attacks
+        // wounded checks should automatically call this, not startSpontaneouslyAttacking, so there's no distance cap on reactive attacks
         timeoutAttackStop = timeoutAttackStopInitial;
         timeoutAttackUpdate = timeoutAttackUpdateInitial;
         timeoutShoot = timeoutShootInitial;
@@ -192,7 +220,7 @@ public class angelScript : MonoBehaviour
         if (state == AngelState.JUST_CREATED)
         {
             index = hsm.nextAngelIndex;
-            hsm.angelDict.Add(index, this.gameObject);
+            hsm.angelDict.Add(index, gameObject);
             hsm.nextAngelIndex++;
 
             randomNextActivity();
@@ -207,9 +235,7 @@ public class angelScript : MonoBehaviour
             }
             timeoutDriftChange -= Time.deltaTime;
             if (timeoutDriftChange <= 0)
-                updateDriftDir();
-            // TODO check if wounded
-        }
+                updateDriftDir();        }
         else if (state == AngelState.CHASING_SHEEP)
         {
             timeoutChaseStop -= Time.deltaTime;
@@ -221,7 +247,6 @@ public class angelScript : MonoBehaviour
             timeoutChaseRedirect -= Time.deltaTime;
             if (timeoutChaseRedirect <= 0)
                 updateChaseDir();
-            // TODO check if wounded
         }
         else if (state == AngelState.ABDUCTING_SHEEP)
         {
@@ -281,6 +306,8 @@ public class angelScript : MonoBehaviour
         goalDisplacement /= goalDisplacement.magnitude;
         // add random factor
         goalDisplacement += Random.onUnitSphere * attackMoveRandomStrength;
+
+        // TODO turn towards player
 
         // Move towards goal
         rb.velocity = (goalDisplacement / goalDisplacement.magnitude) * attackSpeed;
