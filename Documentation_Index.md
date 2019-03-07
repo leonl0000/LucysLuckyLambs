@@ -1,10 +1,21 @@
 # Welcome
 
-  Helloa, <NEW HIRE NAME>
+  Helloa, NEW_HIRE_FIRST_NAME, welcome to EmuGames! On our first major project, Luci's Lucky Lambs, we are creating a game about a shepherd leading sheep through various obstacles, all on behalf of his old friend Luci\[fer\]. 
+  
+  To get started, you will need to know the basics of Unity. First, either show us some prior work in Unity, or follow this <a href="https://www.youtube.com/watch?v=j48LtUkZRjU&list=PLPV2KyIb3jR53Jce9hP7G5xC4O9AgnOuL">tutorial by Brackeys</a>, and make the build the tutorial level in there with at least *one unique, creative addition*.
 
+  After doing so, you'll be all set and ready to work the project. It consists of 5 main elements:
+  - The player
+  - The Sheep
+  - Antagonist NPCs
+  - Terrain and other obstacles
+  - Story and Dialogue
+  
+  We currently have the most work done in the first three categories, and have just started on the last two. You'll find the bulk of the code in the <a href='https://github.com/StanfordCS194/EmuGames/tree/master/prototypes/Quick%20Prototype/Assets/Scripts'>scripts folder<a>, organized by category.
 
+[Insert more details about code, 1 section at a time]
 
-
+And lastly, below is a record of most of our brainstorming sessions and early demo clips so you can see how the game shaped along from an empty plane with a sphere shepherd and capsule sheep to the growing game it is today.
 
 # Emu Games Documentation Index
 
