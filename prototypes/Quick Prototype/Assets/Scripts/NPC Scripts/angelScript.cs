@@ -64,7 +64,7 @@ public class angelScript : MonoBehaviour
     public float timeoutShootInitial = 2;
     public float maxShotRange = 70;
     public GameObject bolt;
-    public float boltSpawnDist = 2;
+    public float boltSpawnDist = 10;
     public float boltSpeed = 40;
     public float woundAlarmRange = 30;
 
@@ -179,6 +179,8 @@ public class angelScript : MonoBehaviour
         health -= damage;
         if (health < 0)
         {
+            Debug.Log("angel destroyed");
+            hsm.angelDict.Remove(index);
             Destroy(gameObject);
             return;
         }

@@ -108,7 +108,7 @@ MonoBehaviour:
   hsm: {fileID: 0}
   player: {fileID: 0}
   index: 0
-  startHealth: 20
+  startHealth: 30
   health: 0
   levitationHeight: 35
   driftProbability: 0.4
@@ -140,7 +140,7 @@ MonoBehaviour:
   timeoutShootInitial: 2
   maxShotRange: 70
   bolt: {fileID: 3479384020816144214, guid: c4edab50550ae834ab42903dd6d5c1ad, type: 3}
-  boltSpawnDist: 2
+  boltSpawnDist: 10
   boltSpeed: 40
   woundAlarmRange: 50
 --- !u!54 &2197692854295177673
