@@ -28,9 +28,10 @@ public class PlayerMovement : MonoBehaviour
     private bool panRight;
     private bool panLeft;
     private bool ab1;
-    public bool ab2;
+    private bool ab2;
     private bool ab3;
     private bool ab4;
+    private bool ab5;
     private bool jump;
     public bool wallInPlay;
     private float xangle;
@@ -70,6 +71,7 @@ public class PlayerMovement : MonoBehaviour
         ab2 = Input.GetKey(KeyCode.Alpha2) || hsm.fireballDown;
         ab3 = Input.GetKeyDown(KeyCode.Alpha3);
         ab4 = Input.GetKeyDown(KeyCode.Alpha4);
+        ab5 = Input.GetKeyDown(KeyCode.Alpha5);
 
 
         //Rotates the player's facing direction based on Mouse X and Y axis movement.
@@ -157,6 +159,10 @@ public class PlayerMovement : MonoBehaviour
         {
             abilities.trumpWall();
             wallInPlay = true;
+        }
+
+        if (ab5) {
+            abilities.Lightning();
         }
 
     }

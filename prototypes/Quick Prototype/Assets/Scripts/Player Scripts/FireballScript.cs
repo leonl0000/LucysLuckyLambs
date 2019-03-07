@@ -41,12 +41,11 @@ public class FireballScript : MonoBehaviour
         thisExplosion.transform.GetChild(1).transform.GetChild(0).gameObject.GetComponent<Light>().intensity = power * fireExplosionMaxLight;
 
         // And call damage-inflicting function on sheep and wolves, etc.
+        HealthScript healthScript = collision.collider.GetComponent<HealthScript>();
+        if (healthScript != null) healthScript.wound(maxFireballDamage * power * power, gameObject.transform);
+
         if (collision.collider.tag == "sheep")
             collision.gameObject.GetComponent<sheepScript>().wound(maxFireballDamage * power * power, gameObject.transform);
-        else if (collision.collider.tag == "Predator")
-            collision.gameObject.GetComponent<PredatorScript>().wound(maxFireballDamage * power * power, gameObject.transform);
-        else if (collision.collider.tag == "angel")
-            collision.gameObject.GetComponent<angelScript>().wound(maxFireballDamage * power * power, gameObject.transform);
 
         // Destroy fireball
         Destroy(gameObject);

@@ -21,14 +21,11 @@ public class angelBoltScript : MonoBehaviour
         // TODO make bolt explosion and instantiate above?
 
         // And call damage-inflicting function on sheep and wolves, etc.
-        if (collision.collider.tag == "sheep")
-            collision.gameObject.GetComponent<sheepScript>().wound(boltDamage, gameObject.transform);
-        else if (collision.collider.tag == "Predator")
-            collision.gameObject.GetComponent<PredatorScript>().wound(boltDamage, gameObject.transform);
-        else if (collision.collider.tag == "angel")
-            collision.gameObject.GetComponent<angelScript>().wound(boltDamage, gameObject.transform);
-        else if (collision.collider.tag == "Player")
-        {
+
+        HealthScript healthScript = collision.collider.GetComponent<HealthScript>();
+        if (healthScript != null) healthScript.wound(boltDamage, gameObject.transform);
+
+        else if (collision.collider.tag == "Player") {
             hsm.health -= 5;
             if (hsm.health < 0) Destroy(hsm.player);
         }

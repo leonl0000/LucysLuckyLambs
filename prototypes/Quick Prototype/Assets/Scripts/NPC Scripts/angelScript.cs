@@ -87,7 +87,8 @@ public class angelScript : MonoBehaviour
         lineRenderer.colorGradient = gradient;
         lineRenderer.positionCount = 0;
 
-        health = startHealth;
+        HealthScript.AddHealthScript(gameObject, startHealth, null, WoundAction, DeathFunction);
+        //health = startHealth;
 
         state = AngelState.JUST_CREATED;
     }
@@ -173,29 +174,22 @@ public class angelScript : MonoBehaviour
         startAttacking();
     }
 
-    public void wound(float damage, Transform site)
-    {
-        // do damage; no bloodSplatter
-        health -= damage;
-        if (health < 0)
-        {
-            Debug.Log("angel destroyed");
-            hsm.angelDict.Remove(index);
-            Destroy(gameObject);
-            return;
-        }
+    public bool DeathFunction() {
+        Debug.Log("angel destroyed");
+        hsm.angelDict.Remove(index);
+        return true;
+    }
 
-        foreach (int angelIndex in hsm.angelDict.Keys)
-        {
+    public void WoundAction(float damage)
+    {
+        foreach (int angelIndex in hsm.angelDict.Keys) {
             if (angelIndex == index)
                 continue;
             GameObject otherAngel = hsm.angelDict[angelIndex];
             Vector3 otherPos = otherAngel.transform.position;
             float distance = (otherPos - transform.position).magnitude;
             if (distance < woundAlarmRange)
-            {
                 otherAngel.GetComponent<angelScript>().alarmTriggered();
-            }
         }
         alarmTriggered();
     }
