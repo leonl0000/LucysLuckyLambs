@@ -1,15 +1,26 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class Abilities : MonoBehaviour {
 
     public hellSceneManager hsm;
-
+    
+    //Lure variables
     public GameObject lure;
     public int throw_speed;
     private GameObject spawned_lure;
+    
+    //Wall variables
+    public GameObject wall;
+    public int wall_move_speed;
+    private GameObject spawnedWall;
+    private float forward_angle;
+    private float side_angle;
+    private Vector3 offsetAngle;
 
+    //Fireball variables!
     public GameObject fireball;
     public float minFireballSpeed = 40;
     public float maxFireballSpeed = 100;
@@ -32,8 +43,21 @@ public class Abilities : MonoBehaviour {
     {
         // move currently-growing fireball to new position
         // done in FixedUpdate so it doesn't lag behind player movement
-        if (isGrowingFireball)
+        if (isGrowingFireball) { 
             spawned_fireball.transform.position = cam.transform.position + cam.transform.forward * 10;
+        
+            // calculate current power
+            fireballGrowLength += Time.deltaTime;
+            float growFraction = Mathf.Max(Mathf.Min(1, fireballGrowLength / fireballMaxGrowLength), fireballMinPower);
+            float currPower = fireballMinPower + growFraction * (1 - fireballMinPower);
+
+            // set fireball scale according to power
+            float currFireballScale = currPower * fireballAimSphereMaxScale;
+            spawned_fireball.gameObject.transform.localScale = new Vector3(currFireballScale, currFireballScale, currFireballScale);
+
+            // set light intensity according to power
+            spawned_fireball.gameObject.transform.GetChild(1).gameObject.GetComponent<Light>().intensity = currPower * fireballMaxLight;
+        }
     }
 
     public void SpawnLure()
@@ -46,6 +70,21 @@ public class Abilities : MonoBehaviour {
             hsm.lureDict[nextIndex] = spawned_lure;
             spawned_lure.GetComponent<LureScript>().index = nextIndex;
             nextIndex++;
+            if(hsm.lureDict.Count > 3) {
+                hsm.lureDict[hsm.lureDict.Keys.Min()].GetComponent<LureScript>().destroyLure();
+            }
+        }
+    }
+
+    public void trumpWall()
+    {
+
+
+        if (hsm.mana >= 5)
+        {
+            spawnedWall = Instantiate(wall, me_transform.position + new Vector3(0, 13, 0), wall.transform.rotation);
+            hsm.mana -= 5;
+
         }
     }
 
@@ -53,6 +92,7 @@ public class Abilities : MonoBehaviour {
     public void FireballKey()
     {
         // possibly create a new fireball
+
         if (!isGrowingFireball && hsm.mana >= 2)
         {
             isGrowingFireball = true;
@@ -68,41 +108,31 @@ public class Abilities : MonoBehaviour {
             spawned_fireball.gameObject.transform.localScale = new Vector3(currFireballScale, currFireballScale, currFireballScale);
         }
         // otherwise, grow current fireball
-        else if (isGrowingFireball)
-        {
-            // calculate current power
-            fireballGrowLength += Time.deltaTime;
-            float growFraction = Mathf.Max(Mathf.Min(1, fireballGrowLength / fireballMaxGrowLength), fireballMinPower);
-            float currPower = fireballMinPower + growFraction * (1 - fireballMinPower);
 
-            // set fireball scale according to power
-            float currFireballScale = currPower * fireballAimSphereMaxScale;
-            spawned_fireball.gameObject.transform.localScale = new Vector3(currFireballScale, currFireballScale, currFireballScale);
-
-            // set light intensity according to power
-            spawned_fireball.gameObject.transform.GetChild(1).gameObject.GetComponent<Light>().intensity = currPower * fireballMaxLight;
-        }
     }
 
     public void FireballRelease()
     {
-        // compute fireball power
-        isGrowingFireball = false;
-        float growFraction = Mathf.Min(1, fireballGrowLength / fireballMaxGrowLength);
-        float currPower = fireballMinPower + growFraction * (1 - fireballMinPower);
-        spawned_fireball.GetComponent<FireballScript>().power = currPower;
+        if (isGrowingFireball) {
+            // compute fireball power
+            isGrowingFireball = false;
+            float growFraction = Mathf.Min(1, fireballGrowLength / fireballMaxGrowLength);
+            float currPower = fireballMinPower + growFraction * (1 - fireballMinPower);
+            spawned_fireball.GetComponent<FireballScript>().beginLifeTimer();
+            spawned_fireball.GetComponent<FireballScript>().power = currPower;
 
-        // activate particles, and set to right scale
-        spawned_fireball.gameObject.transform.GetChild(0).gameObject.GetComponent<Renderer>().enabled = true;
-        float currParticleScale = currPower * fireballParticlesMaxScale;
-        spawned_fireball.transform.GetChild(0).gameObject.transform.localScale = new Vector3(currParticleScale, currParticleScale, currParticleScale);
+            // activate particles, and set to right scale
+            spawned_fireball.gameObject.transform.GetChild(0).gameObject.GetComponent<Renderer>().enabled = true;
+            float currParticleScale = currPower * fireballParticlesMaxScale;
+            spawned_fireball.transform.GetChild(0).gameObject.transform.localScale = new Vector3(currParticleScale, currParticleScale, currParticleScale);
 
-        // deactivate the aiming sphere
-        spawned_fireball.gameObject.GetComponent<Renderer>().enabled = false;
+            // deactivate the aiming sphere
+            spawned_fireball.gameObject.GetComponent<Renderer>().enabled = false;
 
-        // shoot fireball forward with appropriate speed, smaller ones shoot faster
-        float fireballSpeed = minFireballSpeed + (1 - currPower) * (maxFireballSpeed - minFireballSpeed);
-        spawned_fireball.GetComponent<Rigidbody>().velocity += cam.transform.forward * fireballSpeed;
+            // shoot fireball forward with appropriate speed, smaller ones shoot faster
+            float fireballSpeed = minFireballSpeed + (1 - currPower) * (maxFireballSpeed - minFireballSpeed);
+            spawned_fireball.GetComponent<Rigidbody>().velocity += cam.transform.forward * fireballSpeed;
+        }
     }
 
     public void spawnSheep() {
