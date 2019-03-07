@@ -7,6 +7,8 @@ TagManager:
   - sheep
   - ground
   - Predator
+  - fireball
+  - angel
   layers:
   - Default
   - TransparentFX
