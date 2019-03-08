@@ -87,6 +87,10 @@ public class hellSceneManager : MonoBehaviour {
             case 4:
                 if (!playerMovement.wallInPlay) playerAbilities.trumpWall();
                 break;
+
+            case 5:
+                playerAbilities.Lightning();
+                break;
         }
     }
 
@@ -120,7 +124,7 @@ public class hellSceneManager : MonoBehaviour {
     //Deal with objects that fall off the edge
     public void objectDrop(GameObject o) {
         if (o.tag == "sheep") {
-            sheepDict.Remove(o.GetComponent<sheepScript>().index);
+            o.GetComponent<sheepScript>().DeathFunction();
             Destroy(o);
             //Debug.Log(string.Format("Sheep {0} dropped", o.GetComponent<sheepScript>().index));
             numSheepDropped += 1;
@@ -130,19 +134,16 @@ public class hellSceneManager : MonoBehaviour {
     public void predatorCollision(GameObject pred, GameObject prey) {
         if(prey.tag == "sheep") {
             numSheepEaten++;
-            sheepDict.Remove(prey.GetComponent<sheepScript>().index);
+            prey.GetComponent<sheepScript>().DeathFunction();
             Destroy(prey);
         }
     }
     #endregion
 
-    public bool spawnSheep() {
-        return spawnSheepAt(spawnGate.position);
-
-    }
+    public bool spawnSheep() { return spawnSheepAt(spawnGate.position); }
 
     public bool spawnSheepAt(Vector3 pos) {
-        if (mana > 0) {
+        if (mana >= 1) {
             mana--;
             GameObject s = Instantiate(sheep, pos, sheep.transform.rotation);
             s.GetComponent<sheepScript>().index = nextSheepIndex;

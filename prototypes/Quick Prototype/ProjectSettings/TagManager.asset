@@ -9,6 +9,7 @@ TagManager:
   - Predator
   - fireball
   - angel
+  - Lightning
   layers:
   - Default
   - TransparentFX

@@ -41,6 +41,12 @@ public class sheepScript : MonoBehaviour {
         rb.velocity = new Vector3(2 * MAX_INITIAL_SPEED * (Random.value - .5f), 0, 2 * MAX_INITIAL_SPEED * (Random.value - .5f));
         goal = new Vector3(0, 0, 0);
         moveCountdown = Random.Range(minStartCountdown, maxStartCountdown);
+        HealthScript.AddHealthScript(gameObject, 5, Resources.Load<GameObject>("BloodSplatter"), null, DeathFunction);
+    }
+
+    public bool DeathFunction() {
+        hsm.sheepDict.Remove(index);
+        return true;
     }
 
 
