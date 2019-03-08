@@ -68,6 +68,7 @@ public class angelScript : MonoBehaviour
     public float boltSpawnDist = 10;
     public float boltSpeed = 40;
     public float woundAlarmRange = 30;
+    private Vector3 playerTargetDisplacement = new Vector3(0, 5, 0); // bolts are aimed at player's position plus this
 
     // Start is called before the first frame update
     void Start()
@@ -280,7 +281,7 @@ public class angelScript : MonoBehaviour
     {
         Debug.Log("shoot");
         timeoutShoot = timeoutShootInitial;
-        Vector3 angelToPlayer = player.transform.position - transform.position;
+        Vector3 angelToPlayer = player.transform.position - transform.position + playerTargetDisplacement;
         if (angelToPlayer.magnitude > maxShotRange)
             return;
 

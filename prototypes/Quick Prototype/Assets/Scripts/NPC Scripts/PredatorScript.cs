@@ -71,6 +71,12 @@ public class PredatorScript : MonoBehaviour
                 velocityTarget = speed * direction;
                 rb.velocity = velocityTarget;
                 directionTimer = directionTimeout;
+
+                // rotate to face movement direction
+                transform.rotation = Quaternion.LookRotation(direction, Vector3.up);
+                // rotate by another 90 degrees y so it looks forward
+                // TODO is there a way to do this in the unity object viewer? would be faster
+                transform.Rotate(transform.rotation.x, transform.rotation.y + 90, transform.rotation.z);
             } else {
                 directionTimer -= Time.deltaTime;
                 if (velocityResetTimer < 0) rb.velocity = velocityTarget;
@@ -85,6 +91,7 @@ public class PredatorScript : MonoBehaviour
             rb.AddForce(0, 250, 0, ForceMode.VelocityChange);
         }
         lastPosition = rb.position;
+
     }
 
     public void OnCollisionEnter(Collision collision) {        //Bounce on ground!

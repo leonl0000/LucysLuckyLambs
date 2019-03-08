@@ -44,6 +44,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Start()
     {
+        playerRB = this.GetComponent<Rigidbody>();
         pan_type = Constants.PanType.MOUSE;
         playerRB.AddForce(0, 200, 0);
         abilities = this.gameObject.GetComponent<Abilities>();
@@ -128,21 +129,22 @@ public class PlayerMovement : MonoBehaviour
             //Rotate the sprite about the Y axis in the negative direction
             delta_velocity += -transform.right * moveSpeed;
         }
-
-        //If the velocity we're about to add will make us faster than max_velocity
-        if (Mathf.Abs(Vector3.Magnitude(playerRB.velocity + delta_velocity)) > max_velocity) 
-        {
-            //Correct the delta_velocity to add exactly the remainder from playerRB.velocity to max_velcoity
-            delta_velocity = ((playerRB.velocity + delta_velocity) / (Vector3.Magnitude(playerRB.velocity + delta_velocity) / max_velocity)) - playerRB.velocity;
-        }
         
         playerRB.velocity += delta_velocity;
+
+        // impose maximum on non-vertical velocity
+        Vector3 horizontalVelocity = new Vector3(playerRB.velocity.x, 0, playerRB.velocity.z);
+        if (horizontalVelocity.magnitude > max_velocity)
+        {
+            horizontalVelocity = horizontalVelocity.normalized * max_velocity;
+            playerRB.velocity = new Vector3(horizontalVelocity.x, playerRB.velocity.y, horizontalVelocity.z);
+        }
 
 
         if (jump && num_jumps > 0)
         {
             num_jumps--;
-            playerRB.AddForce(0, 400, 0);
+            playerRB.AddForce(0, 15, 0, ForceMode.VelocityChange);
         }
 
         if (ab1) abilities.SpawnLure();
