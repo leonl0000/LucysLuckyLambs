@@ -145,7 +145,7 @@ public class PlayerMovement : MonoBehaviour
         if (jump && num_jumps > 0)
         {
             num_jumps--;
-            playerRB.AddForce(0, 400, 0);
+            playerRB.AddForce(0, 15, 0, ForceMode.VelocityChange);
         }
 
         if (ab1) abilities.SpawnLure();
