@@ -91,10 +91,6 @@ public class angelScript : MonoBehaviour
         HealthScript.AddHealthScript(gameObject, startHealth, null, WoundAction, DeathFunction);
 
         state = AngelState.JUST_CREATED;
-
-        //abductionBurst = Resources.Load<GameObject>("Prefabs/AbductionBurst.prefab");
-        //abductBeamMat = Resources.Load<Material>("Materials/AbductBeamMat.mat");
-        // TODO why do the above lines return None?
     }
 
     void randomNextActivity()
