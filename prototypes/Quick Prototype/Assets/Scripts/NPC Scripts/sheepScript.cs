@@ -29,9 +29,9 @@ public class sheepScript : MonoBehaviour {
 
     private bool isOnGround = false;
 
-
     public float oldGoalPersistence = 0.5f;
     public float newGoalStrength = 0.5f;
+    
 
 
 
@@ -42,6 +42,7 @@ public class sheepScript : MonoBehaviour {
         goal = new Vector3(0, 0, 0);
         moveCountdown = Random.Range(minStartCountdown, maxStartCountdown);
         HealthScript.AddHealthScript(gameObject, 5, Resources.Load<GameObject>("BloodSplatter"), null, DeathFunction);
+        hsm.registerSheep(gameObject);
     }
 
     public bool DeathFunction() {
