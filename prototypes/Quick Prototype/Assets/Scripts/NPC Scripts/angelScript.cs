@@ -43,7 +43,7 @@ public class angelScript : MonoBehaviour
     public float timeoutAbductStopInitial = 60;
     public float abductStopDist = 70;
     public float abductSpeed = 5;
-    public float abductDoneDist = 10;
+    public float abductDoneDist = 15;
 
     public float beamWidth = 0.5f;
     public Color beamStartCol = Color.white;
@@ -52,6 +52,7 @@ public class angelScript : MonoBehaviour
     public float beamEndAlpha = 0.3f;
     private LineRenderer lineRenderer;
     public Material abductBeamMat;
+    public GameObject abductionBurst;
 
     public float maxAutoAttackDist = 90;
     private float timeoutAttackStop;
@@ -88,9 +89,12 @@ public class angelScript : MonoBehaviour
         lineRenderer.positionCount = 0;
 
         HealthScript.AddHealthScript(gameObject, startHealth, null, WoundAction, DeathFunction);
-        //health = startHealth;
 
         state = AngelState.JUST_CREATED;
+
+        //abductionBurst = Resources.Load<GameObject>("Prefabs/AbductionBurst.prefab");
+        //abductBeamMat = Resources.Load<Material>("Materials/AbductBeamMat.mat");
+        // TODO why do the above lines return None?
     }
 
     void randomNextActivity()
@@ -329,6 +333,12 @@ public class angelScript : MonoBehaviour
 
     void updateChaseDir()
     {
+        if (sheepChaseTarget == null)
+        {
+            randomNextActivity();
+            return;
+        }
+
         // check whether we can transition to abduction
         float dist = (sheepChaseTarget.transform.position - transform.position).magnitude;
         Debug.Log(string.Format("start abduction? dist is {0}", dist));
@@ -384,10 +394,11 @@ public class angelScript : MonoBehaviour
         // check whether sheep is close enough to disappear
         if (sheepToAngel.magnitude < abductDoneDist)
         {
+            // spawn particle effect
+            Instantiate(abductionBurst, sheepChaseTarget.transform.position, sheepChaseTarget.transform.rotation);
+
             // disappear sheep
             hsm.objectDrop(sheepChaseTarget);
-
-            // TODO spawn particle effect
 
             // move out of abduction mode
             endAbducting();
