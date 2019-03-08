@@ -134,10 +134,9 @@ public class PlayerMovement : MonoBehaviour
 
         // impose maximum on non-vertical velocity
         Vector3 horizontalVelocity = new Vector3(playerRB.velocity.x, 0, playerRB.velocity.z);
-        float horizontalSpeed = horizontalVelocity.magnitude;
-        if (horizontalSpeed > max_velocity)
+        if (horizontalVelocity.magnitude > max_velocity)
         {
-            horizontalVelocity *= max_velocity / horizontalSpeed;
+            horizontalVelocity = horizontalVelocity.normalized * max_velocity;
             playerRB.velocity = new Vector3(horizontalVelocity.x, playerRB.velocity.y, horizontalVelocity.z);
         }
 
