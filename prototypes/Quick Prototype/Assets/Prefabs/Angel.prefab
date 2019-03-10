@@ -125,15 +125,17 @@ MonoBehaviour:
   timeoutAbductStopInitial: 60
   abductStopDist: 70
   abductSpeed: 5
-  abductDoneDist: 10
+  abductDoneDist: 15
   beamWidth: 0.5
   beamStartCol: {r: 1, g: 1, b: 1, a: 1}
   beamEndCol: {r: 0, g: 1, b: 1, a: 1}
   beamStartAlpha: 0.7
   beamEndAlpha: 0.3
-  abductBeamMat: {fileID: 0}
+  abductBeamMat: {fileID: 2100000, guid: 363850704c17fe948904f9fd61fef875, type: 2}
+  abductionBurst: {fileID: 4367185573352591643, guid: 26280cc5bf6d8c34c813335a8102c776,
+    type: 3}
   maxAutoAttackDist: 90
-  timeoutAttackStopInitial: 0
+  timeoutAttackStopInitial: 30
   attackMoveRandomStrength: 1
   attackSpeed: 10
   timeoutAttackUpdateInitial: 3

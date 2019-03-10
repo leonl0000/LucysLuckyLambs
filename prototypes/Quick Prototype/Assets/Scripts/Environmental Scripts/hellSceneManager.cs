@@ -59,7 +59,6 @@ public class hellSceneManager : MonoBehaviour {
         health = 100f;
         numSheepDropped = 0;
         numSheepEaten = 0;
-        sheepDict = new Dictionary<int, GameObject>();
         lureDict = new Dictionary<int, GameObject>();
         angelDict = new Dictionary<int, GameObject>();
         nextSheepIndex = 0;
@@ -161,6 +160,14 @@ public class hellSceneManager : MonoBehaviour {
     }
     #endregion
 
+    public void registerSheep(GameObject s) {
+        if (sheepDict == null)
+            sheepDict = new Dictionary<int, GameObject>();
+        s.GetComponent<sheepScript>().index = nextSheepIndex;
+        sheepDict[nextSheepIndex] = s;
+        nextSheepIndex++;
+    }
+
     #region Boids and Lures
     /* Called with a sheep's index. Returns its goal based on current game state.
      This is combined with sheep's current goal to produce new goal. */
@@ -254,8 +261,8 @@ public class hellSceneManager : MonoBehaviour {
         Vector3 randomForce = Random.onUnitSphere;
         newGoal += randomForce * boidNoise;
         newGoal.y = 0; // goal is on same plane as sheep
-        Debug.AssertFormat(!float.IsNaN(newGoal.x), "{0} {1} {2} {3}", playerGoal, coherenceAvoidanceGoal, alignmentGoal, lureGoal);
-        Debug.AssertFormat(!float.IsNaN(newGoal.z), "{0} {1} {2} {3}", playerGoal, coherenceAvoidanceGoal, alignmentGoal, lureGoal);
+        Debug.AssertFormat(!float.IsNaN(newGoal.x), "{0} {1} {2} {3} {4}", playerGoal, coherenceAvoidanceGoal, alignmentGoal, lureGoal, sheepDict.Count);
+        Debug.AssertFormat(!float.IsNaN(newGoal.z), "{0} {1} {2} {3} {4}", playerGoal, coherenceAvoidanceGoal, alignmentGoal, lureGoal, sheepDict.Count);
         return newGoal;
     }
 
