@@ -32,7 +32,7 @@ public class HealthScript : MonoBehaviour
         Health -= damage;
         if (woundObject != null && site != null) Instantiate(woundObject, site.position, site.rotation);
         WoundAction?.Invoke(damage);
-        if (Health < 0) {
+        if (Health <= 0) {
             bool destroySelf = true;
             if (DeathFunction != null) destroySelf = DeathFunction();
             if (destroySelf) Destroy(gameObject);

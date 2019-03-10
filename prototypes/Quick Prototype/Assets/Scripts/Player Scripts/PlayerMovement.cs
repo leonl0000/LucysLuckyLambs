@@ -40,6 +40,7 @@ public class PlayerMovement : MonoBehaviour
     public Constants.PanType pan_type;
     private Vector3 offsetAngle;
     public Transform cameraTransform;
+    private FollowPlayer fp;
     
 
     void Start()
@@ -49,6 +50,7 @@ public class PlayerMovement : MonoBehaviour
         abilities = this.gameObject.GetComponent<Abilities>();
         num_jumps = max_jumps;
         hsm = GameObject.Find("GameManager").GetComponent<hellSceneManager>();
+        fp = cam.GetComponent<FollowPlayer>();
 
         GameObject tempObj = new GameObject();
         tempObj.transform.position = transform.position;
@@ -75,26 +77,38 @@ public class PlayerMovement : MonoBehaviour
 
 
         //Rotates the player's facing direction based on Mouse X and Y axis movement.
-        if (pan_type == Constants.PanType.MOUSE)
-        {
+        //if (pan_type == Constants.PanType.MOUSE)
+        //{
+        //    xangle += camSpeed * Input.GetAxis("Mouse X");
+        //    yangle += camSpeed * Input.GetAxis("Mouse Y");
+        //    offsetAngle = new Vector3(yangle, xangle, 0);
+        //    cameraTransform.eulerAngles = offsetAngle;
+        //    transform.eulerAngles = new Vector3(0, xangle, 0);
+        //} else 
+        //{
+        //    float axis = 0; ;
+        //    if (panRight) axis = 1;
+        //    if (panLeft) axis = -1;
+        //    xangle += camSpeed * axis;
+        //    offsetAngle = new Vector3(0, xangle, 0);
+        //    cameraTransform.eulerAngles = offsetAngle;
+        //    transform.eulerAngles = offsetAngle;
+        //    //if (panRight) transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 90, 0), camSpeed * Time.deltaTime);
+        //    //else if (panLeft) transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, -90, 0), camSpeed * Time.deltaTime);
+        //}
+
+        if (pan_type == Constants.PanType.MOUSE) {
             xangle += camSpeed * Input.GetAxis("Mouse X");
             yangle += camSpeed * Input.GetAxis("Mouse Y");
-            offsetAngle = new Vector3(yangle, xangle, 0);
-            cameraTransform.eulerAngles = offsetAngle;
-            transform.eulerAngles = new Vector3(0, xangle, 0);
-        } else 
-        {
-            float axis = 0; ;
-            if (panRight) axis = 1;
-            if (panLeft) axis = -1;
-            xangle += camSpeed * axis;
-            offsetAngle = new Vector3(0, xangle, 0);
-            cameraTransform.eulerAngles = offsetAngle;
-            transform.eulerAngles = offsetAngle;
-            //if (panRight) transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 90, 0), camSpeed * Time.deltaTime);
-            //else if (panLeft) transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, -90, 0), camSpeed * Time.deltaTime);
         }
+        xangle += camSpeed * ((panRight ? 1 : 0) + (panLeft ? -1 : 0));
+        offsetAngle = new Vector3(yangle, xangle, 0);
+        cameraTransform.eulerAngles = offsetAngle;
+        transform.eulerAngles = offsetAngle;
 
+
+        if (Input.GetKey("z")) fp.positionBack -= 10 * Time.deltaTime;
+        if (Input.GetKey("x")) fp.positionBack += 10 * Time.deltaTime;
 
     }
 

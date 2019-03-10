@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public enum AngelState { DRIFTING, CHASING_SHEEP, ABDUCTING_SHEEP, ATTACKING_PLAYER, JUST_CREATED };
@@ -177,7 +178,13 @@ public class angelScript : MonoBehaviour
     public bool DeathFunction() {
         Debug.Log("angel destroyed");
         hsm.angelDict.Remove(index);
-        return true;
+        Rigidbody rb = gameObject.GetComponent<Rigidbody>();
+        rb.useGravity = true;
+        rb.velocity = 25 * Vector3.down;
+        gameObject.GetComponent<MeshRenderer>().material =
+            Resources.Load<Material>(Path.Combine("Materials", "Dead Angel"));
+        enabled = false;
+        return false;
     }
 
     public void WoundAction(float damage)

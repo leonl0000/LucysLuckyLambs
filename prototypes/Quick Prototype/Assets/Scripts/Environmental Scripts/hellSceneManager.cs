@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -19,6 +20,8 @@ public class hellSceneManager : MonoBehaviour {
 
     public Dictionary<int, GameObject> sheepDict;
     private int nextSheepIndex;
+
+    public static DialogueBoxScript DBS;
 
     public Dictionary<int, GameObject> lureDict;
 
@@ -64,6 +67,8 @@ public class hellSceneManager : MonoBehaviour {
         playerMovement = player.GetComponent<PlayerMovement>();
         if (SaveSystem.saveSlot != 0) load(SaveSystem.saveSlot);
         fireballDown = false;
+
+        GameObject OpeningTutorial = Instantiate(Resources.Load<GameObject>(Path.Combine("Dialogues", "Lv1 Tutorial Dialogue")));
     }
 
     public void triggerAbility(int abNum) {
@@ -140,6 +145,7 @@ public class hellSceneManager : MonoBehaviour {
     }
     #endregion
 
+    #region Sheep
     public bool spawnSheep() { return spawnSheepAt(spawnGate.position); }
 
     public bool spawnSheepAt(Vector3 pos) {
@@ -149,12 +155,11 @@ public class hellSceneManager : MonoBehaviour {
             s.GetComponent<sheepScript>().index = nextSheepIndex;
             sheepDict[nextSheepIndex] = s;
             nextSheepIndex++;
-            //Debug.Log(string.Format("Sheep {0} Born", s.GetComponent<sheepScript>().index));
             return true;
         }
         return false;
     }
-
+    #endregion
 
     #region Boids and Lures
     /* Called with a sheep's index. Returns its goal based on current game state.
