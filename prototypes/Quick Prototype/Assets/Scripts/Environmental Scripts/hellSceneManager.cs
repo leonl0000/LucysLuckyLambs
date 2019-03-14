@@ -62,6 +62,8 @@ public class hellSceneManager : MonoBehaviour {
         lureDict = new Dictionary<int, GameObject>();
         angelDict = new Dictionary<int, GameObject>();
         nextSheepIndex = 0;
+        foreach (GameObject s in GameObject.FindGameObjectsWithTag("sheep"))
+            registerSheep(s);
         playerAbilities = player.GetComponent<Abilities>();
         playerMovement = player.GetComponent<PlayerMovement>();
         if (SaveSystem.saveSlot != 0) load(SaveSystem.saveSlot);

@@ -49,7 +49,7 @@ public class sheepScript : MonoBehaviour {
         rb.velocity = new Vector3(2 * MAX_INITIAL_SPEED * (Random.value - .5f), 0, 2 * MAX_INITIAL_SPEED * (Random.value - .5f));
         goal = new Vector3(0, 0, 0);
         moveCountdown = Random.Range(minStartCountdown, maxStartCountdown);
-        healthScript = HealthScript.AddHealthScript(gameObject, max_health, Resources.Load<GameObject>("BloodSplatter"), null, DeathFunction);
+        healthScript = HealthScript.AddHealthScript(gameObject, max_health, 4f, Resources.Load<GameObject>("BloodSplatter"), null, DeathFunction);
         hsm.registerSheep(gameObject);
     }
 

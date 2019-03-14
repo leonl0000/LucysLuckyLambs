@@ -102,6 +102,7 @@ public class Abilities : MonoBehaviour {
             fireballGrowLength = 0;
             hsm.mana -= 2;
             spawned_fireball = Instantiate(fireball, cam.transform.position + cam.transform.forward * 10, fireball.transform.rotation);
+            spawned_fireball.GetComponent<SphereCollider>().enabled = false;
 
             // deactivate particles and light while aiming
             spawned_fireball.gameObject.transform.GetChild(0).gameObject.GetComponent<Renderer>().enabled = false;
@@ -135,6 +136,7 @@ public class Abilities : MonoBehaviour {
             // shoot fireball forward with appropriate speed, smaller ones shoot faster
             float fireballSpeed = minFireballSpeed + (1 - currPower) * (maxFireballSpeed - minFireballSpeed);
             spawned_fireball.GetComponent<Rigidbody>().velocity += cam.transform.forward * fireballSpeed;
+            spawned_fireball.GetComponent<SphereCollider>().enabled = true;
         }
     }
 

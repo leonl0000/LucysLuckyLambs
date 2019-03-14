@@ -31,7 +31,6 @@ public class DialogueBoxScript : MonoBehaviour
         hsm = GameObject.Find("GameManager").GetComponent<hellSceneManager>();
         dialogueCanvas = transform.parent.GetComponent<Canvas>();
         nameBox = transform.Find("NameText").GetComponent<TextMeshProUGUI>();
-        print(nameBox);
         textBox = transform.Find("TextText").GetComponent<TextMeshProUGUI>();
         responseBoxRect = transform.Find("ResponseBox").GetComponent<RectTransform>();
         scrollingListTransform = responseBoxRect.transform.Find("ScrollingList");

@@ -99,13 +99,15 @@ public class PlayerMovement : MonoBehaviour
         //}
 
         if (pan_type == Constants.PanType.MOUSE) {
+            //if(Input.mousePosition.x > 0 && Input.mousePosition.x < Screen.width)
             xangle += camSpeed * Input.GetAxis("Mouse X");
-            yangle += camSpeed * Input.GetAxis("Mouse Y");
+            //if(Input.mousePosition.y > 0 && Input.mousePosition.y < Screen.height)
+            //yangle -= camSpeed * Input.GetAxis("Mouse Y") * 550/Screen.height;
+            yangle = (Mathf.Max(Mathf.Min(Input.mousePosition.y, Screen.height), 0) / Screen.height - .5f) * -180;
         }
         xangle += camSpeed * ((panRight ? 1 : 0) + (panLeft ? -1 : 0));
-        offsetAngle = new Vector3(yangle, xangle, 0);
-        cameraTransform.eulerAngles = offsetAngle;
-        transform.eulerAngles = offsetAngle;
+        cameraTransform.eulerAngles = new Vector3(yangle, xangle, 0);
+        transform.eulerAngles = new Vector3(0, xangle, 0);
 
 
         if (Input.GetKey("z")) fp.positionBack -= 10 * Time.deltaTime;
@@ -145,6 +147,7 @@ public class PlayerMovement : MonoBehaviour
         }
         
         playerRB.velocity += delta_velocity;
+        //playerRB.AddForce(100* delta_velocity * Time.deltaTime, ForceMode.VelocityChange);
 
         // impose maximum on non-vertical velocity
         Vector3 horizontalVelocity = new Vector3(playerRB.velocity.x, 0, playerRB.velocity.z);
