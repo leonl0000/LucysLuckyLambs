@@ -33,6 +33,9 @@ public class Abilities : MonoBehaviour {
     private const float fireballMaxGrowLength = 3; // length in seconds to grow fireball to full size
     private const float fireballMaxLight = 3; // maximum intensity of fireball's light
 
+    //Lightning variables...
+    private GameObject LightningObject;
+
     public Camera cam;
 
     private Transform me_transform;
@@ -139,9 +142,17 @@ public class Abilities : MonoBehaviour {
         hsm.spawnSheep();
     }
 
+    public void Lightning() {
+        if (hsm.mana >= 10) {
+            Instantiate(LightningObject, transform.position, LightningObject.transform.rotation);
+            hsm.mana -= 10;
+        }
+    }
+
     // Use this for initialization
     void Start () {
         me_transform = this.gameObject.transform;
+        LightningObject = Resources.Load<GameObject>("Lightning");
 	}
 
 	// Update is called once per frame

@@ -25,6 +25,7 @@ public class PredatorScript : MonoBehaviour
     public float health;
 
     public GameObject bloodSplatter;
+    public HealthScript healthScript;
 
     void Start() {
         chaseTimer = chasingTimeout;
@@ -33,11 +34,18 @@ public class PredatorScript : MonoBehaviour
         terrainTimer = 0;
         health = 30;
         rb = gameObject.GetComponent<Rigidbody>();
+        HealthScript.AddHealthScript(gameObject, 40, Resources.Load<GameObject>("BloodSplatter"));
+    }
+
+    public void onDeath() {
+        Destroy(gameObject);
     }
 
     private GameObject getNewPrey() {
         GameObject nextPrey = null;
         float minSqDist = maxSquaredDistance;
+        //Debug.Log("HSM " + hsm);
+        //Debug.Log("SD " + hsm.sheepDict);
         foreach (int index in hsm.sheepDict.Keys) {
             float dist = (gameObject.transform.position - hsm.sheepDict[index].transform.position).sqrMagnitude;
             Debug.Log(maxSquaredDistance);
@@ -63,6 +71,12 @@ public class PredatorScript : MonoBehaviour
                 velocityTarget = speed * direction;
                 rb.velocity = velocityTarget;
                 directionTimer = directionTimeout;
+
+                // rotate to face movement direction
+                transform.rotation = Quaternion.LookRotation(direction, Vector3.up);
+                // rotate by another 90 degrees y so it looks forward
+                // TODO is there a way to do this in the unity object viewer? would be faster
+                transform.Rotate(transform.rotation.x, transform.rotation.y + 90, transform.rotation.z);
             } else {
                 directionTimer -= Time.deltaTime;
                 if (velocityResetTimer < 0) rb.velocity = velocityTarget;
@@ -77,6 +91,7 @@ public class PredatorScript : MonoBehaviour
             rb.AddForce(0, 250, 0, ForceMode.VelocityChange);
         }
         lastPosition = rb.position;
+
     }
 
     public void OnCollisionEnter(Collision collision) {        //Bounce on ground!
@@ -94,10 +109,10 @@ public class PredatorScript : MonoBehaviour
         }
     }
 
-    public void wound(float damage, Transform site) {
-        GameObject thisSplatter = Instantiate(Resources.Load("BloodSplatter"), site.position, site.rotation) as GameObject;
-        health -= damage;
-        if (health < 0) Destroy(gameObject);
-    }
+    //public void wound(float damage, Transform site) {
+    //    GameObject thisSplatter = Instantiate(, site.position, site.rotation);
+    //    health -= damage;
+    //    if (health < 0) Destroy(gameObject);
+    //}
 }
 

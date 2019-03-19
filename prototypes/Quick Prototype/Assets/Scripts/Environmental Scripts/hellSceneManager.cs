@@ -22,6 +22,9 @@ public class hellSceneManager : MonoBehaviour {
 
     public Dictionary<int, GameObject> lureDict;
 
+    public Dictionary<int, GameObject> angelDict;
+    public int nextAngelIndex;
+
     public float playerBoidInfluence = 150f; //multiplied onto the force each sheep gets applied
 
     public float boidSeparateThreshold;
@@ -53,8 +56,8 @@ public class hellSceneManager : MonoBehaviour {
         health = 100f;
         numSheepDropped = 0;
         numSheepEaten = 0;
-        sheepDict = new Dictionary<int, GameObject>();
         lureDict = new Dictionary<int, GameObject>();
+        angelDict = new Dictionary<int, GameObject>();
         nextSheepIndex = 0;
         playerAbilities = player.GetComponent<Abilities>();
         playerMovement = player.GetComponent<PlayerMovement>();
@@ -82,6 +85,10 @@ public class hellSceneManager : MonoBehaviour {
 
             case 4:
                 if (!playerMovement.wallInPlay) playerAbilities.trumpWall();
+                break;
+
+            case 5:
+                playerAbilities.Lightning();
                 break;
         }
     }
@@ -116,7 +123,7 @@ public class hellSceneManager : MonoBehaviour {
     //Deal with objects that fall off the edge
     public void objectDrop(GameObject o) {
         if (o.tag == "sheep") {
-            sheepDict.Remove(o.GetComponent<sheepScript>().index);
+            o.GetComponent<sheepScript>().DeathFunction();
             Destroy(o);
             //Debug.Log(string.Format("Sheep {0} dropped", o.GetComponent<sheepScript>().index));
             numSheepDropped += 1;
@@ -126,30 +133,31 @@ public class hellSceneManager : MonoBehaviour {
     public void predatorCollision(GameObject pred, GameObject prey) {
         if(prey.tag == "sheep") {
             numSheepEaten++;
-            sheepDict.Remove(prey.GetComponent<sheepScript>().index);
+            prey.GetComponent<sheepScript>().DeathFunction();
             Destroy(prey);
         }
     }
     #endregion
 
-    public bool spawnSheep() {
-        return spawnSheepAt(spawnGate.position);
-
-    }
+    public bool spawnSheep() { return spawnSheepAt(spawnGate.position); }
 
     public bool spawnSheepAt(Vector3 pos) {
-        if (mana > 0) {
+        if (mana >= 1) {
             mana--;
             GameObject s = Instantiate(sheep, pos, sheep.transform.rotation);
-            s.GetComponent<sheepScript>().index = nextSheepIndex;
-            sheepDict[nextSheepIndex] = s;
-            nextSheepIndex++;
             //Debug.Log(string.Format("Sheep {0} Born", s.GetComponent<sheepScript>().index));
             return true;
         }
         return false;
     }
 
+    public void registerSheep(GameObject s) {
+        if (sheepDict == null)
+            sheepDict = new Dictionary<int, GameObject>();
+        s.GetComponent<sheepScript>().index = nextSheepIndex;
+        sheepDict[nextSheepIndex] = s;
+        nextSheepIndex++;
+    }
 
     #region Boids and Lures
     /* Called with a sheep's index. Returns its goal based on current game state.
@@ -244,8 +252,8 @@ public class hellSceneManager : MonoBehaviour {
         Vector3 randomForce = Random.onUnitSphere;
         newGoal += randomForce * boidNoise;
         newGoal.y = 0; // goal is on same plane as sheep
-        Debug.AssertFormat(!float.IsNaN(newGoal.x), "{0} {1} {2} {3}", playerGoal, coherenceAvoidanceGoal, alignmentGoal, lureGoal);
-        Debug.AssertFormat(!float.IsNaN(newGoal.z), "{0} {1} {2} {3}", playerGoal, coherenceAvoidanceGoal, alignmentGoal, lureGoal);
+        Debug.AssertFormat(!float.IsNaN(newGoal.x), "{0} {1} {2} {3} {4}", playerGoal, coherenceAvoidanceGoal, alignmentGoal, lureGoal, sheepDict.Count);
+        Debug.AssertFormat(!float.IsNaN(newGoal.z), "{0} {1} {2} {3} {4}", playerGoal, coherenceAvoidanceGoal, alignmentGoal, lureGoal, sheepDict.Count);
         return newGoal;
     }
 

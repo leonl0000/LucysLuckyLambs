@@ -13,9 +13,10 @@ GameObject:
   - component: {fileID: 6450905996507713775}
   - component: {fileID: 855205487664284122}
   - component: {fileID: 7362995482438591844}
+  - component: {fileID: 2197692854295177673}
   m_Layer: 0
   m_Name: Angel
-  m_TagString: Untagged
+  m_TagString: angel
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -29,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 846120469414695321}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 30, y: 61, z: 18.22}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 5, y: 5, z: 5}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -106,6 +107,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hsm: {fileID: 0}
   player: {fileID: 0}
+  index: 0
+  startHealth: 30
+  health: 0
   levitationHeight: 35
   driftProbability: 0.4
   chaseProbability: 0.5
@@ -121,17 +125,39 @@ MonoBehaviour:
   timeoutAbductStopInitial: 60
   abductStopDist: 70
   abductSpeed: 5
-  abductDoneDist: 10
+  abductDoneDist: 15
+  beamWidth: 0.5
   beamStartCol: {r: 1, g: 1, b: 1, a: 1}
   beamEndCol: {r: 0, g: 1, b: 1, a: 1}
   beamStartAlpha: 0.7
   beamEndAlpha: 0.3
-  abductBeamMat: {fileID: 0}
+  abductBeamMat: {fileID: 2100000, guid: 363850704c17fe948904f9fd61fef875, type: 2}
+  abductionBurst: {fileID: 4367185573352591643, guid: 26280cc5bf6d8c34c813335a8102c776,
+    type: 3}
   maxAutoAttackDist: 90
-  timeoutAttackStopInitial: 0
+  timeoutAttackStopInitial: 30
   attackMoveRandomStrength: 1
   attackSpeed: 10
   timeoutAttackUpdateInitial: 3
   timeoutShootInitial: 2
   maxShotRange: 70
   bolt: {fileID: 3479384020816144214, guid: c4edab50550ae834ab42903dd6d5c1ad, type: 3}
+  boltSpawnDist: 10
+  boltSpeed: 40
+  woundAlarmRange: 50
+--- !u!54 &2197692854295177673
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 846120469414695321}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
