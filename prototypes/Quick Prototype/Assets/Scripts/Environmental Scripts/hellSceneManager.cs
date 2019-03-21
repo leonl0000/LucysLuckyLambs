@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -19,6 +20,8 @@ public class hellSceneManager : MonoBehaviour {
 
     public Dictionary<int, GameObject> sheepDict;
     private int nextSheepIndex;
+
+    public static DialogueBoxScript DBS;
 
     public Dictionary<int, GameObject> lureDict;
 
@@ -59,10 +62,14 @@ public class hellSceneManager : MonoBehaviour {
         lureDict = new Dictionary<int, GameObject>();
         angelDict = new Dictionary<int, GameObject>();
         nextSheepIndex = 0;
+        foreach (GameObject s in GameObject.FindGameObjectsWithTag("sheep"))
+            registerSheep(s);
         playerAbilities = player.GetComponent<Abilities>();
         playerMovement = player.GetComponent<PlayerMovement>();
         if (SaveSystem.saveSlot != 0) load(SaveSystem.saveSlot);
         fireballDown = false;
+
+        GameObject OpeningTutorial = Instantiate(Resources.Load<GameObject>(Path.Combine("Dialogues", "Lv1 Tutorial Dialogue")));
     }
 
     public void triggerAbility(int abNum) {
@@ -139,17 +146,21 @@ public class hellSceneManager : MonoBehaviour {
     }
     #endregion
 
+    #region Sheep
     public bool spawnSheep() { return spawnSheepAt(spawnGate.position); }
 
     public bool spawnSheepAt(Vector3 pos) {
         if (mana >= 1) {
             mana--;
             GameObject s = Instantiate(sheep, pos, sheep.transform.rotation);
-            //Debug.Log(string.Format("Sheep {0} Born", s.GetComponent<sheepScript>().index));
+            s.GetComponent<sheepScript>().index = nextSheepIndex;
+            sheepDict[nextSheepIndex] = s;
+            nextSheepIndex++;
             return true;
         }
         return false;
     }
+    #endregion
 
     public void registerSheep(GameObject s) {
         if (sheepDict == null)
