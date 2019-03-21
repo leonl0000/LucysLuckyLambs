@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class Abilities : MonoBehaviour {
 
@@ -32,6 +33,9 @@ public class Abilities : MonoBehaviour {
     private const float fireballMaxGrowLength = 3; // length in seconds to grow fireball to full size
     private const float fireballMaxLight = 3; // maximum intensity of fireball's light
 
+    //Lightning variables...
+    private GameObject LightningObject;
+
     public Camera cam;
 
     private Transform me_transform;
@@ -42,55 +46,9 @@ public class Abilities : MonoBehaviour {
     {
         // move currently-growing fireball to new position
         // done in FixedUpdate so it doesn't lag behind player movement
-        if (isGrowingFireball)
+        if (isGrowingFireball) { 
             spawned_fireball.transform.position = cam.transform.position + cam.transform.forward * 10;
-    }
-
-    public void SpawnLure()
-    {
-        if (hsm.mana >= 2) {
-            hsm.mana -= 2;
-            spawned_lure = Instantiate(lure, me_transform.position + new Vector3(0, 13, 0), lure.transform.rotation);
-            //spawned_lure.GetComponent<Rigidbody>().velocity += (cam.transform.forward * throw_speed) + new Vector3(0, 1 * throw_speed, 0);
-
-            hsm.lureDict[nextIndex] = spawned_lure;
-            spawned_lure.GetComponent<LureScript>().index = nextIndex;
-            nextIndex++;
-        }
-    }
-
-    public void trumpWall()
-    {
-
-
-        if (hsm.mana >= 2)
-        {
-            spawnedWall = Instantiate(wall, me_transform.position + new Vector3(0, 13, 0), wall.transform.rotation);
-
-        }
-    }
-
-    /* Called when fireball key is held down. Can either spawn or grow fireball */
-    public void FireballKey()
-    {
-        // possibly create a new fireball
-        if (!isGrowingFireball && hsm.mana >= 2)
-        {
-            isGrowingFireball = true;
-            fireballGrowLength = 0;
-            hsm.mana -= 2;
-            spawned_fireball = Instantiate(fireball, cam.transform.position + cam.transform.forward * 10, fireball.transform.rotation);
-
-            // deactivate particles and light while aiming
-            spawned_fireball.gameObject.transform.GetChild(0).gameObject.GetComponent<Renderer>().enabled = false;
-
-            // set fireball aiming sphere's scale
-            float currFireballScale = fireballMinPower * fireballAimSphereMaxScale;
-            spawned_fireball.gameObject.transform.localScale = new Vector3(currFireballScale, currFireballScale, currFireballScale);
-        }
-        // otherwise, grow current fireball
-        else if (isGrowingFireball)
-        {
+        
             // calculate current power
             fireballGrowLength += Time.deltaTime;
             float growFraction = Mathf.Max(Mathf.Min(1, fireballGrowLength / fireballMaxGrowLength), fireballMinPower);
@@ -105,6 +63,58 @@ public class Abilities : MonoBehaviour {
         }
     }
 
+    public void SpawnLure()
+    {
+        if (hsm.mana >= 2) {
+            hsm.mana -= 2;
+            spawned_lure = Instantiate(lure, me_transform.position + new Vector3(0, 13, 0), lure.transform.rotation);
+            //spawned_lure.GetComponent<Rigidbody>().velocity += (cam.transform.forward * throw_speed) + new Vector3(0, 1 * throw_speed, 0);
+
+            hsm.lureDict[nextIndex] = spawned_lure;
+            spawned_lure.GetComponent<LureScript>().index = nextIndex;
+            nextIndex++;
+            if(hsm.lureDict.Count > 3) {
+                hsm.lureDict[hsm.lureDict.Keys.Min()].GetComponent<LureScript>().destroyLure();
+            }
+        }
+    }
+
+    public void trumpWall()
+    {
+
+
+        if (hsm.mana >= 5)
+        {
+            spawnedWall = Instantiate(wall, me_transform.position + new Vector3(0, 13, 0), wall.transform.rotation);
+            hsm.mana -= 5;
+
+        }
+    }
+
+    /* Called when fireball key is held down. Can either spawn or grow fireball */
+    public void FireballKey()
+    {
+        // possibly create a new fireball
+
+        if (!isGrowingFireball && hsm.mana >= 2)
+        {
+            isGrowingFireball = true;
+            fireballGrowLength = 0;
+            hsm.mana -= 2;
+            spawned_fireball = Instantiate(fireball, cam.transform.position + cam.transform.forward * 10, fireball.transform.rotation);
+            spawned_fireball.GetComponent<SphereCollider>().enabled = false;
+
+            // deactivate particles and light while aiming
+            spawned_fireball.gameObject.transform.GetChild(0).gameObject.GetComponent<Renderer>().enabled = false;
+
+            // set fireball aiming sphere's scale
+            float currFireballScale = fireballMinPower * fireballAimSphereMaxScale;
+            spawned_fireball.gameObject.transform.localScale = new Vector3(currFireballScale, currFireballScale, currFireballScale);
+        }
+        // otherwise, grow current fireball
+
+    }
+
     public void FireballRelease()
     {
         if (isGrowingFireball) {
@@ -112,6 +122,7 @@ public class Abilities : MonoBehaviour {
             isGrowingFireball = false;
             float growFraction = Mathf.Min(1, fireballGrowLength / fireballMaxGrowLength);
             float currPower = fireballMinPower + growFraction * (1 - fireballMinPower);
+            spawned_fireball.GetComponent<FireballScript>().beginLifeTimer();
             spawned_fireball.GetComponent<FireballScript>().power = currPower;
 
             // activate particles, and set to right scale
@@ -125,6 +136,7 @@ public class Abilities : MonoBehaviour {
             // shoot fireball forward with appropriate speed, smaller ones shoot faster
             float fireballSpeed = minFireballSpeed + (1 - currPower) * (maxFireballSpeed - minFireballSpeed);
             spawned_fireball.GetComponent<Rigidbody>().velocity += cam.transform.forward * fireballSpeed;
+            spawned_fireball.GetComponent<SphereCollider>().enabled = true;
         }
     }
 
@@ -132,9 +144,17 @@ public class Abilities : MonoBehaviour {
         hsm.spawnSheep();
     }
 
+    public void Lightning() {
+        if (hsm.mana >= 10) {
+            Instantiate(LightningObject, transform.position, LightningObject.transform.rotation);
+            hsm.mana -= 10;
+        }
+    }
+
     // Use this for initialization
     void Start () {
         me_transform = this.gameObject.transform;
+        LightningObject = Resources.Load<GameObject>("Lightning");
 	}
 
 	// Update is called once per frame

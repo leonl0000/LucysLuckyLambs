@@ -6,8 +6,8 @@ public class FollowPlayer : MonoBehaviour
 {
     public GameObject player;
     public Vector3 offset;
-    public int positionBack; // how far behind the player the camera is positioned
-    public int lookForward; // how far in front of the player the camera is looking
+    public float positionBack; // how far behind the player the camera is positioned
+    public float lookForward; // how far in front of the player the camera is looking
 
 
     void FixedUpdate()

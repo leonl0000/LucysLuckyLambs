@@ -3,6 +3,7 @@
 public class sheepScript : MonoBehaviour {
     public Rigidbody rb;
     public hellSceneManager hsm;
+    private HealthScript healthScript;
 
     // x & z velocities will be set uniformly randomly in [-MAX_INITIAL_SPEED, MAX_INITIAL_SPEED]
     public float MAX_INITIAL_SPEED = 15;
@@ -29,11 +30,18 @@ public class sheepScript : MonoBehaviour {
 
     private bool isOnGround = false;
 
-
     public float oldGoalPersistence = 0.5f;
     public float newGoalStrength = 0.5f;
 
+    private float max_health = 5;
+    
+    public float fallingThreshold = 0.05f;
 
+    public float woundCollisionMomentum = 25 * 10;
+    public float lethalCollisionMomentum = 40 * 10;
+    
+    public float woundDropSpeed = 10;
+    public float lethalDropSpeed = 40;
 
 
     void Start() {
@@ -41,6 +49,13 @@ public class sheepScript : MonoBehaviour {
         rb.velocity = new Vector3(2 * MAX_INITIAL_SPEED * (Random.value - .5f), 0, 2 * MAX_INITIAL_SPEED * (Random.value - .5f));
         goal = new Vector3(0, 0, 0);
         moveCountdown = Random.Range(minStartCountdown, maxStartCountdown);
+        healthScript = HealthScript.AddHealthScript(gameObject, max_health, 4f, Resources.Load<GameObject>("BloodSplatter"), null, DeathFunction);
+        hsm.registerSheep(gameObject);
+    }
+
+    public bool DeathFunction() {
+        hsm.sheepDict.Remove(index);
+        return true;
     }
 
 
@@ -66,8 +81,12 @@ public class sheepScript : MonoBehaviour {
             Vector3 goalHop = new Vector3(goal.x, hopForce, goal.z);
             rb.AddForce(goalHop, ForceMode.VelocityChange);
             isOnGround = false;
-            if (rb.velocity.magnitude > maxSheepSpeed)
-                rb.velocity = rb.velocity.normalized * maxSheepSpeed;
+
+            Vector3 horizontalVelocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+            if (horizontalVelocity.magnitude > maxSheepSpeed) {
+                horizontalVelocity = horizontalVelocity.normalized * maxSheepSpeed;
+                rb.velocity = new Vector3(horizontalVelocity.x, rb.velocity.y, horizontalVelocity.z);
+            }
 
             moveCountdown = Random.Range(minStartCountdown, maxStartCountdown);
 
@@ -75,7 +94,7 @@ public class sheepScript : MonoBehaviour {
         }
         // if a move countdown has passed but it hasn't hit the ground, just assume it's on ground
         // TODO fix this; leaving it out makes sheep freeze, letting them hop when not on ground causes flying sheep
-        else if (moveCountdown <= 0 && !isOnGround)
+        else if (moveCountdown <= 0 && !isOnGround && rb.velocity.y > fallingThreshold)
         {
             moveCountdown = Random.Range(minStartCountdown, maxStartCountdown);
             isOnGround = true;
@@ -97,9 +116,31 @@ public class sheepScript : MonoBehaviour {
             // Bouncing -- disabled since sheep now hop
             // rb.AddForce(0, sheepBounce, 0, ForceMode.VelocityChange);
 
+            // do damage when sheep hit the ground too fast
+            /* float collisionSpeed = collision.relativeVelocity.magnitude;
+            if (collisionSpeed > woundDropSpeed)
+            {
+                float damage = collisionSpeed / lethalDropSpeed;
+                Debug.Log(string.Format("collision speed {0} damage {1}", collisionSpeed, damage));
+                healthScript.wound(damage, collision.transform);
+            } */
+
             isOnGround = true;
 
             afterHop();
+        } else {
+            // do damage if momentum is too great
+            /* Rigidbody rbHit = collision.collider.GetComponent<Rigidbody>();
+            if (rbHit != null) {
+                float collisionMass = rbHit.mass;
+                float collisionSpeed = collision.relativeVelocity.magnitude;
+                float collisionMomentum = collisionMass * collisionSpeed;
+                if (collisionMomentum > woundCollisionMomentum) {
+                    float damage = collisionMomentum / lethalCollisionMomentum;
+                    Debug.Log(string.Format("collision momentum {0} damage {1}", collisionMomentum, damage));
+                    healthScript.wound(damage, collision.transform);
+                }
+            } */
         }
     }
 

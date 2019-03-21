@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
-public enum AngelState { DRIFTING, CHASING_SHEEP, ABDUCTING_SHEEP, ATTACKING_PLAYER, NULL };
+public enum AngelState { DRIFTING, CHASING_SHEEP, ABDUCTING_SHEEP, ATTACKING_PLAYER, JUST_CREATED };
 
 public class angelScript : MonoBehaviour
 {
@@ -11,6 +12,10 @@ public class angelScript : MonoBehaviour
     private AngelState state;
     private Rigidbody rb;
     public GameObject player;
+    public int index;
+
+    public float startHealth = 20f;
+    public float health;
 
     public float levitationHeight = 35;
 
@@ -39,14 +44,16 @@ public class angelScript : MonoBehaviour
     public float timeoutAbductStopInitial = 60;
     public float abductStopDist = 70;
     public float abductSpeed = 5;
-    public float abductDoneDist = 10;
+    public float abductDoneDist = 15;
 
+    public float beamWidth = 0.5f;
     public Color beamStartCol = Color.white;
     public Color beamEndCol = Color.cyan;
     public float beamStartAlpha = 0.7f;
     public float beamEndAlpha = 0.3f;
     private LineRenderer lineRenderer;
     public Material abductBeamMat;
+    public GameObject abductionBurst;
 
     public float maxAutoAttackDist = 90;
     private float timeoutAttackStop;
@@ -59,8 +66,10 @@ public class angelScript : MonoBehaviour
     public float timeoutShootInitial = 2;
     public float maxShotRange = 70;
     public GameObject bolt;
-    public float boltSpawnDist = 2;
+    public float boltSpawnDist = 10;
     public float boltSpeed = 40;
+    public float woundAlarmRange = 30;
+    private Vector3 playerTargetDisplacement = new Vector3(0, 5, 0); // bolts are aimed at player's position plus this
 
     // Start is called before the first frame update
     void Start()
@@ -72,7 +81,7 @@ public class angelScript : MonoBehaviour
         // create abduction beam
         lineRenderer = gameObject.AddComponent<LineRenderer>();
         lineRenderer.material = abductBeamMat;
-        lineRenderer.widthMultiplier = 0.2f;
+        lineRenderer.widthMultiplier = beamWidth;
         Gradient gradient = new Gradient();
         gradient.SetKeys(
             new GradientColorKey[] { new GradientColorKey(beamStartCol, 0.0f), new GradientColorKey(beamEndCol, 1.0f) },
@@ -81,7 +90,10 @@ public class angelScript : MonoBehaviour
         lineRenderer.colorGradient = gradient;
         lineRenderer.positionCount = 0;
 
-        state = AngelState.NULL;
+        
+        HealthScript.AddHealthScript(gameObject, startHealth, .6f * transform.localScale.x, null, WoundAction, DeathFunction);
+
+        state = AngelState.JUST_CREATED;
     }
 
     void randomNextActivity()
@@ -165,9 +177,41 @@ public class angelScript : MonoBehaviour
         startAttacking();
     }
 
+    public bool DeathFunction() {
+        //Debug.Log("angel destroyed");
+        hsm.angelDict.Remove(index);
+        Rigidbody rb = gameObject.GetComponent<Rigidbody>();
+        rb.useGravity = true;
+        rb.velocity = 25 * Vector3.down;
+        gameObject.GetComponent<MeshRenderer>().material =
+            Resources.Load<Material>(Path.Combine("Materials", "Dead Angel"));
+        enabled = false;
+        return false;
+    }
+
+    public void WoundAction(float damage)
+    {
+        foreach (int angelIndex in hsm.angelDict.Keys) {
+            if (angelIndex == index)
+                continue;
+            GameObject otherAngel = hsm.angelDict[angelIndex];
+            Vector3 otherPos = otherAngel.transform.position;
+            float distance = (otherPos - transform.position).magnitude;
+            if (distance < woundAlarmRange)
+                otherAngel.GetComponent<angelScript>().alarmTriggered();
+        }
+        alarmTriggered();
+    }
+
+    void alarmTriggered()
+    {
+        state = AngelState.ATTACKING_PLAYER;
+        startAttacking();
+    }
+
     void startAttacking()
     {
-        // TODO wounded checks should automatically call this, not startSpontaneouslyAttacking, so there's no distance cap on reactive attacks
+        // wounded checks should automatically call this, not startSpontaneouslyAttacking, so there's no distance cap on reactive attacks
         timeoutAttackStop = timeoutAttackStopInitial;
         timeoutAttackUpdate = timeoutAttackUpdateInitial;
         timeoutShoot = timeoutShootInitial;
@@ -178,8 +222,12 @@ public class angelScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (state == AngelState.NULL)
+        if (state == AngelState.JUST_CREATED)
         {
+            index = hsm.nextAngelIndex;
+            hsm.angelDict.Add(index, gameObject);
+            hsm.nextAngelIndex++;
+
             randomNextActivity();
         }
         else if (state == AngelState.DRIFTING)
@@ -192,9 +240,7 @@ public class angelScript : MonoBehaviour
             }
             timeoutDriftChange -= Time.deltaTime;
             if (timeoutDriftChange <= 0)
-                updateDriftDir();
-            // TODO check if wounded
-        }
+                updateDriftDir();        }
         else if (state == AngelState.CHASING_SHEEP)
         {
             timeoutChaseStop -= Time.deltaTime;
@@ -206,7 +252,6 @@ public class angelScript : MonoBehaviour
             timeoutChaseRedirect -= Time.deltaTime;
             if (timeoutChaseRedirect <= 0)
                 updateChaseDir();
-            // TODO check if wounded
         }
         else if (state == AngelState.ABDUCTING_SHEEP)
         {
@@ -244,7 +289,7 @@ public class angelScript : MonoBehaviour
     {
         Debug.Log("shoot");
         timeoutShoot = timeoutShootInitial;
-        Vector3 angelToPlayer = player.transform.position - transform.position;
+        Vector3 angelToPlayer = player.transform.position - transform.position + playerTargetDisplacement;
         if (angelToPlayer.magnitude > maxShotRange)
             return;
 
@@ -256,7 +301,7 @@ public class angelScript : MonoBehaviour
 
     void updateAttack()
     {
-        Debug.Log("updateAttack");
+        //Debug.Log("updateAttack");
         timeoutAttackUpdate = timeoutAttackUpdateInitial;
 
         // Find position we want to head to
@@ -266,6 +311,8 @@ public class angelScript : MonoBehaviour
         goalDisplacement /= goalDisplacement.magnitude;
         // add random factor
         goalDisplacement += Random.onUnitSphere * attackMoveRandomStrength;
+
+        // TODO turn towards player
 
         // Move towards goal
         rb.velocity = (goalDisplacement / goalDisplacement.magnitude) * attackSpeed;
@@ -291,9 +338,15 @@ public class angelScript : MonoBehaviour
 
     void updateChaseDir()
     {
+        if (sheepChaseTarget == null)
+        {
+            randomNextActivity();
+            return;
+        }
+
         // check whether we can transition to abduction
         float dist = (sheepChaseTarget.transform.position - transform.position).magnitude;
-        Debug.Log(string.Format("start abduction? dist is {0}", dist));
+        //Debug.Log(string.Format("start abduction? dist is {0}", dist));
         if (dist <= abductStartDist)
         {
             state = AngelState.ABDUCTING_SHEEP;
@@ -346,10 +399,11 @@ public class angelScript : MonoBehaviour
         // check whether sheep is close enough to disappear
         if (sheepToAngel.magnitude < abductDoneDist)
         {
+            // spawn particle effect
+            Instantiate(abductionBurst, sheepChaseTarget.transform.position, sheepChaseTarget.transform.rotation);
+
             // disappear sheep
             hsm.objectDrop(sheepChaseTarget);
-
-            // TODO spawn particle effect
 
             // move out of abduction mode
             endAbducting();
