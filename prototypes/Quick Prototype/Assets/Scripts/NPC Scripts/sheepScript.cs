@@ -158,12 +158,4 @@ public class sheepScript : MonoBehaviour {
             goal = goal.normalized * maxGoalSize;
     }
 
-    public void wound(float damage, Transform site)
-    {
-        // TODO inflict damage, possibly die
-
-        // Spawn blood splatter
-        GameObject thisSplatter = Instantiate(bloodSplatter, site.position, site.rotation);
-    }
-
 }

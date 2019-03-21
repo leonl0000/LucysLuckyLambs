@@ -2207,6 +2207,11 @@ PrefabInstance:
       propertyPath: woundDropSpeed
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 509831795736211844, guid: 36fb4eefdda37904e8c93007d4cf89c7,
+        type: 3}
+      propertyPath: hsm
+      value: 
+      objectReference: {fileID: 300832503}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 36fb4eefdda37904e8c93007d4cf89c7, type: 3}
 --- !u!1 &1153589030
