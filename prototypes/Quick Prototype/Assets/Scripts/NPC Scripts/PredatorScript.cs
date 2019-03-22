@@ -34,7 +34,7 @@ public class PredatorScript : MonoBehaviour
         terrainTimer = 0;
         health = 30;
         rb = gameObject.GetComponent<Rigidbody>();
-        HealthScript.AddHealthScript(gameObject, 40, Resources.Load<GameObject>("BloodSplatter"));
+        HealthScript.AddHealthScript(gameObject, 40, 4f, Resources.Load<GameObject>("BloodSplatter"));
     }
 
     public void onDeath() {
@@ -48,7 +48,6 @@ public class PredatorScript : MonoBehaviour
         //Debug.Log("SD " + hsm.sheepDict);
         foreach (int index in hsm.sheepDict.Keys) {
             float dist = (gameObject.transform.position - hsm.sheepDict[index].transform.position).sqrMagnitude;
-            Debug.Log(maxSquaredDistance);
             if (dist < minSqDist) {
                 nextPrey = hsm.sheepDict[index];
                 minSqDist = dist;

@@ -32,6 +32,10 @@ public class FireballScript : MonoBehaviour
 
     public void OnCollisionEnter(Collision collision)
     {
+        if(collision.collider.tag == "Player") {
+            Physics.IgnoreCollision(collision.collider, gameObject.GetComponent<Collider>());
+            return;
+        }
         // Spawn explosion
         GameObject thisExplosion = Instantiate(explosion, this.gameObject.transform.position, this.gameObject.transform.rotation);
         // set explosion scale
@@ -43,9 +47,6 @@ public class FireballScript : MonoBehaviour
         // And call damage-inflicting function on sheep and wolves, etc.
         HealthScript healthScript = collision.collider.GetComponent<HealthScript>();
         if (healthScript != null) healthScript.wound(maxFireballDamage * power * power, gameObject.transform);
-
-        if (collision.collider.tag == "sheep")
-            collision.gameObject.GetComponent<sheepScript>().wound(maxFireballDamage * power * power, gameObject.transform);
 
         // Destroy fireball
         Destroy(gameObject);

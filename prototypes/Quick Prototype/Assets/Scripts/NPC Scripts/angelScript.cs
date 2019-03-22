@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public enum AngelState { DRIFTING, CHASING_SHEEP, ABDUCTING_SHEEP, ATTACKING_PLAYER, JUST_CREATED };
@@ -89,7 +90,8 @@ public class angelScript : MonoBehaviour
         lineRenderer.colorGradient = gradient;
         lineRenderer.positionCount = 0;
 
-        HealthScript.AddHealthScript(gameObject, startHealth, null, WoundAction, DeathFunction);
+        
+        HealthScript.AddHealthScript(gameObject, startHealth, .6f * transform.localScale.x, null, WoundAction, DeathFunction);
 
         state = AngelState.JUST_CREATED;
     }
@@ -176,9 +178,15 @@ public class angelScript : MonoBehaviour
     }
 
     public bool DeathFunction() {
-        Debug.Log("angel destroyed");
+        //Debug.Log("angel destroyed");
         hsm.angelDict.Remove(index);
-        return true;
+        Rigidbody rb = gameObject.GetComponent<Rigidbody>();
+        rb.useGravity = true;
+        rb.velocity = 25 * Vector3.down;
+        gameObject.GetComponent<MeshRenderer>().material =
+            Resources.Load<Material>(Path.Combine("Materials", "Dead Angel"));
+        enabled = false;
+        return false;
     }
 
     public void WoundAction(float damage)
@@ -293,7 +301,7 @@ public class angelScript : MonoBehaviour
 
     void updateAttack()
     {
-        Debug.Log("updateAttack");
+        //Debug.Log("updateAttack");
         timeoutAttackUpdate = timeoutAttackUpdateInitial;
 
         // Find position we want to head to
@@ -338,7 +346,7 @@ public class angelScript : MonoBehaviour
 
         // check whether we can transition to abduction
         float dist = (sheepChaseTarget.transform.position - transform.position).magnitude;
-        Debug.Log(string.Format("start abduction? dist is {0}", dist));
+        //Debug.Log(string.Format("start abduction? dist is {0}", dist));
         if (dist <= abductStartDist)
         {
             state = AngelState.ABDUCTING_SHEEP;
