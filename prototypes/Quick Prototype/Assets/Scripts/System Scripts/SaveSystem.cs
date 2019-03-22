@@ -6,9 +6,16 @@ public static class SaveSystem
 {
     public static int saveSlot = 0;
 
-    public static string[] saves = {Application.persistentDataPath + "/save_slot_1.bin",
-        Application.persistentDataPath + "/save_slot_2.bin",
-        Application.persistentDataPath + "/save_slot_3.bin"};
+    public static string[] saves = {Path.Combine(Application.persistentDataPath, "save_slot_1.bin"),
+        Path.Combine(Application.persistentDataPath, "save_slot_2.bin"),
+        Path.Combine(Application.persistentDataPath, "save_slot_3.bin")};
+
+    #if UNITY_STANDALONE_WIN
+    #endif
+
+    #if UNITY_WEBGL
+
+    #endif
 
     public static void SaveGame(hellSceneManager hsm, int saveSlot) {
         string save = saves[saveSlot - 1];
