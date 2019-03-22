@@ -68,8 +68,10 @@ public class hellSceneManager : MonoBehaviour {
         playerMovement = player.GetComponent<PlayerMovement>();
         if (SaveSystem.saveSlot != 0) load(SaveSystem.saveSlot);
         fireballDown = false;
+        GameObject OpeningTutorial;
 
-        GameObject OpeningTutorial = Instantiate(Resources.Load<GameObject>(Path.Combine("Dialogues", "Lv1 Tutorial Dialogue")));
+        if (SceneManager.GetActiveScene().buildIndex == 1)
+            OpeningTutorial = Instantiate(Resources.Load<GameObject>(Path.Combine("Dialogues", "Lv1 Tutorial Dialogue")));
     }
 
     public void triggerAbility(int abNum) {
