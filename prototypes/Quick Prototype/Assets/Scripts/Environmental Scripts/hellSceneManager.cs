@@ -12,6 +12,9 @@ public class hellSceneManager : MonoBehaviour {
     public bool fireballDown;
     public float mana;
     public float health;
+    public float manaMax = 100;
+    public float healthMax = 100;
+    public float manaRegen = .5f;
     public int numSheepDropped;
     public int numSheepEaten;
     public GameObject sheep;
@@ -62,8 +65,6 @@ public class hellSceneManager : MonoBehaviour {
         lureDict = new Dictionary<int, GameObject>();
         angelDict = new Dictionary<int, GameObject>();
         nextSheepIndex = 0;
-        //foreach (GameObject s in GameObject.FindGameObjectsWithTag("sheep"))
-        //    registerSheep(s);
         playerAbilities = player.GetComponent<Abilities>();
         playerMovement = player.GetComponent<PlayerMovement>();
         if (SaveSystem.saveSlot != 0) load(SaveSystem.saveSlot);
@@ -100,6 +101,10 @@ public class hellSceneManager : MonoBehaviour {
     }
 
     void FixedUpdate() {
+        mana += Time.fixedDeltaTime * manaRegen;
+        if(mana > manaMax) {
+            manaMax *= 2;
+        }
         if (mana > 1000) {
             nextLevel();
         }
@@ -114,7 +119,8 @@ public class hellSceneManager : MonoBehaviour {
                 sheepDict.Remove(o.GetComponent<sheepScript>().index);
                 Destroy(o);
                 //Debug.Log(string.Format("Sheep {0} SACRIFICED", o.GetComponent<sheepScript>().index));
-                mana += 100;
+                mana += 10;
+                manaRegen = (manaRegen + .5f) * 1.05f;
                 hellGate.numSacrificed += 1;
                 break;
 
