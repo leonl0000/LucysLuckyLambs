@@ -1,5 +1,0 @@
-# Sheep 
-
-# Boiding Behavior
-
-# Gates
