@@ -616,6 +616,22 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dc52171679c070a4ebaa3d0f0a5644c2, type: 3}
+--- !u!1 &429009621
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 402354438}
+  m_Layer: 0
+  m_Name: Recovery GameObject (402354438)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!4 &443131567 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 471828, guid: 19682540d8a014522a319b1cf788aee2,
@@ -918,12 +934,12 @@ Terrain:
   m_TerrainData: {fileID: 15600000, guid: ac17684daab3bf243b9f15bbeac598f3, type: 2}
   m_TreeDistance: 5000
   m_TreeBillboardDistance: 635
-  m_TreeCrossFadeLength: 34.5
+  m_TreeCrossFadeLength: 125.1
   m_TreeMaximumFullLODCount: 50
-  m_DetailObjectDistance: 126
-  m_DetailObjectDensity: 1
-  m_HeightmapPixelError: 5
-  m_SplatMapDistance: 1000
+  m_DetailObjectDistance: 200.1
+  m_DetailObjectDensity: 0.064
+  m_HeightmapPixelError: 14.8
+  m_SplatMapDistance: 1642
   m_HeightmapMaximumLOD: 0
   m_CastShadows: 1
   m_DrawHeightmap: 1
@@ -1203,7 +1219,7 @@ Light:
   serializedVersion: 8
   m_Type: 1
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 0.8
+  m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
   m_CookieSize: 10
