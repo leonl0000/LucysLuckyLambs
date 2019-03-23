@@ -165,9 +165,6 @@ public class hellSceneManager : MonoBehaviour {
         if (mana >= cost) {
             mana -= cost;
             GameObject s = Instantiate(sheep, pos, sheep.transform.rotation);
-            s.GetComponent<sheepScript>().index = nextSheepIndex;
-            sheepDict[nextSheepIndex] = s;
-            nextSheepIndex++;
             return true;
         }
         return false;
@@ -177,6 +174,7 @@ public class hellSceneManager : MonoBehaviour {
     public void registerSheep(GameObject s) {
         if (sheepDict == null)
             sheepDict = new Dictionary<int, GameObject>();
+        Debug.Log("Called reg");
         s.GetComponent<sheepScript>().index = nextSheepIndex;
         sheepDict[nextSheepIndex] = s;
         nextSheepIndex++;

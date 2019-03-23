@@ -28,7 +28,7 @@ public class sheepScript : MonoBehaviour {
     public float hopForce = 4; // force with which sheep hop up
     // TODO eventually this will involve panic
 
-    private bool isOnGround = false;
+    public bool isOnGround = false;
 
     public float oldGoalPersistence = 0.5f;
     public float newGoalStrength = 0.5f;
@@ -70,6 +70,8 @@ public class sheepScript : MonoBehaviour {
         }
     }
 
+    public Vector3 gg;
+    public Vector3 g2;
     
     void Update() {
         //Check if fallen off
@@ -79,6 +81,7 @@ public class sheepScript : MonoBehaviour {
         if (moveCountdown <= 0 && isOnGround)
         {
             Vector3 goalHop = new Vector3(goal.x, hopForce, goal.z);
+            g2 = goalHop;
             rb.AddForce(goalHop, ForceMode.VelocityChange);
             isOnGround = false;
 
@@ -113,9 +116,6 @@ public class sheepScript : MonoBehaviour {
 
         //Hitting ground
         if (collision.collider.tag == "ground") {
-            // Bouncing -- disabled since sheep now hop
-            // rb.AddForce(0, sheepBounce, 0, ForceMode.VelocityChange);
-
             // do damage when sheep hit the ground too fast
             /* float collisionSpeed = collision.relativeVelocity.magnitude;
             if (collisionSpeed > woundDropSpeed)
@@ -144,12 +144,16 @@ public class sheepScript : MonoBehaviour {
         }
     }
 
+    public Vector3 g3;
+
     /* Called after every hop. Sets new goal. */
     private void afterHop()
     {
         // After every hop, update goal as interpolation of old and new goals
         Vector3 newGoal = hsm.getSheepGoal(index);
+        gg = newGoal;
         goal = goal * oldGoalPersistence + newGoal * newGoalStrength;
+        g3 = goal;
 
         goal.y = 0; // goal is on same plane as sheep
 

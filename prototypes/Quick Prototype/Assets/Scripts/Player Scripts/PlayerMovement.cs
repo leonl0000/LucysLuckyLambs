@@ -103,7 +103,7 @@ public class PlayerMovement : MonoBehaviour
             xangle += camSpeed * Input.GetAxis("Mouse X");
             //if(Input.mousePosition.y > 0 && Input.mousePosition.y < Screen.height)
             //yangle -= camSpeed * Input.GetAxis("Mouse Y") * 550/Screen.height;
-            yangle = (Mathf.Max(Mathf.Min(Input.mousePosition.y, Screen.height), 0) / Screen.height - .5f) * -180;
+            yangle = (Mathf.Max(Mathf.Min(Input.mousePosition.y, Screen.height), 0) / Screen.height - .5f) * -160;
         }
         xangle += camSpeed * ((panRight ? 1 : 0) + (panLeft ? -1 : 0));
         cameraTransform.eulerAngles = new Vector3(yangle, xangle, 0);
