@@ -8,4 +8,6 @@ The <a href='https://github.com/StanfordCS194/EmuGames/blob/master/prototypes/Qu
 
 The <a href='https://github.com/StanfordCS194/EmuGames/blob/master/prototypes/Quick%20Prototype/Assets/Scripts/UI%20Scripts/MenuManager.cs'>menu manager script</a> manages the menus displayed when the game is started. It shows the initial welcome page, the first "letter from Lucifer", and loads the first level.
 
+The <a href='https://github.com/StanfordCS194/EmuGames/blob/master/prototypes/Quick%20Prototype/Assets/MinimapScript.cs'>minimap script</a> ensures the texture render minimap at the top right of the UI follows the player's position and z-y orientation (their "look" direction" so the map is oriented as the player is).
+
 TODO update this once we have mana and health bars
