@@ -411,103 +411,19 @@ MonoBehaviour:
   Pages:
   - pageName: Start
     charName: Mal
-    dialogueText: Hey, I see your the new shephard.
+    dialogueText: 'Alright! Your first sheep "transported".
+
+      You get 10 mana for each sheep, and you''ll need 1000 to get to the next level.'
     responses:
-    - Yeah, I am
-    - '[Skip Tutorial]'
-    - Nope.
+    - '[NEXT]'
     responseNextPages:
     - Page2
-    - EXIT
-    - SnarkyPage2
   - pageName: Page2
     charName: Mal
-    dialogueText: 'Welcome. Call me Mal. I''ll be your guide--at least until you get
-      a grasp of the basics.
-
-      You move with the WASD keys.'
+    dialogueText: While your mana can only regenerate to 100 at first, you can surpass
+      those limits by transporting sheep.
     responses:
-    - Yeah
-    responseNextPages:
-    - Page3
-  - pageName: SnarkyPage2
-    charName: Mal
-    dialogueText: '...
-
-      Let''s pretend you''re not snarky and get on with this.'
-    responses:
-    - '...'
-    responseNextPages:
-    - Page2
-  - pageName: Page3
-    charName: Mal
-    dialogueText: 'You can look around with the mouse, and also pan left and right
-      the the Q and E keys.
-
-      Hit ''P'' to toggle the mouse looking.
-
-'
-    responses:
-    - '[Next]'
-    responseNextPages:
-    - Page4
-  - pageName: Page4
-    charName: Mal
-    dialogueText: 'As shepherd, you must guide the sheep safely across to that yonder
-      red portal to bring them to the boss.
-
-      With [Spell 3: Sheep], you can summon sheep to this pen for 1 mana.'
-    responses:
-    - Guide?
-    responseNextPages:
-    - Page5
-  - pageName: Page5
-    charName: Mal
-    dialogueText: "Yes, guide. \nSheep will follow other sheep--and, they will follow
-      you, as long as your close. \nIf you wander off too far, you'll lose influence,
-      but you can place lures with [Spell 1: Lure] along the way."
-    responses:
-    - Ok...
-    - You mean "you're"
-    responseNextPages:
-    - Page6
-    - SnarkyPage6
-  - pageName: Page6
-    charName: Mal
-    dialogueText: Beware! There is a den of wolves in this field somewhere, and they
-      may attack your sheep.
-    responses:
-    - Oh, no!
-    - I can handle it.
-    responseNextPages:
-    - Page7
-    - Page7
-  - pageName: SnarkyPage6
-    charName: Mal
-    dialogueText: '...
-
-      Well then, fine. Figure the rest out for yourself.'
-    responses:
-    - '[Exit Tutorial]'
-    responseNextPages:
-    - EXIT
-  - pageName: Page7
-    charName: Mal
-    dialogueText: "You'll have your other spells to ward them off:\n[Spell 2: Fireball],
-      [Spell 4: Wall], and [Spell 5: Lightning]. \nDo be careful you don't hit the
-      sheep, though--that lightning spell in particular can be a double edged sword."
-    responses:
-    - '[Next]'
-    responseNextPages:
-    - Page8
-  - pageName: Page8
-    charName: Mal
-    dialogueText: 'Bringing a sheep to the portal will grant you 100 mana, and you''ll
-      1000 to advance to the next plane.
-
-      Well, that''s all for now. Good luck.'
-    responses:
-    - '[Exit Tutorial]'
+    - '[NEXT]'
     responseNextPages:
     - EXIT
 --- !u!1 &1596607610552446930
@@ -830,7 +746,7 @@ GameObject:
   - component: {fileID: 1596607611298085534}
   - component: {fileID: 1596607611298085535}
   m_Layer: 5
-  m_Name: Lv1 Tutorial Dialogue
+  m_Name: Lv1 Tutorial Dialogue 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1032,7 +948,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1596607611224606677}
   m_HandleRect: {fileID: 1596607611224606678}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -1075,7 +991,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.00001901727}
+  m_AnchoredPosition: {x: 0, y: -0.000019073486}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1596607612052224292

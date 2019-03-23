@@ -69,11 +69,8 @@ public class hellSceneManager : MonoBehaviour {
         playerMovement = player.GetComponent<PlayerMovement>();
         if (SaveSystem.saveSlot != 0) load(SaveSystem.saveSlot);
         fireballDown = false;
-
-        GameObject OpeningTutorial;
-
-        if (SceneManager.GetActiveScene().buildIndex == 1)
-            OpeningTutorial = Instantiate(Resources.Load<GameObject>(Path.Combine("Dialogues", "Lv1 Tutorial Dialogue")));
+        if(SceneManager.GetActiveScene().buildIndex == 1)
+            Instantiate(Resources.Load<GameObject>(Path.Combine("Dialogues", "Lv1 Tutorial Dialogue")));
     }
 
     public void triggerAbility(int abNum) {
@@ -105,7 +102,8 @@ public class hellSceneManager : MonoBehaviour {
     }
 
     void FixedUpdate() {
-        mana += Time.fixedDeltaTime * manaRegen;
+        float manaTemp = mana + Time.fixedDeltaTime * manaRegen;
+        if (manaTemp < manaMax) mana = manaTemp;
         if(mana > manaMax) {
             manaMax *= 2;
         }
@@ -120,10 +118,12 @@ public class hellSceneManager : MonoBehaviour {
     public void objectEnterHellgate(GameObject o, hellgateScript hellGate) {
         switch(o.tag) {
             case "sheep":
+                if(hellGate.numSacrificed == 0 && SceneManager.GetActiveScene().buildIndex != 1)
+                    Instantiate(Resources.Load<GameObject>(Path.Combine("Dialogues", "Lv1 Tutorial Dialogue 2")));
                 sheepDict.Remove(o.GetComponent<sheepScript>().index);
                 Destroy(o);
-                //Debug.Log(string.Format("Sheep {0} SACRIFICED", o.GetComponent<sheepScript>().index));
                 mana += 10;
+                if (mana > manaMax) manaMax *= 2;
                 manaRegen = (manaRegen + .5f) * 1.05f;
                 hellGate.numSacrificed += 1;
                 break;
@@ -159,12 +159,10 @@ public class hellSceneManager : MonoBehaviour {
     public bool spawnSheep() { return spawnSheepAt(spawnGate.position); }
 
     public bool spawnSheepAt(Vector3 pos) {
-        if (mana >= 1) {
-            mana--;
+        float cost = Mathf.Pow(2, (int)(sheepDict.Count / 10));
+        if (mana >= cost) {
+            mana -= cost;
             GameObject s = Instantiate(sheep, pos, sheep.transform.rotation);
-            s.GetComponent<sheepScript>().index = nextSheepIndex;
-            sheepDict[nextSheepIndex] = s;
-            nextSheepIndex++;
             return true;
         }
         return false;
@@ -174,6 +172,7 @@ public class hellSceneManager : MonoBehaviour {
     public void registerSheep(GameObject s) {
         if (sheepDict == null)
             sheepDict = new Dictionary<int, GameObject>();
+        Debug.Log("Called reg");
         s.GetComponent<sheepScript>().index = nextSheepIndex;
         sheepDict[nextSheepIndex] = s;
         nextSheepIndex++;
@@ -207,16 +206,17 @@ public class hellSceneManager : MonoBehaviour {
             Vector3 ItoJ = posJ - posI;
             float distance = ItoJ.magnitude;
 
-            Vector3 ItoJnormalized = ItoJ / distance;
+            Vector3 ItoJnormalized = ItoJ / (distance+0.001f);
             Vector3 ItoJnormflat = new Vector3(ItoJnormalized.x, 0, ItoJnormalized.z);
 
             // Either separate or cohere, depending on distance
             if (distance < boidSeparateThreshold)
             {
                 // apply separation rule
-                coherenceAvoidanceGoal += -ItoJnormflat * boidSeparationStrength / Mathf.Min(1, distance);
-                numCohereAvoid += 1 / Mathf.Min(1, distance);
+                coherenceAvoidanceGoal += -ItoJnormflat * boidSeparationStrength / Mathf.Max(1, distance);
+                numCohereAvoid += 1 / Mathf.Max(1, distance);
             }
+
             else if (distance < boidCohereThreshold)
             {
                 // apply coherence rule
@@ -259,14 +259,16 @@ public class hellSceneManager : MonoBehaviour {
         Vector3 newGoal = new Vector3(0, 0, 0);
         // normalize each factor
         if (numCohereAvoid != 0)
-            coherenceAvoidanceGoal /= numCohereAvoid;
+            coherenceAvoidanceGoal /= (numCohereAvoid);
         if (numAlignment != 0)
-            alignmentGoal /= numAlignment;
+            alignmentGoal /= (numAlignment);
         // lureGoal /= numLures; // dividing makes 2 lures as effective as one
         // add in each factor, with weight
+
         newGoal += playerBoidFactor * playerGoal;
         newGoal += coherenceAvoidanceBoidFactor * coherenceAvoidanceGoal;
         newGoal += alignmentBoidFactor * alignmentGoal;
+
         newGoal += lureBoidFactor * lureGoal;
         // Add random goal change
         Vector3 randomForce = Random.onUnitSphere;
