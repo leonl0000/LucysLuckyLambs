@@ -27,6 +27,11 @@ public class PlayerMovement : MonoBehaviour
     private bool backMove;
     private bool panRight;
     private bool panLeft;
+    private bool[] abs = new bool[10];
+    private KeyCode[] ALPHAS = {KeyCode.Alpha0, KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3,
+        KeyCode.Alpha4, KeyCode.Alpha5, KeyCode.Alpha6, KeyCode.Alpha7, KeyCode.Alpha8, KeyCode.Alpha9};
+    public float[] spellCoolDownTimeOut;
+    public float[] spellCoolDownTimers = new float[10];
     private bool ab1;
     private bool ab2;
     private bool ab3;
@@ -53,6 +58,7 @@ public class PlayerMovement : MonoBehaviour
         hsm = GameObject.Find("GameManager").GetComponent<hellSceneManager>();
         fp = cam.GetComponent<FollowPlayer>();
 
+        spellCoolDownTimeOut = new float[10] { 0, .5f, 0, .2f, 1f, 4f, 0, 0, 0, 0 };
         GameObject tempObj = new GameObject();
         tempObj.transform.position = transform.position;
         tempObj.transform.eulerAngles = transform.eulerAngles;
@@ -70,40 +76,19 @@ public class PlayerMovement : MonoBehaviour
         forwardMove = Input.GetKey("w");
         backMove = Input.GetKey("s");
         jump = Input.GetKeyDown(KeyCode.Space);
-        ab1 = Input.GetKeyDown(KeyCode.Alpha1);
-        ab2 = Input.GetKey(KeyCode.Alpha2) || hsm.fireballDown;
-        ab3 = Input.GetKeyDown(KeyCode.Alpha3);
-        ab4 = Input.GetKeyDown(KeyCode.Alpha4);
-        ab5 = Input.GetKeyDown(KeyCode.Alpha5);
-
-
-        //Rotates the player's facing direction based on Mouse X and Y axis movement.
-        //if (pan_type == Constants.PanType.MOUSE)
-        //{
-        //    xangle += camSpeed * Input.GetAxis("Mouse X");
-        //    yangle += camSpeed * Input.GetAxis("Mouse Y");
-        //    offsetAngle = new Vector3(yangle, xangle, 0);
-        //    cameraTransform.eulerAngles = offsetAngle;
-        //    transform.eulerAngles = new Vector3(0, xangle, 0);
-        //} else 
-        //{
-        //    float axis = 0; ;
-        //    if (panRight) axis = 1;
-        //    if (panLeft) axis = -1;
-        //    xangle += camSpeed * axis;
-        //    offsetAngle = new Vector3(0, xangle, 0);
-        //    cameraTransform.eulerAngles = offsetAngle;
-        //    transform.eulerAngles = offsetAngle;
-        //    //if (panRight) transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 90, 0), camSpeed * Time.deltaTime);
-        //    //else if (panLeft) transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, -90, 0), camSpeed * Time.deltaTime);
-        //}
+        for (int i = 0; i < 10; i++) abs[i] = Input.GetKey(ALPHAS[i]) && spellCoolDownTimers[i] <= 0;
+        //ab1 = Input.GetKeyDown(KeyCode.Alpha1);
+        //ab2 = Input.GetKey(KeyCode.Alpha2) || hsm.fireballDown;
+        //ab3 = Input.GetKeyDown(KeyCode.Alpha3);
+        //ab4 = Input.GetKeyDown(KeyCode.Alpha4);
+        //ab5 = Input.GetKeyDown(KeyCode.Alpha5);
 
         if (pan_type == Constants.PanType.MOUSE) {
             //if(Input.mousePosition.x > 0 && Input.mousePosition.x < Screen.width)
             xangle += camSpeed * Input.GetAxis("Mouse X");
             //if(Input.mousePosition.y > 0 && Input.mousePosition.y < Screen.height)
             //yangle -= camSpeed * Input.GetAxis("Mouse Y") * 550/Screen.height;
-            yangle = (Mathf.Max(Mathf.Min(Input.mousePosition.y, Screen.height), 0) / Screen.height - .5f) * -160;
+            yangle = (Mathf.Max(Mathf.Min(Input.mousePosition.y, Screen.height), 0) / Screen.height - .5f) * -120;
         }
         xangle += camSpeed * ((panRight ? 1 : 0) + (panLeft ? -1 : 0));
         cameraTransform.eulerAngles = new Vector3(yangle, xangle, 0);
@@ -158,31 +143,36 @@ public class PlayerMovement : MonoBehaviour
         }
 
 
-        if (jump && num_jumps > 0)
-        {
+        if (jump && num_jumps > 0) {
             num_jumps--;
             playerRB.AddForce(0, 15, 0, ForceMode.VelocityChange);
         }
 
-        if (ab1) abilities.SpawnLure();
-        
-        if (ab2)   {
+        if (abs[1]) {
+            if(abilities.SpawnLure())
+                spellCoolDownTimers[1] = spellCoolDownTimeOut[1];
+        }        
+        if (abs[2] || hsm.fireballDown)   {
             abilities.FireballKey();
         }  else if (abilities.isGrowingFireball)   {
             abilities.FireballRelease();
         }
-
-        if (ab3) abilities.spawnSheep();
-
-        if(ab4 && !wallInPlay)
-        {
-            abilities.trumpWall();
-            wallInPlay = true;
+        if (abs[3]) {
+            if(abilities.spawnSheep())
+                spellCoolDownTimers[3] = spellCoolDownTimeOut[3];
         }
-
-        if (ab5) {
-            abilities.Lightning();
+        if(abs[4] && !wallInPlay) {
+            if (abilities.trumpWall()) {
+                wallInPlay = true;
+                spellCoolDownTimers[4] = spellCoolDownTimeOut[4];
+            }
         }
-
+        if (abs[5]) {
+            if(abilities.Lightning())
+                spellCoolDownTimers[5] = spellCoolDownTimeOut[5];
+        }
+        for(int i = 0; i < 10; i++) {
+            spellCoolDownTimers[i] = Mathf.Max(0, spellCoolDownTimers[i] - Time.deltaTime);
+        }
     }
 }

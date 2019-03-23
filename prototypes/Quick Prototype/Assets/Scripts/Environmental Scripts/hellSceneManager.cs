@@ -69,9 +69,8 @@ public class hellSceneManager : MonoBehaviour {
         playerMovement = player.GetComponent<PlayerMovement>();
         if (SaveSystem.saveSlot != 0) load(SaveSystem.saveSlot);
         fireballDown = false;
-        foreach (GameObject s in GameObject.FindGameObjectsWithTag("sheep"))
-            registerSheep(s);
-        GameObject OpeningTutorial = Instantiate(Resources.Load<GameObject>(Path.Combine("Dialogues", "Lv1 Tutorial Dialogue")));
+        if(SceneManager.GetActiveScene().buildIndex == 1)
+            Instantiate(Resources.Load<GameObject>(Path.Combine("Dialogues", "Lv1 Tutorial Dialogue")));
     }
 
     public void triggerAbility(int abNum) {
@@ -119,11 +118,10 @@ public class hellSceneManager : MonoBehaviour {
     public void objectEnterHellgate(GameObject o, hellgateScript hellGate) {
         switch(o.tag) {
             case "sheep":
-                if(hellGate.numSacrificed == 0)
+                if(hellGate.numSacrificed == 0 && SceneManager.GetActiveScene().buildIndex != 1)
                     Instantiate(Resources.Load<GameObject>(Path.Combine("Dialogues", "Lv1 Tutorial Dialogue 2")));
                 sheepDict.Remove(o.GetComponent<sheepScript>().index);
                 Destroy(o);
-                //Debug.Log(string.Format("Sheep {0} SACRIFICED", o.GetComponent<sheepScript>().index));
                 mana += 10;
                 if (mana > manaMax) manaMax *= 2;
                 manaRegen = (manaRegen + .5f) * 1.05f;

@@ -63,7 +63,7 @@ public class Abilities : MonoBehaviour {
         }
     }
 
-    public void SpawnLure()
+    public bool SpawnLure()
     {
         if (hsm.mana >= 2) {
             hsm.mana -= 2;
@@ -73,22 +73,19 @@ public class Abilities : MonoBehaviour {
             hsm.lureDict[nextIndex] = spawned_lure;
             spawned_lure.GetComponent<LureScript>().index = nextIndex;
             nextIndex++;
-            if(hsm.lureDict.Count > 3) {
+            if (hsm.lureDict.Count > 3) {
                 hsm.lureDict[hsm.lureDict.Keys.Min()].GetComponent<LureScript>().destroyLure();
             }
-        }
+            return true;
+        } else return false;
     }
 
-    public void trumpWall()
-    {
-
-
-        if (hsm.mana >= 5)
-        {
+    public bool trumpWall()  {
+        if (hsm.mana >= 5) {
             spawnedWall = Instantiate(wall, me_transform.position + new Vector3(0, 13, 0), wall.transform.rotation);
             hsm.mana -= 5;
-
-        }
+            return true;
+        } else return false;
     }
 
     /* Called when fireball key is held down. Can either spawn or grow fireball */
@@ -140,15 +137,16 @@ public class Abilities : MonoBehaviour {
         }
     }
 
-    public void spawnSheep() {
-        hsm.spawnSheep();
+    public bool spawnSheep() {
+        return hsm.spawnSheep();
     }
 
-    public void Lightning() {
+    public bool Lightning() {
         if (hsm.mana >= 10) {
             Instantiate(LightningObject, transform.position, LightningObject.transform.rotation);
             hsm.mana -= 10;
-        }
+            return true;
+        } else return false;
     }
 
     // Use this for initialization

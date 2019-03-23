@@ -17,4 +17,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Level 02.unity
     guid: 65d089f1033a1d4499a0752b342375be
+  - enabled: 1
+    path: Assets/Scenes/Level 02b.unity
+    guid: 121387dbb54625843a1dab526e7e79b6
+  - enabled: 1
+    path: Assets/Scenes/VictroryScreen.unity
+    guid: 9fdaa9de3e505494fb139860a8e1e83d
   m_configObjects: {}
