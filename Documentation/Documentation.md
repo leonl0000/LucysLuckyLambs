@@ -8,17 +8,17 @@
 
 # Code overview
 
-  The current version of the game is a Unity project stored in the  <a href='https://github.com/StanfordCS194/EmuGames/tree/master/prototypes/Quick%20Prototype'>Quick Prototype</a> folder.
+  The current version of the game is a Unity project stored in the  <a href='https://github.com/leonl0000/LucysLuckyLambs/tree/master/prototypes/Quick%20Prototype'>Quick Prototype</a> folder.
   However, the majority of the files in this folder should not be edited directly; they are automatically created by the Unity editor, and changes should by made by opening and modifying the game in the Unity editor.
-  The bulk of the code which we wrote manually for the game objects is located in the <a href='https://github.com/StanfordCS194/EmuGames/tree/master/prototypes/Quick%20Prototype/Assets/Scripts'>scripts folder</a>, organized by category.
+  The bulk of the code which we wrote manually for the game objects is located in the <a href='https://github.com/leonl0000/LucysLuckyLambs/tree/master/prototypes/Quick%20Prototype/Assets/Scripts'>scripts folder</a>, organized by category.
   After learning Unity, you'll be all set and ready to work on this code. It is organized into 6 folders, representing the 6 main features of the game, described below.
 
-- <a href="https://github.com/StanfordCS194/EmuGames/blob/master/Documentation/Player.md">The player</a>
-- <a href="https://github.com/StanfordCS194/EmuGames/blob/master/Documentation/NPCs.md">The non-player characters (NPCs)</a>, including both the sheep and the enemy NPCs.
-- <a href="https://github.com/StanfordCS194/EmuGames/blob/master/Documentation/Environment.md">The environment</a>
-- <a href="https://github.com/StanfordCS194/EmuGames/blob/master/Documentation/Dialogue.md">Story and dialogue</a>
-- <a href="https://github.com/StanfordCS194/EmuGames/blob/master/Documentation/System.md">System scripts</a>
-- <a href="https://github.com/StanfordCS194/EmuGames/blob/master/Documentation/Interface.md">The user interface</a>
+- <a href="https://github.com/leonl0000/LucysLuckyLambs/blob/master/Documentation/Player.md">The player</a>
+- <a href="https://github.com/leonl0000/LucysLuckyLambs/blob/master/Documentation/NPCs.md">The non-player characters (NPCs)</a>, including both the sheep and the enemy NPCs.
+- <a href="https://github.com/leonl0000/LucysLuckyLambs/blob/master/Documentation/Environment.md">The environment</a>
+- <a href="https://github.com/leonl0000/LucysLuckyLambs/blob/master/Documentation/Dialogue.md">Story and dialogue</a>
+- <a href="https://github.com/leonl0000/LucysLuckyLambs/blob/master/Documentation/System.md">System scripts</a>
+- <a href="https://github.com/leonl0000/LucysLuckyLambs/blob/master/Documentation/Interface.md">The user interface</a>
 
 
 
