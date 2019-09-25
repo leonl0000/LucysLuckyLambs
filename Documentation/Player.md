@@ -1,6 +1,6 @@
 # The Player
 
-The scripts used for controlling the player and their abilities are stored in the <a href='https://github.com/leonl0000/LucysLuckyLambs/wiki'>Player Scripts folder</a>. There are five player scripts, described below.
+The scripts used for controlling the player and their abilities are stored in the <a href='https://github.com/leonl0000/LucysLuckyLambs/tree/master/prototypes/Quick%20Prototype/Assets/Scripts/Player%20Scripts'>Player Scripts folder</a>. There are five player scripts, described below.
 
 ## Movement
 The <a href='https://github.com/leonl0000/LucysLuckyLambs/blob/master/prototypes/Quick%20Prototype/Assets/Scripts/Player%20Scripts/PlayerMovement.cs'>movement script</a> handles all incoming keypresses. These include the arrow keys for movement, the panning keys Q and E, the space bar for jumping, as well as the number keys for the various spells. The spell keys cause the invocation of functions from the abilities script, described below.
